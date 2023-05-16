@@ -3,9 +3,9 @@
 import logging
 import os
 
-from api import config
+from . import config
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
 def ls_local(submodel: str):

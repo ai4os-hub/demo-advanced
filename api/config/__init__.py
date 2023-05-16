@@ -6,8 +6,8 @@ from importlib.metadata import metadata as _metadata
 
 # Get configuration from user env and merge with pkg settings
 # TODO: Repalace YOURMODELAPI_SETTINGS by other variable name
-SETTINGS_FILE = pathlib.Path(__file__).parent / "settings.ini"
-SETTINGS_FILE = os.getenv("YOURMODELAPI_SETTINGS", default=SETTINGS_FILE)
+DEFAULTS_FILE = pathlib.Path(__file__).parent / "defaults.ini"
+SETTINGS_FILE = os.getenv("YOURMODELAPI_SETTINGS", default=DEFAULTS_FILE)
 settings = configparser.ConfigParser()
 settings.read(SETTINGS_FILE)
 

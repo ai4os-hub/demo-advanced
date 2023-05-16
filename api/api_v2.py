@@ -9,9 +9,9 @@ docs [1] and at a canonical exemplar module [2].
 """
 import logging
 
-from api import config, fields, parsers, utils
+from . import config, schemas, parsers, utils
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
 def get_metadata():
@@ -38,14 +38,8 @@ def get_predict_args():
     Returns:
         Dictionary of webargs fields.
     """
-    predict_args = {
-        "input_file": fields.CustomFileArg(required=True),
-        "argument_1": fields.CustomPredArg1(required=True),
-        "option_1": fields.CustomPredArg2(required=False),
-        "option_2": fields.CustomPredArg2(required=False),
-    }
-    logger.debug("Web arguments: %d", predict_args)
-    return predict_args
+    logger.debug("Web args schema: %d", schemas.PredArgsSchema)
+    return schemas.PredArgsSchema().fields
 
 
 def get_train_args():
@@ -54,14 +48,8 @@ def get_train_args():
     Returns:
         Dictionary of webargs fields.
     """
-    predict_args = {
-        "input_file": fields.CustomFileArg(required=True),
-        "argument_1": fields.CustomTrainArg1(required=True),
-        "option_1": fields.CustomTrainArg2(required=False),
-        "option_2": fields.CustomTrainArg2(required=False),
-    }
-    logger.debug("Web arguments: %d", predict_args)
-    return predict_args
+    logger.debug("Web args schema: %d", schemas.TrainArgsSchema)
+    return schemas.TrainArgsSchema().fields
 
 
 def predict(input_file, argument_1, **options):

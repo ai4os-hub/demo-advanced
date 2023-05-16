@@ -2,7 +2,7 @@
 """
 import logging
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
 def json_response(argument_1, *extra_values):
