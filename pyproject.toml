@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deepaas-full"  # TODO: Replace with your model name
+authors = [
+    { name = "author_name", email = "your_email@example.com" },
+]
+description = "DEEPaaS full demo/template."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT License" }  # TODO: Replace with your license
+classifiers = [  # TODO: Add/Edit/Remove classifiers
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT",
+]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+"Homepage" = "https://github.com/"
+"Bug Tracker" = "https://github.com/"
+
+[project.entry-points."deepaas.v2.model"]
+deepaas-on-minst-v1 = "api.api_v1"  # TODO: Add remove your versions
+deepaas-on-minst-v2 = "api.api_v2"  # TODO: Add remove your versions
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+version = { file = "VERSION" }
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+env = [ ]
