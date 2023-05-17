@@ -16,7 +16,7 @@ network is a vector of 10 scores — one for each handwritten digit image. You
 will also evaluate how good the model is at classifying the images on the
 test set.
 
-Based on "Deep learning on MINST" at https://github.com/numpy/numpy-tutorials.
+Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
 """
 import pathlib
 import abc
@@ -115,12 +115,12 @@ class HasTest(BaseModel, abc.ABC):
         self._y_test = self.preprocess_label(value)
 
 
-class ModelMINST(HasTest, HasTrain):
-    """Generates a MINST Neural Network model capable of predicting a number
+class ModelMNIST(HasTest, HasTrain):
+    """Generates a MNIST Neural Network model capable of predicting a number
     between 0 and 9 from hand writings.
 
     Returns:
-        Instance of MINST model based on neural networks.
+        Instance of MNIST model based on neural networks.
     """
 
     def __init__(self, **kwds) -> None:
