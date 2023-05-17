@@ -10,14 +10,11 @@ from . import parsers
 class PredArgsSchema(marshmallow.Schema):
     """Prediction arguments schema for api.predict function."""
 
-    accept = fields.String(
-        metadata={
-            "description": "Return format for method response.",
-            "location": "headers",
-        },
-        required=True,
-        validate=validate.OneOf(parsers.content_types),
-    )
+    # Keep order of the parameters as they are defined.
+    class Meta:
+        # pylint: disable=missing-class-docstring
+        # pylint: disable=too-few-public-methods
+        ordered = True
 
     # TODO: XXXXXX Complete description XXXXXXXXXXX.
     input_file = fields.Field(
@@ -53,11 +50,6 @@ class PredArgsSchema(marshmallow.Schema):
         required=False,
     )
 
-
-# TODO: add/edit/remove arguments for predictions
-class TrainArgsSchema(marshmallow.Schema):
-    """Training arguments schema for api.train function."""
-
     accept = fields.String(
         metadata={
             "description": "Return format for method response.",
@@ -66,6 +58,17 @@ class TrainArgsSchema(marshmallow.Schema):
         required=True,
         validate=validate.OneOf(parsers.content_types),
     )
+
+
+# TODO: add/edit/remove arguments for predictions
+class TrainArgsSchema(marshmallow.Schema):
+    """Training arguments schema for api.train function."""
+
+    # Keep order of the parameters as they are defined.
+    class Meta:
+        # pylint: disable=missing-class-docstring
+        # pylint: disable=too-few-public-methods
+        ordered = True
 
     # TODO: XXXXXX Complete description XXXXXXXXXXX.
     input_file = fields.Field(
@@ -99,4 +102,13 @@ class TrainArgsSchema(marshmallow.Schema):
             "description": "Custom optional argument for training.",
         },
         required=False,
+    )
+
+    accept = fields.String(
+        metadata={
+            "description": "Return format for method response.",
+            "location": "headers",
+        },
+        required=True,
+        validate=validate.OneOf(parsers.content_types),
     )
