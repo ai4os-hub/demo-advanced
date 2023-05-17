@@ -145,3 +145,4 @@ GTAGS
 # Things specific to this project #
 ###################################
 whiteboard.py
+sync/rclone.conf
