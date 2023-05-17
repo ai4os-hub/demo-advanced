@@ -1,5 +1,4 @@
-"""Functions to integrate {} model with the DEEPaaS API. 
-TODO: Add model name from template
+"""Endpoint functions to integrate your model with the DEEPaaS API. 
 
 For more information about how to edit the module see, take a look at the
 docs [1] and at a canonical exemplar module [2].
