@@ -32,7 +32,7 @@ env = []
 packages = ["deepaas_full", "deepaas_full.api"]
 
 [tool.setuptools.package-dir]
-"deepaas_full" = "numpy_minst"
+"deepaas_full" = "src"
 "deepaas_full.api" = "api"
 
 [tool.setuptools.dynamic]
@@ -41,4 +41,4 @@ version = { file = "VERSION" }
 
 # TODO: add/rm your endpoint versions
 [project.entry-points."deepaas.v2.model"]
-deepaas-on-minst = "deepaas_full.api"
+deepaas_full = "deepaas_full.api"
