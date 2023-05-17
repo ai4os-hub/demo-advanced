@@ -1,2 +1,7 @@
+# DEEPaaS framework requirements
 webargs~=5.5.2
 deepaas~=2.1.0
+
+# TODO: Edit Model requirements
+numpy~=1.24.3
+matplotlib~=3.7.1
