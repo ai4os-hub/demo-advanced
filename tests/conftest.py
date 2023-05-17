@@ -2,7 +2,7 @@
 # pylint: disable=redefined-outer-name
 import pytest
 
-from api import api_v1 as api
+import api
 
 
 @pytest.fixture(scope="module")

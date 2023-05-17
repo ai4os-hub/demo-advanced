@@ -41,5 +41,4 @@ version = { file = "VERSION" }
 
 # TODO: add/rm your endpoint versions
 [project.entry-points."deepaas.v2.model"]
-deepaas-on-minst-v1 = "deepaas_full.api.api_v1"
-deepaas-on-minst-v2 = "deepaas_full.api.api_v2"
+deepaas-on-minst = "deepaas_full.api"
