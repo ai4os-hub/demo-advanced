@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 # TODO: Edit project name, license and classifiers
 [project]
-name = "deepaas_full"
+name = "deepaas-full"
 authors = [{ name = "author_name", email = "your_email@example.com" }]
 description = "DEEPaaS full demo/template."
 readme = "README.md"
@@ -32,7 +32,6 @@ env = []
 packages = ["deepaas_full", "deepaas_full.api"]
 
 [tool.setuptools.package-dir]
-"deepaas_full" = "src"
 "deepaas_full.api" = "api"
 
 [tool.setuptools.dynamic]

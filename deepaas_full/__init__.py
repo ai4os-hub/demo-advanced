@@ -21,7 +21,7 @@ Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
 import pathlib
 import abc
 
-from . import config, utils
+from deepaas_full import config, utils
 
 
 class BaseModel(abc.ABC):
