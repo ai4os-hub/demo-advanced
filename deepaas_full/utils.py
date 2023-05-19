@@ -21,3 +21,11 @@ def one_hot_encoding(labels, dimension=10):
     one_hot_labels = labels[..., None] == np.arange(dimension)[None]
     # Return one-hot encoded labels.
     return one_hot_labels.astype(np.float64)
+
+
+def relu(value):
+    return (value >= 0) * value
+
+
+def relu2deriv(value):
+    return value >= 0

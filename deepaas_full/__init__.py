@@ -18,104 +18,19 @@ test set.
 
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
 """
-import pathlib
-import abc
 
-from deepaas_full import config, utils
+import numpy as np
 
+from deepaas_full import config, utils, core
 
-class BaseModel(abc.ABC):
-    """Base class to with abstract methods and generic configuration to define
-    specific data models classes based on numpy and neural networks.
-    """
-
-    data_path = pathlib.Path(config.DATA_PATH)
-    label_dimensions = int(config.LABEL_DIMENSIONS)
-
-    @classmethod
-    @abc.abstractmethod
-    def preprocess_data(cls, datas, func=None):
-        raise NotImplementedError
-
-    @classmethod
-    @abc.abstractmethod
-    def preprocess_label(cls, labels, func=None):
-        raise NotImplementedError
+from dataclasses import dataclass
+import numpy.typing as npt
 
 
-class HasTrain(BaseModel, abc.ABC):
-    """Extension for BaseModel that includes trining images and labels.
-
-    Arguments:
-        test_images -- FIle name for raw test images.
-        test_labels -- File name for raw test labels.
-    """
-
-    def __init__(self, **kwds) -> None:
-        kwds = self.load_training(**kwds)
-
-    def load_training(self, training_images, training_labels, **kwds):
-        data_path = pathlib.Path(self.data_path) / "raw"
-        self.x_train = utils.raw_images(data_path / training_images)
-        self.y_train = utils.raw_labels(data_path / training_labels)
-        return kwds
-
-    @property
-    def x_train(self):
-        """The x_train property."""
-        return self._x_train
-
-    @x_train.setter
-    def x_train(self, value):
-        self._x_train = self.preprocess_data(value)
-
-    @property
-    def y_train(self):
-        """The y_train property."""
-        return self._y_train
-
-    @y_train.setter
-    def y_train(self, value):
-        self._y_train = self.preprocess_label(value)
+rng = np.random.default_rng(int(config.RAND_SEED))
 
 
-class HasTest(BaseModel, abc.ABC):
-    """Extension for BaseModel that includes test images and labels.
-
-    Arguments:
-        test_images -- FIle name for raw test images.
-        test_labels -- File name for raw test labels.
-    """
-
-    def __init__(self, **kwds) -> None:
-        kwds = self.load_test(**kwds)
-
-    def load_test(self, test_images, test_labels, **kwds):
-        data_path = pathlib.Path(self.data_path) / "raw"
-        self.x_test = utils.raw_images(data_path / test_images)
-        self.y_test = utils.raw_labels(data_path / test_labels)
-        return kwds
-
-    @property
-    def x_test(self):
-        """The x_test property."""
-        return self._x_test
-
-    @x_test.setter
-    def x_test(self, value):
-        self._x_test = self.preprocess_data(value)
-
-    @property
-    def y_test(self):
-        """The y_test property."""
-        return self._y_test
-
-    @y_test.setter
-    def y_test(self, value):
-        self._y_test = self.preprocess_label(value)
-
-
-class ModelMNIST(HasTest, HasTrain):
+class ModelMNIST(core.BaseModel):
     """Generates a MNIST Neural Network model capable of predicting a number
     between 0 and 9 from hand writings.
 
@@ -123,9 +38,17 @@ class ModelMNIST(HasTest, HasTrain):
         Instance of MNIST model based on neural networks.
     """
 
-    def __init__(self, **kwds) -> None:
-        HasTrain.__init__(self, **kwds)
-        HasTest.__init__(self, **kwds)
+    num_labels = int(config.LABEL_DIMENSIONS)
+    image_size = int(config.IMAGE_SIZE)
+
+    def __init__(self, hidden_size=100, **kwds) -> None:
+        super().__init__(**kwds)
+        self.w[1] = 0.2 * rng.random((self.image_pixels, hidden_size)) - 0.1
+        self.w[2] = 0.2 * rng.random((hidden_size, self.num_labels)) - 0.1
+
+    @property
+    def image_pixels(self):
+        return self.image_size**2
 
     @classmethod
     def preprocess_data(cls, datas, func=lambda x: x / 255):
@@ -133,4 +56,67 @@ class ModelMNIST(HasTest, HasTrain):
 
     @classmethod
     def preprocess_label(cls, labels, func=utils.one_hot_encoding):
-        return func(labels, dimension=cls.label_dimensions)
+        return func(labels, dimension=cls.num_labels)
+
+
+@dataclass
+class ForwardData:
+    dropout_mask: npt.ArrayLike
+    layer_0: npt.ArrayLike
+    layer_1: npt.ArrayLike
+    layer_2: npt.ArrayLike
+
+
+def forward_propagation(model: ModelMNIST, input_data):
+    layer_1 = np.dot(input_data, model.w[1])
+    layer_1 = utils.relu(layer_1)
+    dropout_mask = rng.integers(low=0, high=2, size=layer_1.shape)
+    layer_1 *= dropout_mask * 2
+    layer_2 = np.dot(layer_1, model.w[2])
+    return ForwardData(dropout_mask, input_data, layer_1, layer_2)
+
+
+@dataclass
+class BackpropData:
+    delta_1: npt.ArrayLike
+    delta_2: npt.ArrayLike
+
+
+def back_propagation(model: ModelMNIST, pdata: ForwardData, label):
+    delta_2 = label - pdata.layer_2
+    delta_1 = np.dot(model.w[2], delta_2)
+    delta_1 *= utils.relu2deriv(pdata.layer_1)
+    delta_1 *= pdata.dropout_mask
+    return BackpropData(delta_1, delta_2)
+
+
+def training_step(model: ModelMNIST, learning_rate, loss=0.0, acc=0):
+    for data, label in model.training:
+        fdata = forward_propagation(model, data)
+        bdata = back_propagation(model, fdata, label)
+        model.w[1] += learning_rate * np.outer(fdata.layer_0, bdata.delta_1)
+        model.w[2] += learning_rate * np.outer(fdata.layer_1, bdata.delta_2)
+        loss += np.sum((label - fdata.layer_2) ** 2)
+        acc += int(np.argmax(fdata.layer_2) == np.argmax(label))
+    return loss, acc
+
+
+def evaluation_step(model: ModelMNIST):
+    result = utils.relu(model.x_test @ model.w[1]) @ model.w[2]
+    loss = np.sum((model.y_test - result) ** 2)
+    acc = np.sum(np.argmax(result, axis=1) == np.argmax(model.y_test, axis=1))
+    return loss, acc
+
+
+def train(model: ModelMNIST, epochs, learning_rate=0.005):
+    stats = {k: core.ExecutionStats() for k in ["train", "test"]}
+    for _ in range(epochs):
+        loss, acc = training_step(model, learning_rate)
+        stats["train"].append(loss, acc, model.training_len)
+        loss, acc = evaluation_step(model)
+        stats["test"].append(loss, acc, model.testing_len)
+    return stats
+
+
+def predict(model: ModelMNIST, input_data):
+    return [forward_propagation(model, data).layer_2 for data in input_data]
