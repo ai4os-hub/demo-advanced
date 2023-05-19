@@ -6,7 +6,7 @@ from typing import List
 from deepaas_full import config, utils
 
 
-class _AbstractModel(abc.ABC):
+class _AbstractTraining(abc.ABC):
     data_path = pathlib.Path(config.DATA_PATH)
 
     @classmethod
@@ -19,9 +19,17 @@ class _AbstractModel(abc.ABC):
     def preprocess_label(cls, labels, func=None):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def training_step(self, model, learning_rate):
+        raise NotImplementedError
 
-class _HasTrain(_AbstractModel, abc.ABC):
-    """Extension for _AbstractModel that includes trining images and labels.
+    @abc.abstractmethod
+    def evaluation_step(self, model):
+        raise NotImplementedError
+
+
+class _HasTrain(_AbstractTraining, abc.ABC):
+    """Extension for _AbstractTraining that includes trining images and labels.
 
     Arguments:
         test_images -- FIle name for raw test images.
@@ -63,8 +71,8 @@ class _HasTrain(_AbstractModel, abc.ABC):
         self._y_train = self.preprocess_label(value)
 
 
-class _HasTest(_AbstractModel, abc.ABC):
-    """Extension for _AbstractModel that includes test images and labels.
+class _HasTest(_AbstractTraining, abc.ABC):
+    """Extension for _AbstractTraining that includes test images and labels.
 
     Arguments:
         test_images -- FIle name for raw test images.
@@ -106,14 +114,23 @@ class _HasTest(_AbstractModel, abc.ABC):
         self._y_test = self.preprocess_label(value)
 
 
-class BaseModel(_HasTrain, _HasTest):
-    """Base class to with abstract methods and generic configuration to define
-    specific data models classes based on numpy and neural networks.
-    """
-
+class Training(_HasTrain, _HasTest):
     def __init__(self, **kwds) -> None:
         _HasTrain.__init__(self, **kwds)
         _HasTest.__init__(self, **kwds)
+
+    def train(self, model, epochs, learning_rate=0.005):
+        stats = {k: ExecutionStats() for k in ["train", "test"]}
+        for _ in range(epochs):
+            loss, acc = self.training_step(model, learning_rate)
+            stats["train"].append(loss, acc, self.training_len)
+            loss, acc = self.evaluation_step(model)
+            stats["test"].append(loss, acc, self.testing_len)
+        return stats
+
+
+class BaseModel:
+    def __init__(self, **kwds) -> None:
         self._weights = {}
 
     @property
@@ -136,4 +153,3 @@ class ExecutionStats:
     def append(self, loss, acc, data_length):
         self.err.append(loss / data_length)
         self.acc.append(acc / data_length)
-
