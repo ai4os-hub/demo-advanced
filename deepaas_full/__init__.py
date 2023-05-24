@@ -18,96 +18,39 @@ test set.
 
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
 """
+import time
 
-import numpy as np
+import tensorflow as tf
+from keras import callbacks, layers, losses, metrics, optimizers
 
-from deepaas_full import config, utils, core
-
-from dataclasses import dataclass
-import numpy.typing as npt
-
-
-rng = np.random.default_rng(int(config.RAND_SEED))
-num_labels = int(config.LABEL_DIMENSIONS)
-image_size = int(config.IMAGE_SIZE)
-image_pixels = image_size**2
+from deepaas_full import config, utils
 
 
-@dataclass
-class ForwardData:
-    dropout_mask: npt.ArrayLike
-    layer_0: npt.ArrayLike
-    layer_1: npt.ArrayLike
-    layer_2: npt.ArrayLike
+def create_model(hidden_size=512, dropout_factor=0.2):
+    model = tf.keras.Sequential(
+        [
+            layers.Dense(hidden_size, "relu", input_shape=config.INPUT_SHAPE),
+            layers.Dropout(dropout_factor),
+            layers.Dense(config.LABEL_DIMENSIONS),
+        ]
+    )
+    model.compile(
+        optimizer=optimizers.Adam(),
+        loss=losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=[metrics.SparseCategoricalAccuracy()],
+    )
+    return model
 
 
-@dataclass
-class BackpropData:
-    delta_1: npt.ArrayLike
-    delta_2: npt.ArrayLike
+def training(model, input_data, target_data, **options):
+    # model = utils.load_model(model_name)
+    train = utils.Training(input_data, target_data)
+    options["callbacks"] = generate_callbacks()
+    model.fit(train.data, verbose="auto", **options)
+    return model.summary()
 
 
-class ModelMNIST(core.BaseModel):
-    """Generates a MNIST Neural Network model capable of predicting a number
-    between 0 and 9 from hand writings.
-
-    Returns:
-        Instance of MNIST model based on neural networks.
-    """
-
-    def __init__(self, hidden_size=100, **kwds) -> None:
-        super().__init__(**kwds)
-        self.w[1] = 0.2 * rng.random((image_pixels, hidden_size)) - 0.1
-        self.w[2] = 0.2 * rng.random((hidden_size, num_labels)) - 0.1
-
-    def predict(self, input_data):
-        return [self.forward_propagation(data).layer_2 for data in input_data]
-
-    def forward_propagation(self, input_data):
-        layer_1 = np.dot(input_data, self.w[1])
-        layer_1 = utils.relu(layer_1)
-        dropout_mask = rng.integers(low=0, high=2, size=layer_1.shape)
-        layer_1 *= dropout_mask * 2
-        layer_2 = np.dot(layer_1, self.w[2])
-        return ForwardData(dropout_mask, input_data, layer_1, layer_2)
-
-    def back_propagation(self, pdata: ForwardData, label):
-        delta_2 = label - pdata.layer_2
-        delta_1 = np.dot(self.w[2], delta_2)
-        delta_1 *= utils.relu2deriv(pdata.layer_1)
-        delta_1 *= pdata.dropout_mask
-        return BackpropData(delta_1, delta_2)
-
-
-class TrainingMNIST(core.Training):
-    """Generates a MNIST training instance capable of training a ModelMNIST
-    to improve predictions.
-
-    Returns:
-        Instance of MNIST training based on neural networks.
-    """
-
-    @classmethod
-    def preprocess_data(cls, datas, func=lambda x: x / 255):
-        return func(datas)
-
-    @classmethod
-    def preprocess_label(cls, labels, func=utils.one_hot_encoding):
-        return func(labels, dimension=num_labels)
-
-    def evaluation_step(self, model: ModelMNIST):
-        results = utils.relu(self.x_test @ model.w[1]) @ model.w[2]
-        hits = np.argmax(results, axis=1) == np.argmax(self.y_test, axis=1)
-        loss = np.sum((self.y_test - results) ** 2)
-        return loss, np.sum(hits)
-
-    def training_step(self, model: ModelMNIST, learning_rate):
-        loss, hits = 0.0, 0
-        for data, label in self.training:
-            fd = model.forward_propagation(data)
-            bd = model.back_propagation(fd, label)
-            model.w[1] += learning_rate * np.outer(fd.layer_0, bd.delta_1)
-            model.w[2] += learning_rate * np.outer(fd.layer_1, bd.delta_2)
-            loss += np.sum((label - fd.layer_2) ** 2)
-            hits += int(np.argmax(fd.layer_2) == np.argmax(label))
-        return loss, hits
+def generate_callbacks():
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    checkpoint_path = config.MODELS_PATH / f"{timestamp}/cp.ckpt"
+    return [callbacks.ModelCheckpoint(checkpoint_path, verbose=1)]

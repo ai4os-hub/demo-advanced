@@ -1,9 +1,9 @@
 """Configuration loader for model source."""
 import os
-import random
+from pathlib import Path
 
-MODELS_PATH = os.getenv("MODELS_PATH", default="./models")
-DATA_PATH = os.getenv("MODELS_PATH", default="./data")
-LABEL_DIMENSIONS = os.getenv("LABEL_DIMENSIONS", default="10")
-RAND_SEED = os.getenv("RAND_SEED", f"{random.randint(1, 999999999)}")
-IMAGE_SIZE = os.getenv("IMAGE_SIZE", default="28")
+MODELS_PATH = Path(os.getenv("MODELS_PATH", default="./models"))
+DATA_PATH = Path(os.getenv("MODELS_PATH", default="./data"))
+LABEL_DIMENSIONS = int(os.getenv("LABEL_DIMENSIONS", default="10"))
+IMAGE_SIZE = int(os.getenv("IMAGE_SIZE", default="28"))
+INPUT_SHAPE = (IMAGE_SIZE**2,)

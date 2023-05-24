@@ -17,7 +17,7 @@ def json_response(argument_1, *extra_values):
     """
     logger.debug("Response argument_1: %d", argument_1)
     raise NotImplementedError  # TODO: Convert result values into json dict
-    return json_dictionary
+    # return json_dictionary
 
 
 def pdf_response(argument_1, *extra_values):
@@ -32,8 +32,8 @@ def pdf_response(argument_1, *extra_values):
     """
     logger.debug("Response argument_1: %d", argument_1)
     raise NotImplementedError  # TODO: Convert result values into pdf buffer
-    buffer_out.name = "results_file.pdf"
-    return buffer_out
+    # buffer_out.name = "results_file.pdf"
+    # return buffer_out
 
 
 response_parsers = {

@@ -9,6 +9,7 @@ docs [1] and at a canonical exemplar module [2].
 import logging
 
 from . import config, schemas, parsers, utils
+import deepaas_full
 
 logger = logging.getLogger(__name__)
 
@@ -31,53 +32,37 @@ def get_metadata():
     return metadata
 
 
-def get_predict_args():
-    """Return the arguments that are needed to perform a prediction.
+# @utils.predict_arguments(schema=schemas.PredArgsSchema)
+# def predict(input_file, argument_1, accept, **options):
+#     """Performs {model} prediction from given input data and parameters.
 
-    Returns:
-        Dictionary of webargs fields.
-    """
-    logger.debug("Web args schema: %d", schemas.PredArgsSchema)
-    return schemas.PredArgsSchema().fields
+#     Args:
+#         input_file: Input data to generate prediction values.
+#         argument_1: Required argument 1 to generate prediction values.
+#         **options: Arbitrary keyword arguments from get_predict_args.
 
+#     Options:
+#         option_1: Optional argument 1 to generate prediction values.
+#         option_2: Optional argument 2 to generate prediction values.
 
-def get_train_args():
-    """Return the arguments that are needed to perform a training.
-
-    Returns:
-        Dictionary of webargs fields.
-    """
-    logger.debug("Web args schema: %d", schemas.TrainArgsSchema)
-    return schemas.TrainArgsSchema().fields
-
-
-def predict(input_file, argument_1, **options):
-    """Performs {model} prediction from given input data and parameters.
-
-    Args:
-        input_file: Input data to generate prediction values.
-        argument_1: Required argument 1 to generate prediction values.
-        **options: Arbitrary keyword arguments from get_predict_args.
-
-    Options:
-        option_1: Optional argument 1 to generate prediction values.
-        option_2: Optional argument 2 to generate prediction values.
-
-    Returns:
-        The predicted model values or files.
-    """
-    logger.debug("input_file: %d, argument_1: %d", input_file, argument_1)
-    logger.debug("Options: %d", options)
-    raise NotImplementedError  # TODO: Replace by model predict function
-    return parsers.response_parsers[accept](*result)
+#     Returns:
+#         The predicted model values or files.
+#     """
+#     logger.debug("input_file: %d, argument_1: %d", input_file, argument_1)
+#     logger.debug("Options: %d", options)
+#     raise NotImplementedError  # TODO: Replace by model predict function
+#     # return parsers.response_parsers[accept](*result)
 
 
-def train(input_file, argument_1, **options):
+# @utils.train_arguments(schema=schemas.TrainArgsSchema)
+# def train(input_file, target_file, **options):
+@utils.predict_arguments(schema=schemas.TrainArgsSchema)
+def predict(input_file, target_file, accept, **options):
     """Performs {model} training from given input data and parameters.
 
     Args:
-        input_file: Input data to perform model training.
-        argument_1: Required argument 1 to perform model training.
+        input_file: Input data file to perform model training.
+        input_file: Input labels to file fit model training.
         **options: Arbitrary keyword arguments from get_train_args.
 
     Options:
@@ -87,7 +72,9 @@ def train(input_file, argument_1, **options):
     Returns:
         The train result values or files.
     """
-    logger.debug("input_file: %d, argument_1: %d", input_file, argument_1)
+    logger.debug("input_file: %d, target_file: %d", input_file, target_file)
     logger.debug("Options: %d", options)
-    raise NotImplementedError  # TODO: Replace by model train function
-    return parsers.response_parsers[accept](*result)
+    model = deepaas_full.create_model()
+    input_file, target_file = input_file.filename, target_file.filename
+    return deepaas_full.training(model, input_file, target_file, **options)
+    # return parsers.response_parsers[accept](*result)

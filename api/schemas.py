@@ -6,17 +6,14 @@ import marshmallow
 from . import parsers
 
 
-# TODO: add/edit/remove arguments for predictions
 class PredArgsSchema(marshmallow.Schema):
     """Prediction arguments schema for api.predict function."""
 
-    # Keep order of the parameters as they are defined.
-    class Meta:
+    class Meta:  # Keep order of the parameters as they are defined.
         # pylint: disable=missing-class-docstring
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
     input_file = fields.Field(
         metadata={
             "description": "Custom file to generate predictions.",
@@ -26,7 +23,6 @@ class PredArgsSchema(marshmallow.Schema):
         required=True,
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
     argument_1 = fields.Integer(
         metadata={
             "description": "Custom required argument for predictions.",
@@ -34,7 +30,6 @@ class PredArgsSchema(marshmallow.Schema):
         required=True,
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
     option_1 = fields.Integer(
         metadata={
             "description": "Custom optional argument for predictions.",
@@ -42,7 +37,6 @@ class PredArgsSchema(marshmallow.Schema):
         required=False,
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
     option_2 = fields.Integer(
         metadata={
             "description": "Custom optional argument for predictions.",
@@ -60,17 +54,14 @@ class PredArgsSchema(marshmallow.Schema):
     )
 
 
-# TODO: add/edit/remove arguments for predictions
 class TrainArgsSchema(marshmallow.Schema):
     """Training arguments schema for api.train function."""
 
-    # Keep order of the parameters as they are defined.
-    class Meta:
+    class Meta:  # Keep order of the parameters as they are defined.
         # pylint: disable=missing-class-docstring
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
     input_file = fields.Field(
         metadata={
             "description": "Custom file to use for model training.",
@@ -80,28 +71,81 @@ class TrainArgsSchema(marshmallow.Schema):
         required=True,
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
-    argument_1 = fields.Integer(
+    target_file = fields.Field(
         metadata={
-            "description": "Custom required argument for training.",
+            "description": "Custom file to use for model training.",
+            "type": "file",
+            "location": "form",
         },
         required=True,
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
-    option_1 = fields.Integer(
+    epochs = fields.Integer(
         metadata={
-            "description": "Custom optional argument for training.",
+            "description": "Number of epochs to train the model.",
         },
         required=False,
+        load_default=1,
+        validate=validate.Range(min=1),
     )
 
-    # TODO: XXXXXX Complete description XXXXXXXXXXX.
-    option_2 = fields.Integer(
+    initial_epoch = fields.Integer(
         metadata={
-            "description": "Custom optional argument for training.",
+            "description": "Epoch at which to start training.",
         },
         required=False,
+        load_default=0,
+        validate=validate.Range(min=0),
+    )
+
+    steps_per_epoch = fields.Integer(
+        metadata={
+            "description": "Steps before declaring an epoch finished.",
+        },
+        required=False,
+        validate=validate.Range(min=0),
+    )
+
+    shuffle = fields.Boolean(
+        metadata={
+            "description": "Shuffle the training data before each epoch.",
+        },
+        required=False,
+        load_default=True,
+    )
+
+    validation_split = fields.Float(
+        metadata={
+            "description": "Fraction of the data to be used as validation.",
+        },
+        required=False,
+        load_default=0.0,
+        validate=validate.Range(min=0.0, max=1.0),
+    )
+
+    validation_steps = fields.Integer(
+        metadata={
+            "description": "Steps to draw before stopping on validation.",
+        },
+        required=False,
+        validate=validate.Range(min=0),
+    )
+
+    validation_batch_size = fields.Integer(
+        metadata={
+            "description": "Number of samples per validation batch.",
+        },
+        required=False,
+        validate=validate.Range(min=0),
+    )
+
+    validation_freq = fields.Integer(
+        metadata={
+            "description": "Training epochs to run before validation.",
+        },
+        required=False,
+        load_default=1,
+        validate=validate.Range(min=1),
     )
 
     accept = fields.String(
