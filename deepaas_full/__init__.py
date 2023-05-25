@@ -16,7 +16,8 @@ network is a vector of 10 scores — one for each handwritten digit image. You
 will also evaluate how good the model is at classifying the images on the
 test set.
 
-Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
+Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials
+and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 """
 import time
 
