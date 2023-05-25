@@ -36,8 +36,8 @@ def create_model(hidden_size=512, dropout_factor=0.2):
     )
     model.compile(
         optimizer=optimizers.Adam(),
-        loss=losses.SparseCategoricalCrossentropy(from_logits=True),
-        metrics=[metrics.SparseCategoricalAccuracy()],
+        loss=losses.BinaryCrossentropy(),
+        metrics=[metrics.Accuracy()],
     )
     return model
 
@@ -46,7 +46,7 @@ def training(model, input_data, target_data, **options):
     # model = utils.load_model(model_name)
     train = utils.Training(input_data, target_data)
     options["callbacks"] = generate_callbacks()
-    model.fit(train.data, verbose="auto", **options)
+    model.fit(*train.data, verbose="auto", **options)
     return model.summary()
 
 
