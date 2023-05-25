@@ -31,6 +31,13 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
+    model = Checkpoint(
+        metadata={
+            "description": "Checkpoint to use for predictions.",
+        },
+        required=True,
+    )
+
     input_file = fields.Field(
         metadata={
             "description": "Custom file to generate predictions.",
@@ -40,25 +47,20 @@ class PredArgsSchema(marshmallow.Schema):
         required=True,
     )
 
-    argument_1 = fields.Integer(
+    batch_size = fields.Integer(
         metadata={
-            "description": "Custom required argument for predictions.",
-        },
-        required=True,
-    )
-
-    option_1 = fields.Integer(
-        metadata={
-            "description": "Custom optional argument for predictions.",
+            "description": "Number of samples per batch.",
         },
         required=False,
+        validate=validate.Range(min=1),
     )
 
-    option_2 = fields.Integer(
+    steps = fields.Integer(
         metadata={
-            "description": "Custom optional argument for predictions.",
+            "description": "Steps before prediction round is finished.",
         },
         required=False,
+        validate=validate.Range(min=1),
     )
 
     accept = fields.String(

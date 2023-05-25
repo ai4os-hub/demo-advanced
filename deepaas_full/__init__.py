@@ -56,6 +56,23 @@ def create_model(hidden_size=512, dropout_factor=0.2):
     return model
 
 
+def predict(model, input_data, **options):
+    """Performs predictions on data using a MNIST model.
+
+    Arguments:
+        model -- Tensorflow/Keras model to use for predictions.
+        input_data -- GZip file with images equivalent to MNIST data.
+        options -- See tensorflow/keras predict documentation.
+
+    Returns:
+        Tuple with prediction values and None as callbacks history.
+    """
+    predict_data = utils.Dataset(input_data).data
+    options["callbacks"] = generate_callbacks()
+    predictions = model.predict(*predict_data, verbose="auto", **options)
+    return predictions, None
+
+
 def training(model, input_data, target_data, **options):
     """Performs training on a model from raw MNIST input and target data.
 
@@ -66,12 +83,12 @@ def training(model, input_data, target_data, **options):
         options -- See tensorflow/keras fit documentation.
 
     Returns:
-        Return value from tensorflow model fit function.
+        Tuple with callbacks history and None as prediction values.
     """
     train_data = utils.Training(input_data, target_data).data
     options["callbacks"] = generate_callbacks()
     _callbacks = model.fit(*train_data, verbose="auto", **options)
-    return (_callbacks.history,)
+    return None, _callbacks.history
 
 
 def generate_callbacks():

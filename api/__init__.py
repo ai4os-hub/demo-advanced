@@ -31,50 +31,50 @@ def get_metadata():
     return metadata
 
 
-# @utils.predict_arguments(schema=schemas.PredArgsSchema)
-# def predict(input_file, argument_1, accept, **options):
-#     """Performs {model} prediction from given input data and parameters.
+@utils.predict_arguments(schema=schemas.PredArgsSchema)
+def predict(model, input_file, accept, **options):
+    """Performs {model} prediction from given input data and parameters.
 
-#     Args:
-#         input_file: Input data to generate prediction values.
-#         argument_1: Required argument 1 to generate prediction values.
-#         **options: Arbitrary keyword arguments from get_predict_args.
-
-#     Options:
-#         option_1: Optional argument 1 to generate prediction values.
-#         option_2: Optional argument 2 to generate prediction values.
-
-#     Returns:
-#         The predicted model values or files.
-#     """
-#     logger.debug("input_file: %d, argument_1: %d", input_file, argument_1)
-#     logger.debug("Options: %d", options)
-#     raise NotImplementedError  # TODO: Replace by model predict function
-#     # return parsers.response_parsers[accept](*result)
-
-
-# @utils.train_arguments(schema=schemas.TrainArgsSchema)
-# def train(input_file, target_file, **options):
-@utils.predict_arguments(schema=schemas.TrainArgsSchema)
-def predict(model, input_file, target_file, accept, **options):
-    """Performs {model} training from given input data and parameters.
-
-    Args:
-        model: Model from checkpoint to train with the input files.
-        input_file: Input data file to perform model training.
-        target_file: Input labels to file fit model training.
-        accept: Response parser type.
-        **options: Arbitrary keyword arguments from TrainArgsSchema.
+    Arguments:
+        model -- Model from checkpoint to use for predicting values.
+        input_file -- Input data file to perform predictions from model.
+        accept -- Response parser type.
+        **options -- Arbitrary keyword arguments from PredArgsSchema.
 
     Options:
-        epochs: Number of epochs to train the model.
-        initial_epoch: Epoch at which to start training.
-        steps_per_epoch: Steps before declaring an epoch finished.
-        shuffle: Shuffle the training data before each epoch.
-        validation_split: Fraction of the data to be used as validation.
-        validation_steps: Steps to draw before stopping on validation.
-        validation_batch_size: Number of samples per validation batch.
-        validation_freq: Training epochs to run before validation.
+        batch_size -- Number of samples per batch.
+        steps -- Steps before prediction round is finished.
+
+    Returns:
+        The predicted model values or files.
+    """
+    logger.debug("input_file: %s", input_file)
+    logger.debug("options: %d", options)
+    result = deepaas_full.predict(model, input_file.filename, **options)
+    logger.debug("accept: %s", accept)
+    return parsers.response_parsers[accept](*result)
+
+
+@utils.train_arguments(schema=schemas.TrainArgsSchema)
+def train(model, input_file, target_file, accept, **options):
+    """Performs {model} training from given input data and parameters.
+
+    Arguments:
+        model -- Model from checkpoint to train with the input files.
+        input_file -- Input data file to perform model training.
+        target_file -- Input labels to file fit model training.
+        accept -- Response parser type.
+        **options -- Arbitrary keyword arguments from TrainArgsSchema.
+
+    Options:
+        epochs -- Number of epochs to train the model.
+        initial_epoch -- Epoch at which to start training.
+        steps_per_epoch -- Steps before declaring an epoch finished.
+        shuffle -- Shuffle the training data before each epoch.
+        validation_split -- Fraction of the data to be used as validation.
+        validation_steps -- Steps to draw before stopping on validation.
+        validation_batch_size -- Number of samples per validation batch.
+        validation_freq -- Training epochs to run before validation.
 
     Returns:
         Parsed history/summary of the training process.
