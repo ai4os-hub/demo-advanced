@@ -22,9 +22,13 @@ logger = logging.getLogger(__name__)
 def get_metadata():
     """Returns a dictionary containing metadata information about the module.
 
+    Raises:
+        HTTPException: Unexpected errors aim to return 50X
+
     Returns:
         A dictionary containing metadata information required by DEEPaaS.
     """
+
     try:
         metadata = {
             "authors": config.MODEL_METADATA.get("author"),
@@ -53,6 +57,9 @@ def predict(checkpoint, input_file, accept, **options):
     Options:
         batch_size -- Number of samples per batch.
         steps -- Steps before prediction round is finished.
+
+    Raises:
+        HTTPException: Unexpected errors aim to return 50X
 
     Returns:
         The predicted model values or files.
@@ -87,6 +94,9 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
         validation_steps -- Steps to draw before stopping on validation.
         validation_batch_size -- Number of samples per validation batch.
         validation_freq -- Training epochs to run before validation.
+
+    Raises:
+        HTTPException: Unexpected errors aim to return 50X
 
     Returns:
         Parsed history/summary of the training process.
