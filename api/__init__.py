@@ -60,7 +60,7 @@ def predict(model, input_file, target_file, accept, **options):
     """Performs {model} training from given input data and parameters.
 
     Args:
-        model: Model to train with the input and target files.
+        model: Model from checkpoint to train with the input files.
         input_file: Input data file to perform model training.
         target_file: Input labels to file fit model training.
         accept: Response parser type.
