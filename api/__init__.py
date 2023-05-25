@@ -25,8 +25,7 @@ def get_metadata():
         "description": config.MODEL_METADATA.get("summary"),
         "license": config.MODEL_METADATA.get("license"),
         "version": config.MODEL_METADATA.get("version"),
-        "extra_1": utils.ls_local("models_folder1"),  # TODO: Replace names
-        "extra_2": utils.ls_local("models_folder2"),  # TODO: Replace names
+        "checkpoints": utils.ls_models(),
     }
     logger.debug("Package model metadata: %d", metadata)
     return metadata
@@ -57,24 +56,33 @@ def get_metadata():
 # @utils.train_arguments(schema=schemas.TrainArgsSchema)
 # def train(input_file, target_file, **options):
 @utils.predict_arguments(schema=schemas.TrainArgsSchema)
-def predict(input_file, target_file, accept, **options):
+def predict(model, input_file, target_file, accept, **options):
     """Performs {model} training from given input data and parameters.
 
     Args:
+        model: Model to train with the input and target files.
         input_file: Input data file to perform model training.
-        input_file: Input labels to file fit model training.
-        **options: Arbitrary keyword arguments from get_train_args.
+        target_file: Input labels to file fit model training.
+        accept: Response parser type.
+        **options: Arbitrary keyword arguments from TrainArgsSchema.
 
     Options:
-        option_1: Optional argument 1 to perform model training.
-        option_2: Optional argument 2 to perform model training.
+        epochs: Number of epochs to train the model.
+        initial_epoch: Epoch at which to start training.
+        steps_per_epoch: Steps before declaring an epoch finished.
+        shuffle: Shuffle the training data before each epoch.
+        validation_split: Fraction of the data to be used as validation.
+        validation_steps: Steps to draw before stopping on validation.
+        validation_batch_size: Number of samples per validation batch.
+        validation_freq: Training epochs to run before validation.
 
     Returns:
-        The train result values or files.
+        Summary of the training results.
     """
-    logger.debug("input_file: %d, target_file: %d", input_file, target_file)
-    logger.debug("Options: %d", options)
-    model = deepaas_full.create_model()
-    input_file, target_file = input_file.filename, target_file.filename
-    return deepaas_full.training(model, input_file, target_file, **options)
+    logger.debug("input_file: %s, target_file: %s", input_file, target_file)
+    input_files = input_file.filename, target_file.filename
+    logger.debug("options: %d", options)
+    result = deepaas_full.training(model, *input_files, **options)
+    logger.debug("accept: %s", accept)
     # return parsers.response_parsers[accept](*result)
+    return result
