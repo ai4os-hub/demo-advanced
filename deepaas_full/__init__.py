@@ -21,12 +21,23 @@ Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials.
 import time
 
 import tensorflow as tf
-from keras import callbacks, layers, losses, metrics, optimizers
+from keras import callbacks, layers
 
 from deepaas_full import config, utils
 
 
 def create_model(hidden_size=512, dropout_factor=0.2):
+    """Creates a new MNIST model ready for training. The model is composed
+    by 3 layers (input, hidden, output) with dropout after hidden layer. It
+    uses a `relu` activation function on the hidden layer.
+
+    Keyword Arguments:
+        hidden_size -- Number of nodes for hidden layer (default: {512})
+        dropout_factor -- Dropout after hidden layer (default: {0.2})
+
+    Returns:
+        Tensorflow MNIST model ready for training.
+    """
     model = tf.keras.Sequential(
         [
             layers.Dense(hidden_size, "relu", input_shape=config.INPUT_SHAPE),
@@ -35,22 +46,40 @@ def create_model(hidden_size=512, dropout_factor=0.2):
         ]
     )
     model.compile(
-        optimizer=optimizers.Adam(),
-        loss=losses.BinaryCrossentropy(),
-        metrics=[metrics.Accuracy()],
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
+        loss=tf.keras.losses.BinaryCrossentropy(),
+        metrics=[
+            tf.keras.metrics.BinaryAccuracy(),
+            tf.keras.metrics.FalseNegatives(),
+        ],
     )
     return model
 
 
 def training(model, input_data, target_data, **options):
-    # model = utils.load_model(model_name)
-    train = utils.Training(input_data, target_data)
+    """Performs training on a model from raw MNIST input and target data.
+
+    Arguments:
+        model -- Tensorflow/Keras model to train with data.
+        input_data -- GZip file with training images for MNIST data.
+        target_data -- GZip file with training labels for MNIST data.
+        options -- See tensorflow/keras fit documentation.
+
+    Returns:
+        Return value from tensorflow model fit function.
+    """
+    train_data = utils.Training(input_data, target_data).data
     options["callbacks"] = generate_callbacks()
-    model.fit(*train.data, verbose="auto", **options)
-    return model.summary()
+    return model.fit(*train_data, verbose="auto", **options)
 
 
 def generate_callbacks():
+    """Generator for for training callbacks. It includes the generation
+    of model checkpoints to be saved at the configured models path.
+
+    Returns:
+        Tensorflow training callbacks list.
+    """
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    checkpoint_path = config.MODELS_PATH / f"{timestamp}/cp.ckpt"
+    checkpoint_path = config.MODELS_PATH / f"{timestamp}.cp.ckpt"
     return [callbacks.ModelCheckpoint(checkpoint_path, verbose=1)]
