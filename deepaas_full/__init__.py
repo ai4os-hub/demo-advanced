@@ -66,12 +66,10 @@ def predict(model, input_data, **options):
         options -- See tensorflow/keras predict documentation.
 
     Returns:
-        Tuple with prediction values and None as callbacks history.
+        Return value from tf/keras model predict.
     """
     predict_data = utils.Dataset(input_data).data
-    options["callbacks"] = generate_callbacks()
-    predictions = model.predict(*predict_data, verbose="auto", **options)
-    return predictions, None
+    return model.predict(*predict_data, verbose="auto", **options)
 
 
 def training(model, input_data, target_data, **options):
@@ -84,21 +82,7 @@ def training(model, input_data, target_data, **options):
         options -- See tensorflow/keras fit documentation.
 
     Returns:
-        Tuple with callbacks history and None as prediction values.
+        Return value from tf/keras model fit.
     """
     train_data = utils.Training(input_data, target_data).data
-    options["callbacks"] = generate_callbacks()
-    _callbacks = model.fit(*train_data, verbose="auto", **options)
-    return None, _callbacks.history
-
-
-def generate_callbacks():
-    """Generator for for training callbacks. It includes the generation
-    of model checkpoints to be saved at the configured models path.
-
-    Returns:
-        Tensorflow training callbacks list.
-    """
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    checkpoint_path = config.MODELS_PATH / f"{timestamp}.cp.ckpt"
-    return [callbacks.ModelCheckpoint(checkpoint_path, verbose=1)]
+    return model.fit(*train_data, verbose="auto", **options)

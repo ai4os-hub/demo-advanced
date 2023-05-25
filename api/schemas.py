@@ -3,10 +3,7 @@
 import marshmallow
 from webargs import ValidationError, fields, validate
 
-import deepaas_full
-from tensorflow import errors as tf_errors
-
-from . import config, parsers
+from . import config, parsers, utils
 
 
 class Checkpoint(fields.String):
@@ -15,12 +12,20 @@ class Checkpoint(fields.String):
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
-        try:
-            model = deepaas_full.create_model()
-            model.load_weights(config.MODELS_PATH / value)
-            return model
-        except tf_errors.NotFoundError as err:
-            raise ValidationError(f"Checkpoint `{value}` not found.") from err
+        if value not in utils.ls_models():
+            raise ValidationError(f"Checkpoint `{value}` not found.")
+        return str(config.MODELS_PATH / value)
+
+
+class Dataset(fields.String):
+    """Field that takes a string and validates against current available
+    data files at config.DATA_PATH.
+    """
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        if value not in utils.ls_datasets():
+            raise ValidationError(f"Dataset `{value}` not found.")
+        return str(config.DATA_PATH / value)
 
 
 class PredArgsSchema(marshmallow.Schema):
@@ -31,9 +36,9 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    model = Checkpoint(
+    checkpoint = Checkpoint(
         metadata={
-            "description": "Checkpoint to use for predictions.",
+            "description": "Checkpoint from metadata to use for predictions.",
         },
         required=True,
     )
@@ -81,27 +86,23 @@ class TrainArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    model = Checkpoint(
+    checkpoint = Checkpoint(
         metadata={
-            "description": "Checkpoint to use for training.",
+            "description": "Checkpoint from metadata to use for training.",
         },
         required=True,
     )
 
-    input_file = fields.Field(
+    inputs_ds = Dataset(
         metadata={
-            "description": "Custom file to use for model training.",
-            "type": "file",
-            "location": "form",
+            "description": "Dataset from metadata to use as input images.",
         },
         required=True,
     )
 
-    target_file = fields.Field(
+    labels_ds = Dataset(
         metadata={
-            "description": "Custom file to use for model training.",
-            "type": "file",
-            "location": "form",
+            "description": "Dataset from metadata to use as input labels.",
         },
         required=True,
     )
@@ -172,13 +173,4 @@ class TrainArgsSchema(marshmallow.Schema):
         required=False,
         load_default=1,
         validate=validate.Range(min=1),
-    )
-
-    accept = fields.String(
-        metadata={
-            "description": "Return format for method response.",
-            "location": "headers",
-        },
-        required=True,
-        validate=validate.OneOf(parsers.content_types),
     )
