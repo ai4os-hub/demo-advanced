@@ -70,7 +70,8 @@ def training(model, input_data, target_data, **options):
     """
     train_data = utils.Training(input_data, target_data).data
     options["callbacks"] = generate_callbacks()
-    return model.fit(*train_data, verbose="auto", **options)
+    _callbacks = model.fit(*train_data, verbose="auto", **options)
+    return (_callbacks.history,)
 
 
 def generate_callbacks():

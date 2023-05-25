@@ -77,12 +77,11 @@ def predict(model, input_file, target_file, accept, **options):
         validation_freq: Training epochs to run before validation.
 
     Returns:
-        Summary of the training results.
+        Parsed history/summary of the training process.
     """
     logger.debug("input_file: %s, target_file: %s", input_file, target_file)
     input_files = input_file.filename, target_file.filename
     logger.debug("options: %d", options)
     result = deepaas_full.training(model, *input_files, **options)
     logger.debug("accept: %s", accept)
-    # return parsers.response_parsers[accept](*result)
-    return result
+    return parsers.response_parsers[accept](*result)
