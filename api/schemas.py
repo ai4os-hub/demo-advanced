@@ -1,9 +1,26 @@
 """Module for defining custom web fields to use on the API interface.
 """
-from webargs import fields, validate
 import marshmallow
+from webargs import ValidationError, fields, validate
 
-from . import parsers
+import deepaas_full
+from tensorflow import errors as tf_errors
+
+from . import config, parsers
+
+
+class Checkpoint(fields.String):
+    """Field that takes a string and validates against current available
+    models at config.MODELS_PATH.
+    """
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        try:
+            model = deepaas_full.create_model()
+            model.load_weights(config.MODELS_PATH / value)
+            return model
+        except tf_errors.NotFoundError as err:
+            raise ValidationError(f"Checkpoint `{value}` not found.") from err
 
 
 class PredArgsSchema(marshmallow.Schema):
@@ -61,6 +78,13 @@ class TrainArgsSchema(marshmallow.Schema):
         # pylint: disable=missing-class-docstring
         # pylint: disable=too-few-public-methods
         ordered = True
+
+    model = Checkpoint(
+        metadata={
+            "description": "Checkpoint to use for training.",
+        },
+        required=True,
+    )
 
     input_file = fields.Field(
         metadata={
