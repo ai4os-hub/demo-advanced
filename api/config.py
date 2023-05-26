@@ -4,7 +4,7 @@ from importlib.metadata import metadata as _metadata
 from pathlib import Path
 
 
-DATA_PATH = Path(os.getenv("MODELS_PATH", default="./data/raw"))
+DATA_PATH = Path(os.getenv("DATA_PATH", default="./data/raw"))
 MODELS_PATH = Path(os.getenv("MODELS_PATH", default="./models"))
 MODEL_NAME = os.getenv("MODEL_NAME", default="deepaas_full")
 

@@ -31,7 +31,7 @@ def get_metadata():
 
     try:
         metadata = {
-            "authors": config.MODEL_METADATA.get("author"),
+            "authors": [config.MODEL_METADATA.get("author_email")],
             "description": config.MODEL_METADATA.get("summary"),
             "license": config.MODEL_METADATA.get("license"),
             "version": config.MODEL_METADATA.get("version"),
