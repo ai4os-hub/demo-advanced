@@ -19,40 +19,39 @@ test set.
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials
 and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 """
-import time
-
 import tensorflow as tf
-from keras import callbacks, layers
+from keras import layers
 
 from deepaas_full import config, utils
 
 
-def create_model(hidden_size=512, dropout_factor=0.2):
+def create_model(dropout_factor=0.5):
     """Creates a new MNIST model ready for training. The model is composed
-    by 3 layers (input, hidden, output) with dropout after hidden layer. It
-    uses a `relu` activation function on the hidden layer.
+    by multiple convolution layers with flatten and dropout before the last
+    layer. It uses a `relu` activation function on the hidden layers.
 
     Keyword Arguments:
-        hidden_size -- Number of nodes for hidden layer (default: {512})
-        dropout_factor -- Dropout after hidden layer (default: {0.2})
+        dropout_factor -- Dropout after hidden layer (default: {0.5})
 
     Returns:
         Tensorflow MNIST model ready for training.
     """
     model = tf.keras.Sequential(
         [
-            layers.Dense(hidden_size, "relu", input_shape=config.INPUT_SHAPE),
+            tf.keras.Input(shape=config.INPUT_SHAPE),
+            layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
+            layers.MaxPooling2D(pool_size=(2, 2)),
+            layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
+            layers.MaxPooling2D(pool_size=(2, 2)),
+            layers.Flatten(),
             layers.Dropout(dropout_factor),
-            layers.Dense(config.LABEL_DIMENSIONS),
+            layers.Dense(config.LABEL_DIMENSIONS, activation="softmax"),
         ]
     )
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
-        loss=tf.keras.losses.BinaryCrossentropy(),
-        metrics=[
-            tf.keras.metrics.BinaryAccuracy(),
-            tf.keras.metrics.FalseNegatives(),
-        ],
+        loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False),
+        metrics=[tf.keras.metrics.Accuracy()],
     )
     return model
 

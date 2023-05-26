@@ -70,7 +70,7 @@ def predict(checkpoint, input_file, accept, **options):
         model = tf.keras.models.load_model(checkpoint)
         result = deepaas_full.predict(model, input_file.filename, **options)
         logger.debug("accept: %s", accept)
-        return parsers.response_parsers[accept](*result)
+        return parsers.response_parsers[accept](result)
     except Exception as err:
         raise HTTPException(reason=err) from err
 
