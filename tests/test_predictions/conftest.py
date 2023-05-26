@@ -1,51 +1,51 @@
 """Module for evolution requirements fixtures."""
 # pylint: disable=redefined-outer-name
 import pytest
+from deepaas.model.v2.wrapper import UploadedFile
 
 import api
 
 
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_input1(request):  # TODO: Rename function
-    """Fixture to provide the first input argument to api.predict."""
+@pytest.fixture(scope="module", params=["20230526-115534.cp.ckpt"])
+def checkpoint(request):
+    """Fixture to provide the checkpoint argument to api.predict."""
+    return api.config.MODELS_PATH / request.param
+
+
+@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
+def input_file(request):
+    """Fixture to provide the input_file argument to api.predict."""
+    return UploadedFile("", filename=api.config.DATA_PATH / request.param)
+
+
+@pytest.fixture(scope="module", params=["application/json"])
+def accept(request):
+    """Fixture to provide the accept argument to api.predict."""
     return request.param
 
 
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_input2(request):  # TODO: Rename function
-    """Fixture to provide the second input argument to api.predict."""
+@pytest.fixture(scope="module", params=[None, 20])
+def batch_size(request):
+    """Fixture to provide the batch_size option to api.predict."""
+    return request.param
+
+
+@pytest.fixture(scope="module", params=[None, 2])
+def steps(request):
+    """Fixture to provide the steps option to api.predict."""
     return request.param
 
 
 @pytest.fixture(scope="module")
-def predict_args(predict_input1, predict_input2):
-    """Fixture to return positional arguments for predictions."""
-    return (predict_input1, predict_input2)
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_option1(request):  # TODO: Rename function
-    """Fixture to provide the first input option to api.predict."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_option2(request):  # TODO: Rename function
-    """Fixture to provide the second input option to api.predict."""
-    return request.param
+def options(batch_size, steps):
+    """Fixture to return arbitrary keyword options for predictions."""
+    options = {}  # Customize/Complete with predict options
+    options["batch_size"] = batch_size
+    options["steps"] = steps
+    return {k: v for k, v in options.items() if v is not None}
 
 
 @pytest.fixture(scope="module")
-def predict_kwds(predict_option1, predict_option2):
-    """Fixture to return arbitrary keyword arguments for predictions."""
-    keys = [k for k, v in api.get_predict_args().items() if not v.required]
-    pred_kwds = {}  # TODO: Customize/Complete with predict options
-    pred_kwds[keys[0]] = predict_option1
-    pred_kwds[keys[1]] = predict_option2
-    return {k: v for k, v in pred_kwds.items() if v is not None}
-
-
-@pytest.fixture(scope="module")
-def predictions(predict_args, predict_kwds):
+def predictions(checkpoint, input_file, accept, options):
     """Fixture to return predictions to assert properties."""
-    return api.predict(*predict_args, **predict_kwds)
+    return api.predict(checkpoint, input_file, accept, **options)

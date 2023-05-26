@@ -45,8 +45,8 @@ def test_checkpoints(metadata):
     """Tests that metadata provides checkpoints information."""
     assert "checkpoints" in metadata
     assert metadata["checkpoints"] == [
-        "20230525-160000.cp.ckpt",
-        "20230525-160010.cp.ckpt",
+        "20230526-115455.cp.ckpt",
+        "20230526-115534.cp.ckpt",
     ]
 
 
