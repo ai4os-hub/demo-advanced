@@ -18,7 +18,9 @@ variable `metadata`.
 def test_authors(metadata):
     """Tests that metadata provides authors information."""
     assert "authors" in metadata
-    assert isinstance(metadata["authors"], str)
+    assert isinstance(metadata["authors"], list)
+    for author in metadata["authors"]:
+        assert isinstance(author, str)
 
 
 def test_description(metadata):
@@ -41,15 +43,19 @@ def test_version(metadata):
     assert len(metadata["version"].split(".")) == 3
 
 
-def test_extra_1(metadata):  # TODO: Adjust name / delete
-    """Tests that metadata provides custom model information."""
-    # assert "something" in metadata
-    # assert prediction.something == some_value
-    raise NotImplementedError  # TODO: Delete after adding asserts
+def test_checkpoints(metadata):
+    """Tests that metadata provides checkpoints information."""
+    assert "checkpoints" in metadata
+    assert metadata["checkpoints"] == [
+        "20230525-160000.cp.ckpt",
+        "20230525-160010.cp.ckpt",
+    ]
 
 
-def test_extra_2(metadata):  # TODO: Adjust name / delete
-    """Tests that metadata provides custom model information."""
-    # assert "something" in metadata
-    # assert prediction.something == some_value
-    raise NotImplementedError  # TODO: Delete after adding asserts
+def test_datasets(metadata):
+    """Tests that metadata provides datasets information."""
+    assert "datasets" in metadata
+    assert metadata["datasets"] == [
+        "test-images-idx3-ubyte.gz",
+        "test-labels-idx1-ubyte.gz",
+    ]
