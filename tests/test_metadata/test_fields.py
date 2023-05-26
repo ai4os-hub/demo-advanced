@@ -18,21 +18,19 @@ variable `metadata`.
 def test_authors(metadata):
     """Tests that metadata provides authors information."""
     assert "authors" in metadata
-    assert isinstance(metadata["authors"], list)
-    for author in metadata["authors"]:
-        assert isinstance(author, str)
+    assert metadata["authors"] == ["author_name <your_email@example.com>"]
 
 
 def test_description(metadata):
     """Tests that metadata provides description information."""
     assert "description" in metadata
-    assert isinstance(metadata["description"], str)
+    assert metadata["description"] == "DEEPaaS full demo/template."
 
 
 def test_license(metadata):
     """Tests that metadata provides license information."""
     assert "license" in metadata
-    assert isinstance(metadata["license"], str)
+    assert metadata["license"] == "MIT License"
 
 
 def test_version(metadata):
