@@ -42,8 +42,8 @@ def generate_arguments(schema):
 
 def predict_arguments(schema):
     """Decorator to inject schema as arguments to call predictions."""
-    get_args = generate_arguments(schema)
     def inject_function_schema(func):  # fmt: skip
+        get_args = generate_arguments(schema)
         sys.modules[func.__module__].get_predict_args = get_args
         return func  # Decorator that returns same function
     return inject_function_schema
@@ -51,8 +51,8 @@ def predict_arguments(schema):
 
 def train_arguments(schema):
     """Decorator to inject schema as arguments to perform training."""
-    get_args = generate_arguments(schema)
     def inject_function_schema(func):  # fmt: skip
+        get_args = generate_arguments(schema)
         sys.modules[func.__module__].get_train_args = get_args
         return func  # Decorator that returns same function
     return inject_function_schema

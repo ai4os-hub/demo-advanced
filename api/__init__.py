@@ -1,4 +1,4 @@
-"""Endpoint functions to integrate your model with the DEEPaaS API. 
+"""Endpoint functions to integrate your model with the DEEPaaS API.
 
 For more information about how to edit the module see, take a look at the
 docs [1] and at a canonical exemplar module [2].
@@ -28,7 +28,6 @@ def get_metadata():
     Returns:
         A dictionary containing metadata information required by DEEPaaS.
     """
-
     try:
         metadata = {
             "authors": [config.MODEL_METADATA.get("author_email")],

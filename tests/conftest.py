@@ -1,12 +1,10 @@
 """Tests environment configuration."""
 import os
-import sys
-import tempfile
-import shutil
 import pathlib
+import shutil
+import tempfile
 
 import pytest
-
 
 # Set tests models and data paths
 models_path = pathlib.Path("tests/models")
