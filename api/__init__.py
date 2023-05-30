@@ -107,6 +107,6 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
         logger.debug("options: %s", options)
         model = tf.keras.models.load_model(checkpoint)
         result = deepaas_full.training(model, inputs_ds, labels_ds, **options)
-        return result.history | {"new_checkpoint": ckpt_name}
+        return {"new_checkpoint": ckpt_name, **result.history}
     except Exception as err:
         raise HTTPException(reason=err) from err
