@@ -1,13 +1,9 @@
-"""This model example builds a simple feedforward neural network (with one
-hidden layer) from scratch with NumPy to recognize handwritten digit images.
+"""This model example to build feedforward neural network models from scratch
+with Tensorflow and keras to recognize handwritten digit images.
 
 The deep learning model — one of the most basic artificial neural networks
 that resembles the original multi-layer perceptron — will learn to classify
 digits from 0 to 9 from the MNIST dataset.
-
-The dataset contains 60,000 training and 10,000 test images and corresponding
-labels. Each training and test image is of size 784 (or 28x28 pixels), this
-is the input for the neural network.
 
 Based on the image inputs and their labels (supervised learning), the neural
 network is trained to learn their features using forward propagation and
