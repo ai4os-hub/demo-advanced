@@ -144,6 +144,7 @@ GTAGS
 
 # Things specific to this project #
 ###################################
+deepaas.conf
 whiteboard.py
 sync/rclone.conf
 !tests/test-images-idx3-ubyte.gz
