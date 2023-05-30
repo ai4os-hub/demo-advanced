@@ -1,103 +1,26 @@
-"""Module for evolution requirements fixtures."""
-# pylint: disable=redefined-outer-name
+"""Tests environment configuration."""
+import os
+import pathlib
+import shutil
+import tempfile
+
 import pytest
 
-from api import api_v1 as api
+# Set tests models and data paths
+models_path = pathlib.Path("tests/models")
+models_path_origin = models_path.absolute()
+data_path = pathlib.Path("tests/datasets")
+data_path_origin = data_path.absolute()
+
+# Configure environment variables to use models and datasets at tests
+os.environ["MODELS_PATH"] = str(models_path)
+os.environ["DATA_PATH"] = str(data_path)
 
 
-@pytest.fixture(scope="module")
-def metadata():
-    """Fixture to return defined api metadata."""
-    return api.get_metadata()
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_input1(request):  # TODO: Rename function
-    """Fixture to provide the first input argument to api.predict."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_input2(request):  # TODO: Rename function
-    """Fixture to provide the second input argument to api.predict."""
-    return request.param
-
-
-@pytest.fixture(scope="module")
-def predict_args(predict_input1, predict_input2):
-    """Fixture to return positional arguments for predictions."""
-    return (predict_input1, predict_input2)
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_option1(request):  # TODO: Rename function
-    """Fixture to provide the first input option to api.predict."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def predict_option2(request):  # TODO: Rename function
-    """Fixture to provide the second input option to api.predict."""
-    return request.param
-
-
-@pytest.fixture(scope="module")
-def predict_kwds(predict_option1, predict_option2):
-    """Fixture to return arbitrary keyword arguments for predictions."""
-    keys = [k for k, v in api.get_predict_args().items() if not v.required]
-    pred_kwds = {}  # TODO: Customize/Complete with predict options
-    pred_kwds[keys[0]] = predict_option1
-    pred_kwds[keys[1]] = predict_option2
-    return {k: v for k, v in pred_kwds.items() if v is not None}
-
-
-@pytest.fixture(scope="module")
-def predictions(predict_args, predict_kwds):
-    """Fixture to return predictions to assert properties."""
-    return api.predict(*predict_args, **predict_kwds)
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_input1(request):  # TODO: Rename function
-    """Fixture to provide the first input argument to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_input2(request):  # TODO: Rename function
-    """Fixture to provide the second input argument to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module")
-def train_args(train_input1, train_input2):
-    """Fixture to return positional arguments for training."""
-    return (train_input1, train_input2)
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_option1(request):  # TODO: Rename function
-    """Fixture to provide the first input option to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_option2(request):  # TODO: Rename function
-    """Fixture to provide the second input option to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module")
-def train_kwds(train_option1, train_option2):
-    """Fixture to return arbitrary keyword arguments for training."""
-    keys = [k for k, v in api.get_train_args().items() if not v.required]
-    train_kwds = {}  # TODO: Customize/Complete with predict options
-    train_kwds[keys[0]] = train_option1
-    train_kwds[keys[1]] = train_option2
-    return {k: v for k, v in train_kwds.items() if v is not None}
-
-
-@pytest.fixture(scope="module")
-def training(train_args, train_kwds):
-    """Fixture to perform and return training to assert properties."""
-    return api.train(*train_args, **train_kwds)
+@pytest.fixture(scope="module", autouse=True)
+def _create_testdir():
+    """Fixture to generate a temporary directory for each test module."""
+    with tempfile.TemporaryDirectory() as testdir:
+        shutil.copytree(models_path_origin, f"{testdir}/{models_path}")
+        shutil.copytree(data_path_origin, f"{testdir}/{data_path}")
+        yield os.chdir(testdir)

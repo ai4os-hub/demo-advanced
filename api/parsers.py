@@ -2,38 +2,37 @@
 """
 import logging
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 
-def json_response(argument_1, *extra_values):
+def json_response(values, **extra_values):
     """Converts the prediction or training results into json return format.
 
     Arguments:
-        argument_1 -- _description_   TODO: Complete description
-        extra_values -- _description_ TODO: Complete description
+        values -- Result value from method call.
+        extra_values -- Not used, added for illustration purpose.
 
     Returns:
         Converted values into json dictionary format.
     """
-    logger.debug("Response argument_1: %d", argument_1)
-    raise NotImplementedError  # TODO: Convert result values into json dict
-    return json_dictionary
+    logger.debug("Response result: %d", values)
+    logger.debug("Response options: %d", extra_values)
+    return values.tolist()
 
 
-def pdf_response(argument_1, *extra_values):
+def pdf_response(values, **extra_values):
     """Converts the prediction or training results into json return format.
 
     Arguments:
-        argument_1 -- _description_   TODO: Complete description
-        extra_values -- _description_ TODO: Complete description
+        values -- Result value from method call.
+        extra_values -- Not used, added for illustration purpose.
 
     Returns:
         Converted values into pdf buffer format.
     """
-    logger.debug("Response argument_1: %d", argument_1)
-    raise NotImplementedError  # TODO: Convert result values into pdf buffer
-    buffer_out.name = "results_file.pdf"
-    return buffer_out
+    logger.debug("Response result: %d", values)
+    logger.debug("Response options: %d", extra_values)
+    raise NotImplementedError
 
 
 response_parsers = {

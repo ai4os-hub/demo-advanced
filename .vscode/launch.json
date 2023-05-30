@@ -9,18 +9,18 @@
             "type": "python",
             "request": "launch",
             "module": "deepaas.cmd.run",
-            "args": [ "--listen-ip", "0.0.0.0" ],
+            "args": [ "--config-file=deepaas.conf" ],
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
-        { // Whiteboard debug
-            "name": "Python: Whiteboard",
+        { // Current file debug
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/whiteboard.py",
+            "program": "${file}",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "justMyCode": true,

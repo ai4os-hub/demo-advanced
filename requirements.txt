@@ -1,2 +1,7 @@
+# DEEPaaS framework requirements
 webargs~=5.5.2
 deepaas~=2.1.0
+
+# TODO: Edit Model requirements
+tensorflow~=2.12.0
+
