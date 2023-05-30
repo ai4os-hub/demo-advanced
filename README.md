@@ -23,7 +23,7 @@ API configuration environment variables:
 
 - _DATA_PATH_ path pointing to the training datasets, default `./data/raw`.
 - _MODELS_PATH_ path pointing to the model checkpoints, default `./models`.
-- _MODEL_NAME_ package name used to provide API metadata, default= `deepaas_full`.
+- _MODEL_NAME_ package name used to provide API metadata, default `deepaas_full`.
 
 Model configuration environment variables:
 
