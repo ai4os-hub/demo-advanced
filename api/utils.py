@@ -35,7 +35,7 @@ def ls_datasets():
 def generate_arguments(schema):
     """Function to generate arguments for DEEPaaS using schemas."""
     def arguments_function():  # fmt: skip
-        logger.debug("Web args schema: %d", schema)
+        logger.debug("Web args schema: %s", schema)
         return schema().fields
     return arguments_function
 

@@ -37,7 +37,7 @@ def get_metadata():
             "checkpoints": utils.ls_models(),
             "datasets": utils.ls_datasets(),
         }
-        logger.debug("Package model metadata: %d", metadata)
+        logger.debug("Package model metadata: %s", metadata)
         return metadata
     except Exception as err:
         raise HTTPException(reason=err) from err
@@ -65,7 +65,7 @@ def predict(checkpoint, input_file, accept, **options):
     """
     try:
         logger.debug("input_file: %s", input_file)
-        logger.debug("options: %d", options)
+        logger.debug("options: %s", options)
         model = tf.keras.models.load_model(checkpoint)
         result = deepaas_full.predict(model, input_file.filename, **options)
         logger.debug("accept: %s", accept)
@@ -104,7 +104,7 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
         logger.debug("inputs_ds: %s, labels_ds: %s", inputs_ds, labels_ds)
         ckpt_name = f"{time.strftime('%Y%m%d-%H%M%S')}.cp.ckpt"
         options["callbacks"] = utils.generate_callbacks(ckpt_name)
-        logger.debug("options: %d", options)
+        logger.debug("options: %s", options)
         model = tf.keras.models.load_model(checkpoint)
         result = deepaas_full.training(model, inputs_ds, labels_ds, **options)
         return result.history | {"new_checkpoint": ckpt_name}
