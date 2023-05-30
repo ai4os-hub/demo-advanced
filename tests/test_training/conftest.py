@@ -5,47 +5,60 @@ import pytest
 import api
 
 
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_input1(request):  # TODO: Rename function
-    """Fixture to provide the first input argument to api.train."""
+@pytest.fixture(scope="module", params=["20230526-115455.cp.ckpt"])
+def checkpoint(request):
+    """Fixture to provide the checkpoint argument to api.train."""
+    return api.config.MODELS_PATH / request.param
+
+
+@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
+def inputs_ds(request):
+    """Fixture to provide the inputs_ds argument to api.train."""
+    return api.config.DATA_PATH / request.param
+
+
+@pytest.fixture(scope="module", params=["test-labels-idx1-ubyte.gz"])
+def labels_ds(request):
+    """Fixture to provide the labels_ds argument to api.train."""
+    return api.config.DATA_PATH / request.param
+
+
+@pytest.fixture(scope="module", params=[2])
+def epochs(request):
+    """Fixture to provide the epochs option to api.train."""
     return request.param
 
 
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_input2(request):  # TODO: Rename function
-    """Fixture to provide the second input argument to api.train."""
+@pytest.fixture(scope="module", params=[None, 1])
+def initial_epoch(request):
+    """Fixture to provide the initial_epoch option to api.train."""
+    return request.param
+
+
+@pytest.fixture(scope="module", params=[None, False])
+def shuffle(request):
+    """Fixture to provide the shuffle option to api.train."""
+    return request.param
+
+
+@pytest.fixture(scope="module", params=[None, 0.1])
+def validation_split(request):
+    """Fixture to provide the validation_split option to api.train."""
     return request.param
 
 
 @pytest.fixture(scope="module")
-def train_args(train_input1, train_input2):
-    """Fixture to return positional arguments for training."""
-    return (train_input1, train_input2)
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_option1(request):  # TODO: Rename function
-    """Fixture to provide the first input option to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module", params=[])  # TODO: Add your parameters
-def train_option2(request):  # TODO: Rename function
-    """Fixture to provide the second input option to api.train."""
-    return request.param
-
-
-@pytest.fixture(scope="module")
-def train_kwds(train_option1, train_option2):
+def options(epochs, initial_epoch, shuffle, validation_split):
     """Fixture to return arbitrary keyword arguments for training."""
-    keys = [k for k, v in api.get_train_args().items() if not v.required]
-    train_kwds = {}  # TODO: Customize/Complete with predict options
-    train_kwds[keys[0]] = train_option1
-    train_kwds[keys[1]] = train_option2
-    return {k: v for k, v in train_kwds.items() if v is not None}
+    options = {}  # Customize/Complete with training options
+    options["epochs"] = epochs
+    options["initial_epoch"] = initial_epoch
+    options["shuffle"] = shuffle
+    options["validation_split"] = validation_split
+    return {k: v for k, v in options.items() if v is not None}
 
 
 @pytest.fixture(scope="module")
-def training(train_args, train_kwds):
+def training(checkpoint, inputs_ds, labels_ds, options):
     """Fixture to perform and return training to assert properties."""
-    return api.train(*train_args, **train_kwds)
+    return api.train(checkpoint, inputs_ds, labels_ds, **options)
