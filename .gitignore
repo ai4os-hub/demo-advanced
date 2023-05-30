@@ -147,5 +147,5 @@ GTAGS
 deepaas.conf
 whiteboard.py
 sync/rclone.conf
-!tests/test-images-idx3-ubyte.gz
-!tests/test-labels-idx1-ubyte.gz
+!tests/datasets/test-images-idx3-ubyte.gz
+!tests/datasets/test-labels-idx1-ubyte.gz
