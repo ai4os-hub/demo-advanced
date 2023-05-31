@@ -18,7 +18,7 @@ your function defined at `api.get_metadata`.
 def test_authors(metadata):
     """Tests that metadata provides authors information."""
     assert "authors" in metadata
-    assert metadata["authors"] == ["author_name <your_email@example.com>"]
+    assert metadata["authors"] == ["Borja Esteban <boressan@outlook.com>"]
 
 
 def test_description(metadata):
