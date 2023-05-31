@@ -23,14 +23,13 @@ dynamic = ["version", "dependencies"]
 "Bug Tracker" = "https://github.com/"
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src"]
+pythonpath = ["."]
 env = []
 
 [tool.setuptools]
 packages = ["deepaas_full", "deepaas_full.api"]
 
 [tool.setuptools.package-dir]
-"deepaas_full" = "src/deepaas_full"
 "deepaas_full.api" = "api"
 
 [tool.setuptools.dynamic]
