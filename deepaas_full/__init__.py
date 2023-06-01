@@ -47,7 +47,7 @@ def create_model(dropout_factor=0.5):
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
         loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False),
-        metrics=[tf.keras.metrics.Accuracy()],
+        metrics=[tf.keras.metrics.CategoricalAccuracy()],
     )
     return model
 
