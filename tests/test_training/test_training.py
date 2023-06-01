@@ -15,23 +15,59 @@ your function defined at `api.train`.
 # pylint: disable=unused-argument
 
 
-def test_training_acc(training):
-    """Test training result includes accuracy on the return."""
-    assert "accuracy" in training
-    assert isinstance(training["accuracy"], list)
-    assert all(isinstance(x, float) for x in training["accuracy"])
-    assert all(0.0 <= x <= 1.0 for x in training["accuracy"])
+def test_artifact_uri(training):
+    """Test training result includes artifact_uri on the return."""
+    assert "artifact_uri" in training
+    assert isinstance(training["artifact_uri"], str)
 
 
-def test_training_loss(training):
-    """Test training result includes loss on the return."""
-    assert "loss" in training
-    assert isinstance(training["loss"], list)
-    assert all(isinstance(x, float) for x in training["loss"])
-    assert all(0.0 <= x for x in training["loss"])
+def test_end_time(training):
+    """Test training result includes end_time on the return."""
+    assert "end_time" in training
+    assert isinstance(training["end_time"], int)
+    assert training["end_time"] > 0
 
 
-def test_training_checkpoint(training):
-    """Test training result provides the new checkpoint name."""
-    assert "new_checkpoint" in training
-    assert isinstance(training["new_checkpoint"], str)
+def test_experiment_id(training):
+    """Test training result includes experiment_id on the return."""
+    assert "experiment_id" in training
+    assert isinstance(training["experiment_id"], str)
+
+
+def test_lifecycle_stage(training):
+    """Test training result includes lifecycle_stage on the return."""
+    assert "lifecycle_stage" in training
+    assert isinstance(training["lifecycle_stage"], str)
+    assert training["lifecycle_stage"] == "active"
+
+
+def test_run_id(training):
+    """Test training result includes run_id on the return."""
+    assert "run_id" in training
+    assert isinstance(training["run_id"], str)
+
+
+def test_run_name(training):
+    """Test training result includes run_name on the return."""
+    assert "run_name" in training
+    assert isinstance(training["run_name"], str)
+
+
+def test_start_time(training):
+    """Test training result includes start_time on the return."""
+    assert "start_time" in training
+    assert isinstance(training["start_time"], int)
+    assert training["start_time"] > 0
+
+
+def test_status(training):
+    """Test training result includes status on the return."""
+    assert "status" in training
+    assert isinstance(training["status"], str)
+    assert training["status"] == "FINISHED"
+
+
+def test_user_id(training):
+    """Test training result includes user_id on the return."""
+    assert "user_id" in training
+    assert isinstance(training["user_id"], str)
