@@ -9,6 +9,7 @@ docs [1] and at a canonical exemplar module [2].
 import logging
 import time
 
+import mlflow
 import tensorflow as tf
 from aiohttp.web import HTTPException
 
@@ -98,7 +99,7 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
         HTTPException: Unexpected errors aim to return 50X
 
     Returns:
-        Parsed history/summary of the training process.
+        Dictionary containing mlflow run information.
     """
     try:
         logger.debug("inputs_ds: %s, labels_ds: %s", inputs_ds, labels_ds)
@@ -106,6 +107,9 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
         options["callbacks"] = utils.generate_callbacks(ckpt_name)
         logger.debug("options: %s", options)
         model = tf.keras.models.load_model(checkpoint)
-        return deepaas_full.training(model, inputs_ds, labels_ds, **options)
+        with mlflow.start_run(nested=False) as run:
+            mlflow.tensorflow.autolog()
+            deepaas_full.training(model, inputs_ds, labels_ds, **options)
+        return dict(mlflow.get_run(run.info.run_id).info)
     except Exception as err:
         raise HTTPException(reason=err) from err
