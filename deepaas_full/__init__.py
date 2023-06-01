@@ -18,6 +18,8 @@ and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 import tensorflow as tf
 from keras import layers
 
+import mlflow
+
 from deepaas_full import config, utils
 
 
@@ -77,7 +79,10 @@ def training(model, input_data, target_data, **options):
         options -- See tensorflow/keras fit documentation.
 
     Returns:
-        Return value from tf/keras model fit.
+        Return info value from mlflow run as dictionary.
     """
-    train_data = utils.Training(input_data, target_data).data
-    return model.fit(*train_data, verbose="auto", **options)
+    with mlflow.start_run(nested=False) as run:
+        mlflow.tensorflow.autolog()
+        train_data = utils.Training(input_data, target_data).data
+        model.fit(*train_data, verbose="auto", **options)
+    return dict(mlflow.get_run(run.info.run_id).info)

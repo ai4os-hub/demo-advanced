@@ -6,6 +6,7 @@
     "cSpell.words": [
         "aiohttp",
         "arange",
+        "autolog",
         "backpropagation",
         "ckpt",
         "Crossentropy",
@@ -16,6 +17,7 @@
         "feedforward",
         "keras",
         "logits",
+        "mlflow",
         "MNIST",
         "pdata",
         "perceptron",
