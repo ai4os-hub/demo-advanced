@@ -7,10 +7,8 @@ docs [1] and at a canonical exemplar module [2].
 [2]: https://github.com/deephdc/demo_app
 """
 import logging
-import time
 
 import mlflow
-import tensorflow as tf
 from aiohttp.web import HTTPException
 
 import deepaas_full
@@ -35,7 +33,7 @@ def get_metadata():
             "description": config.MODEL_METADATA.get("summary"),
             "license": config.MODEL_METADATA.get("license"),
             "version": config.MODEL_METADATA.get("version"),
-            "checkpoints": utils.ls_models(),
+            "models": utils.ls_models(),
             "datasets": utils.ls_datasets(),
         }
         logger.debug("Package model metadata: %s", metadata)
@@ -45,11 +43,11 @@ def get_metadata():
 
 
 @utils.predict_arguments(schema=schemas.PredArgsSchema)
-def predict(checkpoint, input_file, accept, **options):
+def predict(model_uri, input_file, accept, **options):
     """Performs {model} prediction from given input data and parameters.
 
     Arguments:
-        checkpoint -- Model from checkpoint to use for predicting values.
+        model_uri -- Model URI from MLFlow to use for prediction values.
         input_file -- Input data file to perform predictions from model.
         accept -- Response parser type.
         **options -- Arbitrary keyword arguments from PredArgsSchema.
@@ -67,7 +65,7 @@ def predict(checkpoint, input_file, accept, **options):
     try:
         logger.debug("input_file: %s", input_file)
         logger.debug("options: %s", options)
-        model = tf.keras.models.load_model(checkpoint)
+        model = mlflow.tensorflow.load_model(model_uri)
         result = deepaas_full.predict(model, input_file.filename, **options)
         logger.debug("accept: %s", accept)
         return parsers.response_parsers[accept](result)
@@ -76,11 +74,11 @@ def predict(checkpoint, input_file, accept, **options):
 
 
 @utils.train_arguments(schema=schemas.TrainArgsSchema)
-def train(checkpoint, inputs_ds, labels_ds, **options):
+def train(model_uri, inputs_ds, labels_ds, **options):
     """Performs {model} training from given input data and parameters.
 
     Arguments:
-        checkpoint -- Model from checkpoint to train with the input files.
+        model_uri -- Model URI from MLFlow to use for training.
         inputs_ds -- Dataset file name to use as data for training.
         labels_ds -- Dataset file name to use as labels to fit model.
         **options -- Arbitrary keyword arguments from TrainArgsSchema.
@@ -103,10 +101,8 @@ def train(checkpoint, inputs_ds, labels_ds, **options):
     """
     try:
         logger.debug("inputs_ds: %s, labels_ds: %s", inputs_ds, labels_ds)
-        ckpt_name = f"{time.strftime('%Y%m%d-%H%M%S')}.cp.ckpt"
-        options["callbacks"] = utils.generate_callbacks(ckpt_name)
         logger.debug("options: %s", options)
-        model = tf.keras.models.load_model(checkpoint)
+        model = mlflow.tensorflow.load_model(model_uri)
         with mlflow.start_run(nested=False) as run:
             mlflow.tensorflow.autolog()
             deepaas_full.training(model, inputs_ds, labels_ds, **options)
