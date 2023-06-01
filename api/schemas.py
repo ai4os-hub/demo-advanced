@@ -1,20 +1,26 @@
 """Module for defining custom web fields to use on the API interface.
 """
 import marshmallow
+import mlflow
 from webargs import ValidationError, fields, validate
 
 from . import config, parsers, utils
 
 
-class Checkpoint(fields.String):
-    """Field that takes a string and validates against current available
-    models at config.MODELS_PATH.
+class ModelURI(fields.String):
+    """Field that takes a string and validates against the available models
+    at the MLFlow instance connected. ModelNameVersion requires the format
+    'models:/{model_name}/{version}' to find it at the MLFlow repository.
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
-        if value not in utils.ls_models():
-            raise ValidationError(f"Checkpoint `{value}` not found.")
-        return str(config.MODELS_PATH / value)
+        try:  # add cache: https://github.com/mlflow/mlflow/issues/3123
+            mlflow.tensorflow.load_model(value)
+            return value
+        except mlflow.MlflowException as err:
+            raise ValidationError(err.message) from err
+        except OSError as err:
+            raise ValidationError(f"Wrong mlflow model uri {value}") from err
 
 
 class Dataset(fields.String):
@@ -36,9 +42,9 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    checkpoint = Checkpoint(
+    model_uri = ModelURI(
         metadata={
-            "description": "Checkpoint from metadata to use for predictions.",
+            "description": "String 'models:/name/version' from MLFlow models.",
         },
         required=True,
     )
@@ -86,9 +92,9 @@ class TrainArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    checkpoint = Checkpoint(
+    model_uri = ModelURI(
         metadata={
-            "description": "Checkpoint from metadata to use for training.",
+            "description": "String 'models:/name/version' from MLFlow models.",
         },
         required=True,
     )

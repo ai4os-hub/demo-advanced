@@ -5,7 +5,6 @@ from pathlib import Path
 
 
 DATA_PATH = Path(os.getenv("DATA_PATH", default="./data/raw"))
-MODELS_PATH = Path(os.getenv("MODELS_PATH", default="./models"))
 MODEL_NAME = os.getenv("MODEL_NAME", default="deepaas_full")
 
 MODEL_METADATA = _metadata(MODEL_NAME).json

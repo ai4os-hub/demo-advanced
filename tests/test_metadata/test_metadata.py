@@ -41,13 +41,13 @@ def test_version(metadata):
     assert len(metadata["version"].split(".")) == 3
 
 
-def test_checkpoints(metadata):
-    """Tests that metadata provides checkpoints information."""
-    assert "checkpoints" in metadata
-    assert metadata["checkpoints"] == [
-        "20230601-090349.cp.ckpt",
-        "20230601-090411.cp.ckpt",
-    ]
+def test_models(metadata):
+    """Tests that metadata provides models information."""
+    assert "models" in metadata
+    assert isinstance(metadata["models"], dict)
+    for model, description in metadata["models"].items():
+        assert isinstance(description, str)
+        assert isinstance(model, str)
 
 
 def test_datasets(metadata):

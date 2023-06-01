@@ -22,7 +22,6 @@ customization:
 API configuration environment variables:
 
 - _DATA_PATH_ path pointing to the training datasets, default `./data/raw`.
-- _MODELS_PATH_ path pointing to the model checkpoints, default `./models`.
 - _MODEL_NAME_ package name used to provide API metadata, default `deepaas_full`.
 
 Model configuration environment variables:
@@ -47,7 +46,6 @@ More information about how to configure DEEPaaS can be found a the
 │   ├── parsers.py                  <- API core for parsers and content types
 │   ├── schemas.py                  <- API schemas with web arguments
 │   └── utils.py                    <- API utilities module
-├── checkpoint_example.py     <- Example to generate checkpoints from python
 ├── data                      <- Folder including model datasets
 │   └── raw                         <- Folder with raw data to generate datasets
 ├── deepaas.conf              <- DEEPaaS configuration file
@@ -57,8 +55,6 @@ More information about how to configure DEEPaaS can be found a the
 │   ├── __init__.py                 <- Model init module with main methods
 │   ├── config.py                   <- Model configuration module
 │   └── utils.py                    <- Model utilities module
-├── models                    <- Folder to store local cached models
-│   └── {data-time}.cp.ckpt         <- Folder to store submodels folders
 ├── pyproject.toml            <- Makes project pip installable (pip install -e .)
 ├── requirements-test.txt     <- Requirements file for testing the service
 ├── requirements.txt          <- Requirements file for running the service
@@ -69,7 +65,6 @@ More information about how to configure DEEPaaS can be found a the
 ├── tests                     <- Folder containing tests for the API methods
 │   ├── conftest.py                 <- File with global test fixtures
 │   ├── datasets                    <- Folder including test datasets
-│   ├── models                      <- Folder including test models
 │   ├── test_metadata               <- Folder with metadata fixtures and tests
 │   ├── test_predictions            <- Folder with predict fixtures and tests
 │   └── test_training               <- Folder with train fixtures and tests
