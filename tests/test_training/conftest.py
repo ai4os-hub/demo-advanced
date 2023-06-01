@@ -5,7 +5,7 @@ import pytest
 import api
 
 
-@pytest.fixture(scope="module", params=["20230526-115455.cp.ckpt"])
+@pytest.fixture(scope="module", params=["20230601-090411.cp.ckpt"])
 def checkpoint(request):
     """Fixture to provide the checkpoint argument to api.train."""
     return api.config.MODELS_PATH / request.param
