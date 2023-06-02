@@ -36,6 +36,7 @@ More information about how to configure DEEPaaS can be found a the
 
 ## Project structure
 ```
+├── .env.sample               <- Sample file to configure environment from file
 ├── Jenkinsfile               <- Describes basic Jenkins CI/CD pipeline
 ├── LICENSE                   <- Project and model license file
 ├── README.md                 <- The top-level README for using this project
