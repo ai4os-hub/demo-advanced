@@ -12,8 +12,8 @@ def model_uri(request):
 
 
 @pytest.fixture(scope="module", params=["t100-dataset.npz"])
-def input_file(request):
-    """Fixture to provide the input_file argument to api.train."""
+def dataset(request):
+    """Fixture to provide the dataset argument to api.train."""
     return api.config.DATA_PATH / request.param
 
 
@@ -53,6 +53,6 @@ def options(epochs, initial_epoch, shuffle, validation_split):
 
 
 @pytest.fixture(scope="module")
-def training(model_uri, input_file, options):
+def training(model_uri, dataset, options):
     """Fixture to perform and return training to assert properties."""
-    return api.train(model_uri, input_file, **options)
+    return api.train(model_uri, dataset, **options)

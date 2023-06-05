@@ -99,9 +99,9 @@ class TrainArgsSchema(marshmallow.Schema):
         required=True,
     )
 
-    input_file = Dataset(
+    dataset = Dataset(
         metadata={
-            "description": "NPZ dataset from metadata for training input.",
+            "description": "Dataset name from metadata for training input.",
         },
         required=True,
     )

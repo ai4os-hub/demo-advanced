@@ -74,12 +74,12 @@ def predict(model_uri, input_file, accept, **options):
 
 
 @utils.train_arguments(schema=schemas.TrainArgsSchema)
-def train(model_uri, input_file, **options):
+def train(model_uri, dataset, **options):
     """Performs {model} training from given input data and parameters.
 
     Arguments:
         model_uri -- Model URI from MLFlow to use for training.
-        input_file -- NPZ file with images and labels to use for training.
+        input_file -- Dataset name with images and labels to use for training.
         **options -- Arbitrary keyword arguments from TrainArgsSchema.
 
     Options:
@@ -99,12 +99,12 @@ def train(model_uri, input_file, **options):
         Dictionary containing mlflow run information.
     """
     try:
-        logger.debug("input_file: %s", input_file)
+        logger.debug("dataset: %s", dataset)
         logger.debug("options: %s", options)
         model = mlflow.tensorflow.load_model(model_uri)
         with mlflow.start_run(nested=False) as run:
             mlflow.tensorflow.autolog()
-            deepaas_full.training(model, input_file, **options)
+            deepaas_full.training(model, dataset, **options)
         return dict(mlflow.get_run(run.info.run_id).info)
     except Exception as err:
         raise HTTPException(reason=err) from err
