@@ -12,7 +12,7 @@ def model_uri(request):
     return request.param
 
 
-@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
+@pytest.fixture(scope="module", params=["t10k-images.npy"])
 def input_file(request):
     """Fixture to provide the input_file argument to api.predict."""
     return UploadedFile("", filename=api.config.DATA_PATH / request.param)

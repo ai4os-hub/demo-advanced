@@ -144,8 +144,7 @@ GTAGS
 
 # Things specific to this project #
 ###################################
+!tests/datasets/t10k_dataset.npz
+!tests/datasets/t10k_images.npy
 deepaas.conf
 whiteboard.py
-sync/rclone.conf
-!tests/datasets/test-images-idx3-ubyte.gz
-!tests/datasets/test-labels-idx1-ubyte.gz

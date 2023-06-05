@@ -16,6 +16,22 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
+        { // Data pre processing debug
+            "name": "Python: Preprocess data",
+            "type": "python",
+            "request": "launch",
+            "module": "transform_data",
+            "args": [
+                "--output=debugging_data.npz",
+                "--verbosity=DEBUG",
+                "data/raw/t10k-images-idx3-ubyte.gz",
+                "data/raw/t10k-labels-idx1-ubyte.gz",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/data"
+            },
+        },
         { // Current file debug
             "name": "Python: Current File",
             "type": "python",

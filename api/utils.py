@@ -25,10 +25,10 @@ def ls_datasets():
     """Utility to return a list of datasets available in `data` folder.
 
     Returns:
-        A list of strings in the format {labels/images}-{type}.gz.
+        A list of strings in the format {id}-{type}.npz.
     """
     logger.debug("Scanning at: %s", config.DATA_PATH)
-    dirscan = (x.name for x in config.DATA_PATH.glob("*.gz"))
+    dirscan = (x.name for x in config.DATA_PATH.glob("*.npz"))
     return sorted(dirscan)
 
 

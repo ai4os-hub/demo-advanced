@@ -23,6 +23,7 @@
         "perceptron",
         "rclone",
         "relu",
+        "savez",
         "softmax",
         "submodel",
         "submodels",

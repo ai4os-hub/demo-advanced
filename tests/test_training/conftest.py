@@ -11,15 +11,9 @@ def model_uri(request):
     return request.param
 
 
-@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
-def inputs_ds(request):
-    """Fixture to provide the inputs_ds argument to api.train."""
-    return api.config.DATA_PATH / request.param
-
-
-@pytest.fixture(scope="module", params=["test-labels-idx1-ubyte.gz"])
-def labels_ds(request):
-    """Fixture to provide the labels_ds argument to api.train."""
+@pytest.fixture(scope="module", params=["t10k-dataset.npz"])
+def input_file(request):
+    """Fixture to provide the input_file argument to api.train."""
     return api.config.DATA_PATH / request.param
 
 
@@ -59,6 +53,6 @@ def options(epochs, initial_epoch, shuffle, validation_split):
 
 
 @pytest.fixture(scope="module")
-def training(model_uri, inputs_ds, labels_ds, options):
+def training(model_uri, input_file, options):
     """Fixture to perform and return training to assert properties."""
-    return api.train(model_uri, inputs_ds, labels_ds, **options)
+    return api.train(model_uri, input_file, **options)
