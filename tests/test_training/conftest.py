@@ -11,7 +11,7 @@ def model_uri(request):
     return request.param
 
 
-@pytest.fixture(scope="module", params=["t10k-dataset.npz"])
+@pytest.fixture(scope="module", params=["t100-dataset.npz"])
 def input_file(request):
     """Fixture to provide the input_file argument to api.train."""
     return api.config.DATA_PATH / request.param

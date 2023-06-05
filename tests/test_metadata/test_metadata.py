@@ -53,4 +53,4 @@ def test_models(metadata):
 def test_datasets(metadata):
     """Tests that metadata provides datasets information."""
     assert "datasets" in metadata
-    assert metadata["datasets"] == ["t10k-dataset.npz"]
+    assert metadata["datasets"] == ["t100-dataset.npz"]
