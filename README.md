@@ -29,18 +29,27 @@ Model configuration environment variables:
 - _LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
 - _IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
 
+MLflow configuration environment variables:
+
+- _MLFLOW_TRACKING_URI_ pointing to the MLflow server to use for storing models.
+- _MLFLOW_TRACKING_USERNAME_ username to use with HTTP Basic authentication on MLflow.
+- _MLFLOW_TRACKING_PASSWORD_ password to use with HTTP Basic authentication on MLflow.
+- _MLFLOW_EXPERIMENT_NAME_ experiment identification to store trainings on MLflow.
+- _MLFLOW_EXPERIMENT_ID_ alternative to _MLFLOW_EXPERIMENT_NAME_ by on MLflow.
+
 To configure DEEPaaS functionalities, create a copy from `deepaas.conf.sample`,
 customize it and pass it to the run call as `deepaas-run --config-file deepaas.conf`.
 More information about how to configure DEEPaaS can be found a the
 [official documentation](https://docs.deep-hybrid-datacloud.eu/projects/deepaas/en/stable/install/configuration/index.html)
 
 ## Project structure
+
 ```
 ├── .env.sample               <- Sample file to configure environment from file
 ├── .gitignore                <- Untracked files that Git should ignore
 ├── .vscode                   <- Workspace configuration for vscode development
 │   ├── launch.json                 <- Run and Debug configurations
-│   └── settings.json               <- Settings for testing, formatting, etc. 
+│   └── settings.json               <- Settings for testing, formatting, etc.
 ├── Jenkinsfile               <- Describes basic Jenkins CI/CD pipeline
 ├── LICENSE                   <- Project and model license file
 ├── README.md                 <- The top-level README for using this project
