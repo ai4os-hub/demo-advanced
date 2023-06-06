@@ -2,10 +2,9 @@
 requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
-# TODO: Edit project name, license and classifiers
 [project]
 name = "deepaas-full"
-authors = [{ name = "author_name", email = "your_email@example.com" }]
+authors = [{ name = "Borja Esteban", email = "boressan@outlook.com" }]
 description = "DEEPaaS full demo/template."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -25,9 +24,8 @@ dynamic = ["version", "dependencies"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-env = []
+env = ["DATA_PATH=tests/datasets"]
 
-# TODO: Replace custom package by user's
 [tool.setuptools]
 packages = ["deepaas_full", "deepaas_full.api"]
 
@@ -38,6 +36,5 @@ packages = ["deepaas_full", "deepaas_full.api"]
 dependencies = { file = ["requirements.txt"] }
 version = { file = "VERSION" }
 
-# TODO: add/rm your endpoint versions
 [project.entry-points."deepaas.v2.model"]
 deepaas_full = "deepaas_full.api"

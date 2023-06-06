@@ -5,21 +5,15 @@ import pytest
 import api
 
 
-@pytest.fixture(scope="module", params=["20230526-115455.cp.ckpt"])
-def checkpoint(request):
-    """Fixture to provide the checkpoint argument to api.train."""
-    return api.config.MODELS_PATH / request.param
+@pytest.fixture(scope="module", params=["models:/deepaas-full-testing/1"])
+def model_uri(request):
+    """Fixture to provide the model_uri argument to api.train."""
+    return request.param
 
 
-@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
-def inputs_ds(request):
-    """Fixture to provide the inputs_ds argument to api.train."""
-    return api.config.DATA_PATH / request.param
-
-
-@pytest.fixture(scope="module", params=["test-labels-idx1-ubyte.gz"])
-def labels_ds(request):
-    """Fixture to provide the labels_ds argument to api.train."""
+@pytest.fixture(scope="module", params=["t100-dataset.npz"])
+def dataset(request):
+    """Fixture to provide the dataset argument to api.train."""
     return api.config.DATA_PATH / request.param
 
 
@@ -59,6 +53,6 @@ def options(epochs, initial_epoch, shuffle, validation_split):
 
 
 @pytest.fixture(scope="module")
-def training(checkpoint, inputs_ds, labels_ds, options):
+def training(model_uri, dataset, options):
     """Fixture to perform and return training to assert properties."""
-    return api.train(checkpoint, inputs_ds, labels_ds, **options)
+    return api.train(model_uri, dataset, **options)

@@ -18,7 +18,7 @@ your function defined at `api.get_metadata`.
 def test_authors(metadata):
     """Tests that metadata provides authors information."""
     assert "authors" in metadata
-    assert metadata["authors"] == ["author_name <your_email@example.com>"]
+    assert metadata["authors"] == ["Borja Esteban <boressan@outlook.com>"]
 
 
 def test_description(metadata):
@@ -41,19 +41,16 @@ def test_version(metadata):
     assert len(metadata["version"].split(".")) == 3
 
 
-def test_checkpoints(metadata):
-    """Tests that metadata provides checkpoints information."""
-    assert "checkpoints" in metadata
-    assert metadata["checkpoints"] == [
-        "20230526-115455.cp.ckpt",
-        "20230526-115534.cp.ckpt",
-    ]
+def test_models(metadata):
+    """Tests that metadata provides models information."""
+    assert "models" in metadata
+    assert isinstance(metadata["models"], dict)
+    for model, description in metadata["models"].items():
+        assert isinstance(description, str)
+        assert isinstance(model, str)
 
 
 def test_datasets(metadata):
     """Tests that metadata provides datasets information."""
     assert "datasets" in metadata
-    assert metadata["datasets"] == [
-        "test-images-idx3-ubyte.gz",
-        "test-labels-idx1-ubyte.gz",
-    ]
+    assert metadata["datasets"] == ["t100-dataset.npz"]

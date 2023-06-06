@@ -6,13 +6,13 @@ from deepaas.model.v2.wrapper import UploadedFile
 import api
 
 
-@pytest.fixture(scope="module", params=["20230526-115534.cp.ckpt"])
-def checkpoint(request):
-    """Fixture to provide the checkpoint argument to api.predict."""
-    return api.config.MODELS_PATH / request.param
+@pytest.fixture(scope="module", params=["models:/deepaas-full-testing/1"])
+def model_uri(request):
+    """Fixture to provide the model_uri argument to api.predict."""
+    return request.param
 
 
-@pytest.fixture(scope="module", params=["test-images-idx3-ubyte.gz"])
+@pytest.fixture(scope="module", params=["t100-images.npy"])
 def input_file(request):
     """Fixture to provide the input_file argument to api.predict."""
     return UploadedFile("", filename=api.config.DATA_PATH / request.param)
@@ -46,6 +46,6 @@ def options(batch_size, steps):
 
 
 @pytest.fixture(scope="module")
-def predictions(checkpoint, input_file, accept, options):
+def predictions(model_uri, input_file, accept, options):
     """Fixture to return predictions to assert properties."""
-    return api.predict(checkpoint, input_file, accept, **options)
+    return api.predict(model_uri, input_file, accept, **options)

@@ -3,7 +3,7 @@
 import logging
 import sys
 
-from keras import callbacks
+import mlflow
 
 from . import config
 
@@ -11,24 +11,24 @@ logger = logging.getLogger(__name__)
 
 
 def ls_models():
-    """Utility to return a list of models available in `models` folder.
+    """Utility to return a list of models available in the MLFlow connected
+    repository.
 
     Returns:
-        A list of strings in the format {submodel}-{timestamp}.
+        A list of RegisteredModel from mlflow.
     """
-    logger.debug("Scanning at: %s", config.MODELS_PATH)
-    dirscan = (x.name for x in config.MODELS_PATH.iterdir() if x.is_dir())
-    return sorted(dirscan)
+    models = mlflow.MlflowClient().search_registered_models()
+    return {x.name: x.description for x in models}
 
 
 def ls_datasets():
     """Utility to return a list of datasets available in `data` folder.
 
     Returns:
-        A list of strings in the format {labels/images}-{type}.gz.
+        A list of strings in the format {id}-{type}.npz.
     """
     logger.debug("Scanning at: %s", config.DATA_PATH)
-    dirscan = (x.name for x in config.DATA_PATH.glob("*.gz"))
+    dirscan = (x.name for x in config.DATA_PATH.glob("*.npz"))
     return sorted(dirscan)
 
 
@@ -56,17 +56,3 @@ def train_arguments(schema):
         sys.modules[func.__module__].get_train_args = get_args
         return func  # Decorator that returns same function
     return inject_function_schema
-
-
-def generate_callbacks(ckpt_name):
-    """Generator for for training callbacks. It includes the generation
-    of model checkpoints to be saved at the configured models path.
-
-    Arguments:
-        ckpt_name -- Models folder name for the ModelCheckpoint path.
-
-    Returns:
-        Tensorflow training callbacks list.
-    """
-    checkpoint_path = config.MODELS_PATH / ckpt_name
-    return [callbacks.ModelCheckpoint(checkpoint_path, verbose=1)]

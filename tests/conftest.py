@@ -1,26 +1,26 @@
 """Tests environment configuration."""
+# pylint: disable=redefined-outer-name
 import os
-import pathlib
 import shutil
 import tempfile
 
 import pytest
 
+from api import config
+
+os.environ["MLFLOW_EXPERIMENT_ID"] = "57"
+
+
 # Set tests models and data paths
-models_path = pathlib.Path("tests/models")
-models_path_origin = models_path.absolute()
-data_path = pathlib.Path("tests/datasets")
-data_path_origin = data_path.absolute()
-
-# Configure environment variables to use models and datasets at tests
-os.environ["MODELS_PATH"] = str(models_path)
-os.environ["DATA_PATH"] = str(data_path)
+@pytest.fixture(scope="session", autouse=True)
+def original_datapath():
+    """Fixture to generate a original directory path for datasets."""
+    return config.DATA_PATH.absolute()
 
 
-@pytest.fixture(scope="module", autouse=True)
-def _create_testdir():
+@pytest.fixture(scope="module", autouse=True, name="testdir")
+def create_testdir(original_datapath):
     """Fixture to generate a temporary directory for each test module."""
     with tempfile.TemporaryDirectory() as testdir:
-        shutil.copytree(models_path_origin, f"{testdir}/{models_path}")
-        shutil.copytree(data_path_origin, f"{testdir}/{data_path}")
+        shutil.copytree(original_datapath, f"{testdir}/{config.DATA_PATH}")
         yield os.chdir(testdir)
