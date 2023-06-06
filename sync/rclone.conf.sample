@@ -1,6 +1,0 @@
-[data]
-type = webdav
-url = https://data-deep.a.incd.pt/public.php/webdav/
-vendor = nextcloud
-user = 
-pass = 

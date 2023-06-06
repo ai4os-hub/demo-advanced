@@ -15,10 +15,11 @@ test set.
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials
 and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 """
+import numpy as np
 import tensorflow as tf
 from keras import layers
 
-from deepaas_full import config, utils
+from deepaas_full import config
 
 
 def create_model(dropout_factor=0.5):
@@ -57,27 +58,26 @@ def predict(model, input_data, **options):
 
     Arguments:
         model -- Tensorflow/Keras model to use for predictions.
-        input_data -- GZip file with images equivalent to MNIST data.
+        input_data -- NPZ file with images equivalent to MNIST data.
         options -- See tensorflow/keras predict documentation.
 
     Returns:
         Return value from tf/keras model predict.
     """
-    predict_data = utils.Dataset(input_data).data
-    return model.predict(*predict_data, verbose="auto", **options)
+    predict_data = np.load(input_data)
+    return model.predict(predict_data, verbose="auto", **options)
 
 
-def training(model, input_data, target_data, **options):
+def training(model, input_data, **options):
     """Performs training on a model from raw MNIST input and target data.
 
     Arguments:
         model -- Tensorflow/Keras model to train with data.
-        input_data -- GZip file with training images for MNIST data.
-        target_data -- GZip file with training labels for MNIST data.
+        input_data -- NPZ file with training images and labels.
         options -- See tensorflow/keras fit documentation.
 
     Returns:
         Return value from tf/keras model fit.
     """
-    train_data = utils.Training(input_data, target_data).data
+    train_data = np.load(input_data).values()
     return model.fit(*train_data, verbose="auto", **options)

@@ -24,7 +24,7 @@ dynamic = ["version", "dependencies"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-env = []
+env = ["DATA_PATH=tests/datasets"]
 
 [tool.setuptools]
 packages = ["deepaas_full", "deepaas_full.api"]

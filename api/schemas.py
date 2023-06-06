@@ -51,7 +51,7 @@ class PredArgsSchema(marshmallow.Schema):
 
     input_file = fields.Field(
         metadata={
-            "description": "Custom file to generate predictions.",
+            "description": "NPY file with images data for predictions.",
             "type": "file",
             "location": "form",
         },
@@ -94,21 +94,14 @@ class TrainArgsSchema(marshmallow.Schema):
 
     model_uri = ModelURI(
         metadata={
-            "description": "String 'models:/name/version' from MLFlow models.",
+            "description": "Str 'models:/name/version' from MLFlow models.",
         },
         required=True,
     )
 
-    inputs_ds = Dataset(
+    dataset = Dataset(
         metadata={
-            "description": "Dataset from metadata to use as input images.",
-        },
-        required=True,
-    )
-
-    labels_ds = Dataset(
-        metadata={
-            "description": "Dataset from metadata to use as input labels.",
+            "description": "Dataset name from metadata for training input.",
         },
         required=True,
     )
