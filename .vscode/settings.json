@@ -10,6 +10,7 @@
         "backpropagation",
         "ckpt",
         "Crossentropy",
+        "datapath",
         "datas",
         "deepaas",
         "dirscan",
