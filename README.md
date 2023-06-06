@@ -13,17 +13,18 @@ cd {repository}  # Navigate inside repository project
 pip install -e .  # Install repository project
 ```
 
-> Use editable mode `pip install -e .` when you are testing your patch to a
-> package through another project.
+> Use editable mode `pip install -e .` when you are want python to access your
+> your code at the repository and not a copy at `.../site-packages`. Useful to
+> test your package changes without reinstalling.
 
 ## Data Version Control
 
-As second step, you need to download your data and datasets. This project uses
-the Data Version Control [DVC](https://dvc.org/) library to organize and
-version all the dataset
+As second step, you need to download your raw data and datasets. This project
+uses the Data Version Control [DVC](https://dvc.org/) library to organize and
+version all datasets and data.
 
-For tutorial about how to use `dvc` follow the following guides
-https://dvc.org/doc/start/data-management
+For a tutorial about how to use `dvc` you can use the guide at DVC:
+[Get Started: Data Management](https://dvc.org/doc/start/data-management).
 
 ```bash
 dvc remote modify --local deep-cloud user {your-dvc-remote-user}
@@ -36,19 +37,19 @@ dvc pull  # Download data from your dvc remote storage
 > and your storage provider.
 
 Make sure your MNIST data repository provides a list of `npz` datasets at the
-folder `./data` or your folder configured as _DATA_PATH_ in your environment.
-The API metadata will provide all the names of the datasets available in such
+folder configured as _DATA_PATH_ in your environment (default: `./data`). The
+API metadata will provide all the file name of the datasets available in that
 folder.
 
-> Note the model functions expect `npz` datasets with the keys `images` and
-> `labels`.
+> Note model function `deepaas_full.train` expects `npz` files with keys
+> `images` and `labels`.
 
 ## FLFlow Experiments and Models Repository
 
-Next step is to configure your experiments, training and models repository.
-This example uses [MLFlow](https://mlflow.org/) in order to track and store
-your models. In order to work correctly, you can configure the following
-environment variables:
+Next step is to configure your experiments, training and the model repository.
+This example uses [MLFlow](https://mlflow.org/) to track and store models.
+In order to work correctly, you should configure the following environment
+variables:
 
 - _MLFLOW_TRACKING_URI_ pointing to the MLflow server to use for storing models.
 - _MLFLOW_TRACKING_USERNAME_ username to use with HTTP Basic authentication on MLflow.
@@ -60,10 +61,10 @@ You can use this by creating an `.env` loaded by your script or directly from
 the command line:
 
 ```bash
-export MLFLOW_TRACKING_USERNAME={your-mflow-user}
-export MLFLOW_TRACKING_PASSWORD={your-mflow-password}
+export MLFLOW_TRACKING_USERNAME={your-mlflow-user}
+export MLFLOW_TRACKING_PASSWORD={your-mlflow-password}
 export MLFLOW_TRACKING_URI=https://{your-mlflow-address}:{mlflow-port}
-export MLFLOW_EXPERIMENT_ID={your-mflow-experiment-id}
+export MLFLOW_EXPERIMENT_ID={your-mlflow-experiment-id}
 ```
 
 > Username and password are only required on MLFlow deployment protected by user and password.
@@ -80,11 +81,11 @@ More information about how to configure DEEPaaS can be found a the
 deepaas-run --config-file=deepaas.conf  # You deploy using deepaas
 ```
 
-> Note that some ports like `80` require administrative privileges. Use `sudo`
-> and ensure that `deepaas-run` script is available in the root `PATH`, for
-> example, if you are using conda
+> Note that some ports like `80` or `443` require administrative privileges.
+> Use `sudo` and ensure that `deepaas-run` script is available in root `PATH`,
+> for example, if you are using conda
 > `sudo env PATH=$PATH:/{path-DEEPaaS-bin} deepaas-run --config-file=deepaas.conf`
-> together with the script to load your environment variables.
+> together with your script or method to load your environment variables.
 
 ## Model and API additional configuration
 
@@ -95,22 +96,23 @@ API configuration environment variables:
 - _DATA_PATH_ path pointing to the training datasets, default `./data/raw`.
 - _MODEL_NAME_ package name used to provide API metadata, default `deepaas_full`.
 
-Model configuration environment variables:
+Model data configuration environment variables:
 
 - _LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
 - _IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
 
 ## Testing
 
-Testing process is automated by tox. Check the environments configured to be
-tested by `tox --listenvs`. If you are missing one of the python environments
-configured to be tested and you are using conda for managing your virtual
-environments, consider using `tox-conda` to automatically manage all python
-installation on your testing virtual environment.
+Testing process is automated by tox library. You can check the environments
+configured to be tested by running `tox --listenvs`. If you are missing one
+of the python environments configured to be tested (e.g. py310, py39) and
+you are using `conda` for managing your virtual environments, consider using
+`tox-conda` to automatically manage all python installation on your testing
+virtual environment.
 
 Tests are implemented following [pytest](https://docs.pytest.org) framework.
 Fixtures and parametrization are placed inside `conftest.py` files meanwhile
-assertions are located on `test_{}.py` files.
+assertion tests are located on `test_*.py` files.
 
 Tests are performed by a remote model named `deepaas-full-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
