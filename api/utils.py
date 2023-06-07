@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def ls_models():
     """Utility to return a list of models available in the MLFlow connected
-    repository.
+    models registry.
 
     Returns:
         A list of RegisteredModel from mlflow.

@@ -44,9 +44,9 @@ folder.
 > Note model function `deepaas_full.train` expects `npz` files with keys
 > `images` and `labels`.
 
-## FLFlow Experiments and Models Repository
+## FLFlow Experiments and Models Registry
 
-Next step is to configure your experiments, training and the model repository.
+Next step is to configure your experiments, training and the model registry.
 This example uses [MLFlow](https://mlflow.org/) to track and store models.
 In order to work correctly, you should configure the following environment
 variables:
@@ -116,14 +116,14 @@ assertion tests are located on `test_*.py` files.
 
 Tests are performed by a remote model named `deepaas-full-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
-your MLFlow model repository and configure the environment variables to access
+your MLFlow model registry and configure the environment variables to access
 it. Experiments can be tracked if you set a _MLFLOW_EXPERIMENT_NAME_ or
 _MLFLOW_EXPERIMENT_id_ however, leaving empty those variables will avoid the
 generation of experiment tracking on the MLFlow server.
 
 > If tests fail with `Registered Model with name=deepaas-full-testing not found`
 > but you are sure that the model `deepaas-full-testing` exists in your MLFlow
-> repository, ensure your MLFlow environment is accessible at test run time.
+> registry, ensure your MLFlow environment is accessible at test run time.
 
 ## Project structure
 

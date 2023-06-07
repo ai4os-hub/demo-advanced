@@ -10,7 +10,7 @@ from . import config, parsers, utils
 class ModelURI(fields.String):
     """Field that takes a string and validates against the available models
     at the MLFlow instance connected. ModelNameVersion requires the format
-    'models:/{model_name}/{version}' to find it at the MLFlow repository.
+    'models:/{model_name}/{version}' to find it at the MLFlow registry.
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
