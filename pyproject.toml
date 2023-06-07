@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "deepaas-full"
+name = "deepaas_full"
 authors = [{ name = "Borja Esteban", email = "boressan@outlook.com" }]
 description = "DEEPaaS full demo/template."
 readme = "README.md"

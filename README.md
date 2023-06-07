@@ -114,15 +114,15 @@ Tests are implemented following [pytest](https://docs.pytest.org) framework.
 Fixtures and parametrization are placed inside `conftest.py` files meanwhile
 assertion tests are located on `test_*.py` files.
 
-Tests are performed by a remote model named `deepaas-full-testing` using its
+Tests are performed by a remote model named `deepaas_full-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
 your MLFlow model registry and configure the environment variables to access
 it. Experiments can be tracked if you set a _MLFLOW_EXPERIMENT_NAME_ or
 _MLFLOW_EXPERIMENT_id_ however, leaving empty those variables will avoid the
 generation of experiment tracking on the MLFlow server.
 
-> If tests fail with `Registered Model with name=deepaas-full-testing not found`
-> but you are sure that the model `deepaas-full-testing` exists in your MLFlow
+> If tests fail with `Registered Model with name=deepaas_full-testing not found`
+> but you are sure that the model `deepaas_full-testing` exists in your MLFlow
 > registry, ensure your MLFlow environment is accessible at test run time.
 
 ## Project structure

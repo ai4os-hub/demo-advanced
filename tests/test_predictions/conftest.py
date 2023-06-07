@@ -6,7 +6,7 @@ from deepaas.model.v2.wrapper import UploadedFile
 import api
 
 
-@pytest.fixture(scope="module", params=["models:/deepaas-full-testing/1"])
+@pytest.fixture(scope="module", params=["models:/deepaas_full-testing/1"])
 def model_uri(request):
     """Fixture to provide the model_uri argument to api.predict."""
     return request.param
