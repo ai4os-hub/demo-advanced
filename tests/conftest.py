@@ -8,8 +8,6 @@ import pytest
 
 from api import config
 
-os.environ["MLFLOW_EXPERIMENT_ID"] = "57"
-
 
 # Set tests models and data paths
 @pytest.fixture(scope="session", autouse=True)
