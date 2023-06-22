@@ -1,13 +1,13 @@
 import httpx
-from prefect import flow, get_run_logger
+import prefect
 
 
-@flow
+@prefect.flow
 def train_model(
     model_uri: str = "models:/borja-MNIST/1",
     dataset: str = "t10k-dataset.npz",
 ):
-    logger = get_run_logger()
+    logger = prefect.get_run_logger()
     response = httpx.post(
         "http://localhost:5000/v2/models/deepaas_full/train/",
         params={"model_uri": model_uri, "dataset": dataset},
