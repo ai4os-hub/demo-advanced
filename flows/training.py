@@ -1,50 +1,51 @@
-import time
-from uuid import UUID
+"""Training workflow for MNIST model.
+"""
+import argparse
+import sys
 
-import httpx
 import prefect
+from prefect.task_runners import SequentialTaskRunner
+
+import api
+
+# Script arguments definition ---------------------------------------
+parser = argparse.ArgumentParser(
+    prog="PROG",
+    description=__doc__,
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    epilog="See '<command> --help' to read about a specific sub-command.",
+)
+parser.add_argument(
+    "model_uri",
+    help="Model URI from MLFlow to use for training.",
+    type=str,
+)
+parser.add_argument(
+    "dataset",
+    help="Dataset to use for training.",
+    type=str,
+)
+# -------------------------------------------------------------------
 
 
-@prefect.flow
-def train_model(
-    model_uri: str = "models:/borja-MNIST/1",
-    dataset: str = "t10k-dataset.npz",
-    max_retries: int = 10,
-):
-    uuid = post_training(model_uri, dataset)
-    for retry in range(max_retries):
-        training = get_training(uuid)
-        if training["status"] == "running":
-            time.sleep(10)
-        else:
-            break
-
-    if retry >= 10:
-        raise TimeoutError("Training timeout")
+@prefect.flow(
+    name="MNIST-Training-Flow",
+    description="Flow to train a MNIST model.",
+    task_runner=SequentialTaskRunner(),
+)
+def main(model_uri, dataset, **options):
+    train(model_uri, dataset)
 
 
 @prefect.task
-def post_training(model_uri: str, dataset: str) -> UUID:
+def train(model_uri, dataset, **options):
     logger = prefect.get_run_logger()
-    response = httpx.post(
-        "http://localhost:5000/v2/models/deepaas_full/train/",
-        params={"model_uri": model_uri, "dataset": dataset},
-    )
-    response.raise_for_status()
-    logger.info("Response: %s", response.json())
-    return response.json()["uuid"]
-
-
-@prefect.task
-def get_training(uuid: UUID):
-    logger = prefect.get_run_logger()
-    response = httpx.get(
-        f"http://localhost:5000/v2/models/deepaas_full/train/{uuid}",
-    )
-    response.raise_for_status()
-    logger.info("Response: %s", response.json())
-    return response.json()
+    result = api.train(model_uri, dataset, **options)
+    logger.debug("Response: %s", result)
+    return result
 
 
 if __name__ == "__main__":
-    train_model()
+    args = parser.parse_args()
+    main(**vars(args))
+    sys.exit(0)  # Shell return 0 == success
