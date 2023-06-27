@@ -1,0 +1,53 @@
+###
+### A complete description of a Prefect Deployment for flow 'MNIST-Training-Flow'
+###
+name: training.sample.yaml
+description: Flow to train a MNIST model.
+version: 363d1ad474f81f90f34969b32bc99b81
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+tags: []
+parameters: {}
+schedule: null
+is_schedule_active: nul
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: MNIST-Training-Flow
+manifest_path: null
+storage: null
+path: /home/borja/projects/deepaas_full
+entrypoint: flows/training.py:main
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    model_uri:
+      title: model_uri
+      position: 0
+    dataset:
+      title: dataset
+      position: 1
+    options:
+      title: options
+      position: 2
+  required:
+  - model_uri
+  - dataset
+  - options
+  definitions: null
+timestamp: '2023-06-23T08:39:06.273138+00:00'
+triggers: []
