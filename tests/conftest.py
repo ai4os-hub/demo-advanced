@@ -9,7 +9,13 @@ import pytest
 from api import config
 
 
-# Set tests models and data paths
+@pytest.fixture(scope="session", autouse=True)
+def check_mlflow_availability():
+    """Fixture to skip tests if MLFlow is not available."""
+    if not config.DEFAULT_MLFLOW_URI:
+        pytest.skip("Undefined MLFLOW_TRACKING_URI env.")
+
+
 @pytest.fixture(scope="session", autouse=True)
 def original_datapath():
     """Fixture to generate a original directory path for datasets."""

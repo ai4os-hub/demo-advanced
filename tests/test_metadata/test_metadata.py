@@ -43,14 +43,14 @@ def test_version(metadata):
 
 def test_models(metadata):
     """Tests that metadata provides models information."""
-    assert "models" in metadata
-    assert isinstance(metadata["models"], dict)
-    for model, description in metadata["models"].items():
+    assert "public_models" in metadata
+    assert isinstance(metadata["public_models"], dict)
+    for model, description in metadata["public_models"].items():
         assert isinstance(description, str)
         assert isinstance(model, str)
 
 
 def test_datasets(metadata):
     """Tests that metadata provides datasets information."""
-    assert "datasets" in metadata
-    assert metadata["datasets"] == ["t100-dataset.npz"]
+    assert "public_datasets" in metadata
+    assert metadata["public_datasets"] == ["t100-dataset.npz"]
