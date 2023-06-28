@@ -2,7 +2,7 @@
 """
 import marshmallow
 import mlflow
-from webargs import ValidationError, fields, validate
+from webargs import ValidationError, fields, validate, missing
 
 from . import config, parsers, utils
 
@@ -10,11 +10,13 @@ from . import config, parsers, utils
 class ModelURI(fields.String):
     """Field that takes a string and validates against the available models
     at the MLFlow instance connected. ModelNameVersion requires the format
-    'models:/{model_name}/{version}' to find it at the MLFlow registry.
+    'models:/{model_name}/{version}' to find it at  the MLFlow registry.
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
         try:  # add cache: https://github.com/mlflow/mlflow/issues/3123
+            mlflow_uri = data.get("mlflow_uri", config.DEFAULT_MLFLOW_URI)
+            mlflow.set_tracking_uri(mlflow_uri)
             mlflow.tensorflow.load_model(value)
             return value
         except mlflow.MlflowException as err:
@@ -41,6 +43,16 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=missing-class-docstring
         # pylint: disable=too-few-public-methods
         ordered = True
+
+    # pylint: disable=simplifiable-if-expression
+    mlflow_uri = fields.Url(
+        metadata={
+            "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
+        },
+        required=False if config.DEFAULT_MLFLOW_URI else True,
+        load_default=config.DEFAULT_MLFLOW_URI or missing,
+        validate=validate.URL(schemes=["http", "https"], require_tld=False),
+    )
 
     model_uri = ModelURI(
         metadata={
@@ -92,6 +104,16 @@ class TrainArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
+    # pylint: disable=simplifiable-if-expression
+    mlflow_uri = fields.Url(
+        metadata={
+            "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
+        },
+        required=False if config.DEFAULT_MLFLOW_URI else True,
+        load_default=config.DEFAULT_MLFLOW_URI or missing,
+        validate=validate.URL(schemes=["http", "https"], require_tld=False),
+    )
+
     model_uri = ModelURI(
         metadata={
             "description": "Str 'models:/name/version' from MLFlow models.",
@@ -104,6 +126,15 @@ class TrainArgsSchema(marshmallow.Schema):
             "description": "Dataset name from metadata for training input.",
         },
         required=True,
+    )
+
+    experiment_id = fields.Integer(
+        metadata={
+            "description": "Experiment id where to store training metrics.",
+        },
+        required=False,
+        load_default=config.DEFAULT_EXPERIMENT_ID,
+        validate=validate.Range(min=1),
     )
 
     epochs = fields.Integer(
