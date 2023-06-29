@@ -11,13 +11,13 @@ import api
     description="Flow to train a MNIST model.",
     task_runner=SequentialTaskRunner(),
 )
-def main(model_uri, dataset):
-    train(model_uri, dataset)
+def main(mlflow_uri, model_uri, dataset, experiment_id=None, **options):
+    logger = prefect.get_run_logger()
+    result = train(mlflow_uri, model_uri, dataset, experiment_id, **options)
+    logger.debug("Training result: %s", result)
+    return result
 
 
 @prefect.task
-def train(model_uri, dataset, **options):
-    logger = prefect.get_run_logger()
-    result = api.train(model_uri, dataset, **options)
-    logger.debug("Response: %s", result)
-    return result
+def train(mlflow_uri, model_uri, dataset, experiment_id, **options):
+    return api.train(mlflow_uri, model_uri, dataset, experiment_id, **options)
