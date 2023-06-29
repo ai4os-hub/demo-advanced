@@ -46,10 +46,16 @@ folder.
 
 ## FLFlow Experiments and Models Registry
 
-Next step is to configure your experiments, training and the model registry.
 This example uses [MLFlow](https://mlflow.org/) to track and store models.
-In order to work correctly, you should configure the following environment
-variables:
+Users can use the API argument `mlflow_uri` to indicate the mlflow instance
+where they want to store their training metrics, models and artifacts.
+
+> TODO: Implement basic authorization on API methods to login into the MLFlow
+> server forwarding the username and password provided by the user.
+
+By default, the argument `mlflow_uri` is required, however, you can set up
+the following environment variables to define default values in case you want
+to provide your users with a public MLFlow server or experiments:
 
 - _MLFLOW_TRACKING_URI_ pointing to the MLflow server to use for storing models.
 - _MLFLOW_TRACKING_USERNAME_ username to use with HTTP Basic authentication on MLflow.
@@ -57,17 +63,18 @@ variables:
 - _MLFLOW_EXPERIMENT_NAME_ experiment identification to store trainings on MLflow.
 - _MLFLOW_EXPERIMENT_ID_ alternative to _MLFLOW_EXPERIMENT_NAME_ by on MLflow.
 
-You can use this by creating an `.env` loaded by your script or directly from
-the command line:
+We recommend to create an `.env` file from `.env.sample.` to load by your
+script. Additionally you can directly use the command line:
 
 ```bash
-export MLFLOW_TRACKING_USERNAME={your-mlflow-user}
+export MLFLOW_TRACKING_USERNAME={your-mlflow-username}
 export MLFLOW_TRACKING_PASSWORD={your-mlflow-password}
 export MLFLOW_TRACKING_URI=https://{your-mlflow-address}:{mlflow-port}
 export MLFLOW_EXPERIMENT_ID={your-mlflow-experiment-id}
 ```
 
-> Username and password are only required on MLFlow deployment protected by user and password.
+> Username and password are only required on MLFlow deployments protected by
+> user and password.
 
 ## Configure and run DEEPaaS
 
@@ -101,6 +108,23 @@ Model data configuration environment variables:
 - _LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
 - _IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
 
+## Flows and deployments
+
+This example uses [Prefect](https://docs.prefect.io/) to define and run flow
+processes to automate training, dataset updates and possible deployments of
+the model.
+
+> TODO: Add flow and deployment to update datasets from public repository.  
+> TODO: Add flow and deployment to deploy model on a public server.
+
+Flows are defined inside the `flows` folder. You can run them using the
+prefect CLI or from a prefect server deployment. For example, to run the
+training flow you can use the following commands:
+
+```bash
+$ prefect deploy --params={training-arguments} flows/training.py:main
+```
+
 ## Testing
 
 Testing process is automated by tox library. You can check the environments
@@ -118,12 +142,12 @@ Tests are performed by a remote model named `deepaas_full-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
 your MLFlow model registry and configure the environment variables to access
 it. Experiments can be tracked if you set a _MLFLOW_EXPERIMENT_NAME_ or
-_MLFLOW_EXPERIMENT_id_ however, leaving empty those variables will avoid the
-generation of experiment tracking on the MLFlow server.
+_MLFLOW_EXPERIMENT_ID_, leaving empty those variables prevents the generation
+of experiment tracking on the MLFlow server.
 
 > If tests fail with `Registered Model with name=deepaas_full-testing not found`
 > but you are sure that the model `deepaas_full-testing` exists in your MLFlow
-> registry, ensure your MLFlow environment is accessible at test run time.
+> registry, ensure your MLFlow environment is accessible at testing runtime.
 
 ## Project structure
 
@@ -150,8 +174,10 @@ folder should look approximately as follows:
 ├── deepaas.conf.sample     <- DEEPaaS configuration sample
 ├── deepaas_full            <- Package folder containing the model code
 ├── deepaas_full.egg-info   <- Pip build for package installation
+├── deployments             <- Folder with prefect deployment configurations 
 ├── dvc.lock                <- Data record and output state tracking (dvc)
 ├── dvc.yaml                <- Configuration and stages for dvc
+├── flows                   <- Folder with Prefect flows
 ├── pyproject.toml          <- Makes project installable (pip install -e .)
 ├── htmlcov                 <- Report from tox qc.cov environment
 ├── requirements-test.txt   <- Requirements file for testing the service
