@@ -35,8 +35,8 @@ def get_metadata():
             "version": config.MODEL_METADATA.get("version"),
             "public_datasets": utils.ls_datasets(),
         }
-        if config.DEFAULT_MLFLOW_URI:
-            metadata["public_mlflow"] = config.DEFAULT_MLFLOW_URI
+        if config.MLFLOW_TRACKING_URI:
+            metadata["public_mlflow"] = config.MLFLOW_TRACKING_URI
             metadata["public_models"] = utils.ls_models()
         logger.debug("Package model metadata: %s", metadata)
         return metadata

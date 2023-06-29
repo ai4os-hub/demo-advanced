@@ -15,7 +15,7 @@ class ModelURI(fields.String):
 
     def _deserialize(self, value, attr, data, **kwargs):
         try:  # add cache: https://github.com/mlflow/mlflow/issues/3123
-            mlflow_uri = data.get("mlflow_uri", config.DEFAULT_MLFLOW_URI)
+            mlflow_uri = data.get("mlflow_uri", config.MLFLOW_TRACKING_URI)
             mlflow.set_tracking_uri(mlflow_uri)
             mlflow.tensorflow.load_model(value)
             return value
@@ -49,8 +49,8 @@ class PredArgsSchema(marshmallow.Schema):
         metadata={
             "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
         },
-        required=False if config.DEFAULT_MLFLOW_URI else True,
-        load_default=config.DEFAULT_MLFLOW_URI or missing,
+        required=False if config.MLFLOW_TRACKING_URI else True,
+        load_default=config.MLFLOW_TRACKING_URI or missing,
         validate=validate.URL(schemes=["http", "https"], require_tld=False),
     )
 
@@ -109,8 +109,8 @@ class TrainArgsSchema(marshmallow.Schema):
         metadata={
             "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
         },
-        required=False if config.DEFAULT_MLFLOW_URI else True,
-        load_default=config.DEFAULT_MLFLOW_URI or missing,
+        required=False if config.MLFLOW_TRACKING_URI else True,
+        load_default=config.MLFLOW_TRACKING_URI or missing,
         validate=validate.URL(schemes=["http", "https"], require_tld=False),
     )
 
@@ -133,7 +133,7 @@ class TrainArgsSchema(marshmallow.Schema):
             "description": "Experiment id where to store training metrics.",
         },
         required=False,
-        load_default=config.DEFAULT_EXPERIMENT_ID,
+        load_default=config.MLFLOW_EXPERIMENT_ID,
         validate=validate.Range(min=1),
     )
 

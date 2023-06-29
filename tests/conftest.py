@@ -12,7 +12,7 @@ from api import config
 @pytest.fixture(scope="session", autouse=True)
 def check_mlflow_availability():
     """Fixture to skip tests if MLFlow is not available."""
-    if not config.DEFAULT_MLFLOW_URI:
+    if not config.MLFLOW_TRACKING_URI:
         pytest.skip("Undefined MLFLOW_TRACKING_URI env.")
 
 

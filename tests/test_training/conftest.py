@@ -55,5 +55,5 @@ def options(epochs, initial_epoch, shuffle, validation_split):
 @pytest.fixture(scope="module")
 def training(model_uri, dataset, options):
     """Fixture to perform and return training to assert properties."""
-    mlflow_uri = api.config.DEFAULT_MLFLOW_URI
+    mlflow_uri = api.config.MLFLOW_TRACKING_URI
     return api.train(mlflow_uri, model_uri, dataset, **options)
