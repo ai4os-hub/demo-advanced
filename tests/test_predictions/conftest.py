@@ -48,4 +48,5 @@ def options(batch_size, steps):
 @pytest.fixture(scope="module")
 def predictions(model_uri, input_file, accept, options):
     """Fixture to return predictions to assert properties."""
-    return api.predict(model_uri, input_file, accept, **options)
+    mlflow_uri = api.config.MLFLOW_TRACKING_URI
+    return api.predict(mlflow_uri, model_uri, input_file, accept, **options)

@@ -32,6 +32,22 @@
                 "PYTHONPATH": "${workspaceFolder}/data"
             },
         },
+        { // Training workflow debug
+            "name": "Python: Training workflow",
+            "type": "python",
+            "request": "launch",
+            "program": "flows/training.py",
+            "args": [
+                "models:/borja-MNIST/1",
+                "data/t10k-dataset.npz",
+            ],
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
         { // Current file debug
             "name": "Python: Current File",
             "type": "python",

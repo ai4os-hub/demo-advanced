@@ -1,0 +1,77 @@
+###
+### A complete description of a Prefect Deployment for flow 'MNIST-Training-Flow'
+###
+name: training
+description: Flow to train a MNIST model.
+version: a13506fb4491008ecd8aa10b0f16e003
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: default-agent-pool
+tags: []
+parameters:
+  {
+    "experiment_id": null,
+    "options":
+      {
+        "epochs": 1,
+        "initial_epoch": 0,
+        "steps_per_epoch": null,
+        "shuffle": true,
+        "validation_split": 0.0,
+        "validation_steps": null,
+        "validation_batch_size": null,
+        "validation_freq": 1,
+      },
+  }
+schedule: null
+is_schedule_active: true
+infra_overrides: {}
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: MNIST-Training-Flow
+manifest_path: null
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  _block_document_id: aa628e64-84bd-48f8-a0a2-9bd640d84c0f
+  _block_document_name: anonymous-e80a5e52-9ce9-43ef-bfaf-d088172b2d78
+  _is_anonymous: true
+  block_type_slug: process
+  _block_type_slug: process
+storage: null
+path: /home/borja/projects/deepaas_full
+entrypoint: flows/training.py:main
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    mlflow_uri:
+      title: mlflow_uri
+      position: 0
+    model_uri:
+      title: model_uri
+      position: 1
+    dataset:
+      title: dataset
+      position: 2
+    experiment_id:
+      title: experiment_id
+      position: 3
+    options:
+      title: options
+      position: 4
+  required:
+    - mlflow_uri
+    - model_uri
+    - dataset
+    - options
+  definitions: null
+timestamp: "2023-06-28T09:19:27.152830+00:00"
+triggers: []

@@ -1,0 +1,4 @@
+# DEEPaaS framework requirements
+jupyterlab
+dvc
+dvc-webdav
