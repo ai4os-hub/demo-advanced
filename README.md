@@ -3,7 +3,7 @@
 > TODO: Complete build status
 > [![Build Status]()]()
 
-## Download and Installation
+## Download, Installation and Requirements
 
 To launch it, first download the repository and install the package using pip.
 
@@ -123,6 +123,16 @@ training flow you can use the following commands:
 
 ```bash
 $ prefect deploy --params={training-arguments} flows/training.py:main
+```
+
+Note that in case you are running prefect CLI or server, you need to install
+and configure a database backend. For more information, check the Prefect
+docs [external-requirements](https://docs.prefect.io/2.10.18/getting-started/installation/#external-requirements).
+In case you are using `conda` you can install SQLite with the following
+command:
+
+```bash 
+$ conda install -c conda-forge sqlite
 ```
 
 ## Testing
