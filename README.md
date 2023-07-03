@@ -8,7 +8,7 @@
 To launch it, first download the repository and install the package using pip.
 
 ```bash
-git clone https://github.com/.../{repostory}  # Download repository
+git clone git@git.scc.kit.edu:m-team/ai/deepaas_full.git  # Download repository
 cd {repository}  # Navigate inside repository project
 pip install -e .  # Install repository project
 ```
