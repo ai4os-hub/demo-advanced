@@ -27,6 +27,7 @@ For a tutorial about how to use `dvc` you can use the guide at DVC:
 [Get Started: Data Management](https://dvc.org/doc/start/data-management).
 
 ```bash
+pip instal -r requirements-dev.txt
 dvc remote modify --local deep-cloud user {your-dvc-remote-user}
 dvc remote modify --local deep-cloud password {your-dvc-remote-password}
 dvc pull  # Download data from your dvc remote storage
