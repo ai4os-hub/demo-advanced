@@ -47,7 +47,7 @@ class PredArgsSchema(marshmallow.Schema):
     # pylint: disable=simplifiable-if-expression
     mlflow_uri = fields.Url(
         metadata={
-            "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
+            "description": "URI '[protocol]://[address]:[port]' to MLFlow instance.",
         },
         required=False if config.MLFLOW_TRACKING_URI else True,
         load_default=config.MLFLOW_TRACKING_URI or missing,
@@ -107,7 +107,7 @@ class TrainArgsSchema(marshmallow.Schema):
     # pylint: disable=simplifiable-if-expression
     mlflow_uri = fields.Url(
         metadata={
-            "description": "URI '[scheme]:[address][port]' to MLFlow instance.",
+            "description": "URI '[protocol]://[address]:[port]' to MLFlow instance.",
         },
         required=False if config.MLFLOW_TRACKING_URI else True,
         load_default=config.MLFLOW_TRACKING_URI or missing,
