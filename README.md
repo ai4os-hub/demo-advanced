@@ -3,12 +3,12 @@
 > TODO: Complete build status
 > [![Build Status]()]()
 
-## Download and Installation
+## Download, Installation and Requirements
 
 To launch it, first download the repository and install the package using pip.
 
 ```bash
-git clone https://github.com/.../{repostory}  # Download repository
+git clone git@git.scc.kit.edu:m-team/ai/deepaas_full.git  # Download repository
 cd {repository}  # Navigate inside repository project
 pip install -e .  # Install repository project
 ```
@@ -27,6 +27,7 @@ For a tutorial about how to use `dvc` you can use the guide at DVC:
 [Get Started: Data Management](https://dvc.org/doc/start/data-management).
 
 ```bash
+pip instal -r requirements-dev.txt
 dvc remote modify --local deep-cloud user {your-dvc-remote-user}
 dvc remote modify --local deep-cloud password {your-dvc-remote-password}
 dvc pull  # Download data from your dvc remote storage
@@ -123,6 +124,16 @@ training flow you can use the following commands:
 
 ```bash
 $ prefect deploy --params={training-arguments} flows/training.py:main
+```
+
+Note that in case you are running prefect CLI or server, you need to install
+and configure a database backend. For more information, check the Prefect
+docs [external-requirements](https://docs.prefect.io/2.10.18/getting-started/installation/#external-requirements).
+In case you are using `conda` you can install SQLite with the following
+command:
+
+```bash 
+$ conda install -c conda-forge sqlite
 ```
 
 ## Testing
