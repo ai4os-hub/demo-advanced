@@ -1,7 +1,8 @@
-# DEEPaaS Full Template
+![qc.sec](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-sec.yml/badge.svg)
+![qc.sty](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-sty.yml/badge.svg)
+![qc.uni](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-uni.yml/badge.svg)
 
-> TODO: Complete build status
-> [![Build Status]()]()
+# DEEPaaS Full Template
 
 ## Download, Installation and Requirements
 
