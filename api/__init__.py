@@ -11,7 +11,7 @@ import logging
 import mlflow
 from aiohttp.web import HTTPException
 
-import deepaas_full
+import deepaas_full as aimodel
 
 from . import config, parsers, schemas, utils
 
@@ -72,7 +72,7 @@ def predict(mlflow_uri, model_uri, input_file, accept, **options):
         model = mlflow.tensorflow.load_model(model_uri)
         logger.debug("Predictions from input_file: %s", input_file)
         logger.debug("Using options: %s", options)
-        result = deepaas_full.predict(model, input_file.filename, **options)
+        result = aimodel.predict(model, input_file.filename, **options)
         logger.debug("Using parser for: %s", accept)
         return parsers.response_parsers[accept](result)
     except Exception as err:
@@ -116,7 +116,7 @@ def train(mlflow_uri, model_uri, dataset, experiment_id=None, **options):
         logger.debug("Using options: %s", options)
         with mlflow.start_run(None, experiment_id, nested=False) as run:
             mlflow.tensorflow.autolog()
-            deepaas_full.training(model, dataset, **options)
+            aimodel.training(model, dataset, **options)
         return dict(mlflow.get_run(run.info.run_id).info)
     except Exception as err:
         raise HTTPException(reason=err) from err
