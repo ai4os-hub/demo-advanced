@@ -16,3 +16,8 @@ test set.
 
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials
 and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
+
+## Generate dataset
+```bash
+$ python -m deepaas_full.data.make_dataset -o file_name images.gz labels.gz
+```

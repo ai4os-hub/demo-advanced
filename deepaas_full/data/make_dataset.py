@@ -10,9 +10,7 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-LOGGER_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-LABEL_DIMENSIONS = 10
-IMAGES_SHAPE = (-1, 28, 28)
+from deepaas_full import config
 
 logger = logging.getLogger(__name__)
 
@@ -52,21 +50,21 @@ parser.add_argument(
 # Script command actions --------------------------------------------
 def _run_command(images_file, labels_file, **options):
     # Common operations
-    logging.basicConfig(format=LOGGER_FORMAT, level=options["verbosity"])
+    logging.basicConfig(level=options["verbosity"])
     logger.info("Processing MNIST images at %s", options["output"])
 
     # Load images file from gz images_file
     logger.debug("Loading MNIST images from file %s", images_file)
     with gzip.open(images_file, "rb") as file:
         images = np.frombuffer(file.read(), np.uint8, offset=16)
-        images = images.reshape(*IMAGES_SHAPE)
-    images = images / 255
+        images = images.reshape(-1, *config.IMAGES_SHAPE)
+    images = images / 255.0
 
     # Load labels file from gz labels_file
     logger.debug("Loading MNIST labels from file %s", labels_file)
     with gzip.open(labels_file, "rb") as file:
         labels = np.frombuffer(file.read(), np.uint8, offset=8)
-    labels = tf.keras.utils.to_categorical(labels, LABEL_DIMENSIONS)
+    labels = tf.keras.utils.to_categorical(labels, config.LABEL_DIMENSIONS)
 
     # Merge and save data in output file
     logger.debug("Saving MNIST pre-process output at %s", options["output"])
