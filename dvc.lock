@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   preprocess_t10k:
-    cmd: python data/transform_data.py -o data/t10k-dataset data/raw/t10k-images-idx3-ubyte.gz
+    cmd: python data/transform_data.py -o data/processed/t10k-dataset data/raw/t10k-images-idx3-ubyte.gz
       data/raw/t10k-labels-idx1-ubyte.gz
     deps:
     - path: data/raw/t10k-images-idx3-ubyte.gz
@@ -14,11 +14,11 @@ stages:
       md5: 4aa880d6614b283ca8a6f0b9316fecdf
       size: 2613
     outs:
-    - path: data/t10k-dataset.npz
+    - path: data/processed/t10k-dataset.npz
       md5: 62b0c8976dd11064e62b9510cfdd81e6
       size: 63120510
   preprocess_train:
-    cmd: python data/transform_data.py -o data/train-dataset data/raw/train-images-idx3-ubyte.gz
+    cmd: python data/transform_data.py -o data/processed/train-dataset data/raw/train-images-idx3-ubyte.gz
       data/raw/train-labels-idx1-ubyte.gz
     deps:
     - path: data/raw/train-images-idx3-ubyte.gz
@@ -31,6 +31,6 @@ stages:
       md5: 4aa880d6614b283ca8a6f0b9316fecdf
       size: 2613
     outs:
-    - path: data/train-dataset.npz
+    - path: data/processed/train-dataset.npz
       md5: 5b30a138185612842e056cef1269dcda
       size: 378720510

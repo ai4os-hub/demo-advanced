@@ -1,18 +1,18 @@
 stages:
   preprocess_t10k:
-    cmd: python data/transform_data.py -o data/t10k-dataset data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
+    cmd: python data/transform_data.py -o data/processed/t10k-dataset data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
     deps:
     - data/raw/t10k-images-idx3-ubyte.gz
     - data/raw/t10k-labels-idx1-ubyte.gz
     - data/transform_data.py
     outs:
-    - data/t10k-dataset.npz
+    - data/processed/t10k-dataset.npz
   preprocess_train:
-    cmd: python data/transform_data.py -o data/train-dataset data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
+    cmd: python data/transform_data.py -o data/processed/train-dataset data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
     deps:
     - data/raw/train-images-idx3-ubyte.gz
     - data/raw/train-labels-idx1-ubyte.gz
     - data/transform_data.py
     outs:
-    - data/train-dataset.npz
+    - data/processed/train-dataset.npz
   
