@@ -54,20 +54,20 @@ def _run_command(images_file, labels_file, **options):
     logger.info("Processing MNIST images at %s", options["output"])
 
     # Load images file from gz images_file
-    logger.debug("Loading MNIST images from file %s", images_file)
+    logger.info("Loading MNIST images from file %s", images_file)
     with gzip.open(images_file, "rb") as file:
         images = np.frombuffer(file.read(), np.uint8, offset=16)
         images = images.reshape(-1, *config.IMAGES_SHAPE)
     images = images / 255.0
 
     # Load labels file from gz labels_file
-    logger.debug("Loading MNIST labels from file %s", labels_file)
+    logger.info("Loading MNIST labels from file %s", labels_file)
     with gzip.open(labels_file, "rb") as file:
         labels = np.frombuffer(file.read(), np.uint8, offset=8)
     labels = tf.keras.utils.to_categorical(labels, config.LABEL_DIMENSIONS)
 
     # Merge and save data in output file
-    logger.debug("Saving MNIST pre-process output at %s", options["output"])
+    logger.info("Saving MNIST pre-process output at %s", options["output"])
     np.savez(options["output"], images=images, labels=labels)
 
     # End of program
