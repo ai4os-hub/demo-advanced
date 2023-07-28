@@ -17,10 +17,10 @@
             },
         },
         { // Data pre processing debug
-            "name": "Python: data.make_dataset",
+            "name": "Python: data.make_convolution",
             "type": "python",
             "request": "launch",
-            "module": "deepaas_full.data.make_dataset",
+            "module": "deepaas_full.data.make_convolution",
             "args": [
                 "--output=debugging_data.npz",
                 "--verbosity=DEBUG",
@@ -32,16 +32,46 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
-        { // Model creation convolution debug
-            "name": "Python: models.mnist_convolution",
+        { // Model creation autoencoder debug
+            "name": "Python: models.make_autoencoder",
             "type": "python",
             "request": "launch",
-            "module": "deepaas_full.models.mnist_convolution",
+            "module": "deepaas_full.models.make_autoencoder",
             "args": [
-                "--name=model_convolution",
+                "--name=autoencoder_64",
+                "--verbosity=DEBUG",
+                "--latent_dim=64",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Model creation convolution debug
+            "name": "Python: models.make_convolution",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.models.make_convolution",
+            "args": [
+                "--name=debug_model",
                 "--verbosity=DEBUG",
                 "--dropout_factor=0.4",
                 "--learning_rate=1e-2",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Convolution model training debug
+            "name": "Python: models.train_model",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.models.train_model",
+            "args": [
+                "--verbosity=DEBUG",
+                "debug_model",
+                "data/processed/t10k-convolution.npz",
             ],
             "justMyCode": true,
             "env": {

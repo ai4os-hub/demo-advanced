@@ -9,14 +9,13 @@ import mlflow
 import numpy as np
 import tensorflow as tf
 from keras import layers
-from mlflow import MlflowClient
 from mlflow.models import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
 
 from deepaas_full import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = MlflowClient()
+mlflow_client = mlflow.MlflowClient()
 
 
 # Type validators ---------------------------------------------------
@@ -74,9 +73,10 @@ parser.add_argument(
 def _run_command(name, **options):
     # Common operations
     logging.basicConfig(level=options["verbosity"])
-    logger.info("Generating MNIST convolution Model as %s", name)
+    logger.debug("Generating MNIST convolution Model as %s", name)
 
     # Generation of the model from command inputs
+    logger.info("Generating MNIST convolution model from configuration")
     model = tf.keras.Sequential(
         [
             tf.keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
@@ -89,7 +89,7 @@ def _run_command(name, **options):
             layers.Dense(config.LABEL_DIMENSIONS, activation="softmax"),
         ]
     )
-    logger.info("Model generated: %s", model.summary())
+    logger.debug("Model generated: %s", model.summary())
 
     # Set model optimizer, loss and metrics
     logger.info("Compile with learning_rate : %s", options["learning_rate"])
@@ -100,17 +100,20 @@ def _run_command(name, **options):
     )
 
     # Create mlflow signature
+    logger.info("Generating model signature for mlflow")
     input_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
     input_schema = Schema([TensorSpec(np.dtype(np.float64), input_shape)])
     output_shape = (-1, config.LABEL_DIMENSIONS)
     output_schema = Schema([TensorSpec(np.dtype(np.float32), output_shape)])
     signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+    logger.debug("Signature generated: %s", signature)
 
     # Saving model experiment to mlflow experiments
     logger.info("Saving model in mlflow experiments.")
     with mlflow.start_run():
         info = mlflow.tensorflow.log_model(model, "model", signature=signature)
     mlflow.register_model(info.model_uri, name)
+    logger.debug("Model saved with details: %s", info)
 
     # End of program
     logger.info("End of MNIST model creation script")

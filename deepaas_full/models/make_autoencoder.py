@@ -1,6 +1,7 @@
 """Script to generate MNIST data encoder to reduce dimensionality of input
 data.
 """
+# pylint: disable=invalid-name
 import argparse
 import logging
 import sys
@@ -9,14 +10,14 @@ import mlflow
 import numpy as np
 import tensorflow as tf
 from keras import layers
-from mlflow import MlflowClient
 from mlflow.models import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
+from tensorflow import keras
 
 from deepaas_full import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = MlflowClient()
+mlflow_client = mlflow.MlflowClient()
 
 
 # Type validators ---------------------------------------------------
@@ -60,42 +61,50 @@ parser.add_argument(
 def _run_command(name, **options):
     # Common operations
     logging.basicConfig(level=options["verbosity"])
-    logger.info("Generating MNIST encoder Model as %s", name)
+    logger.debug("Generating MNIST encoder Model as %s", name)
 
-    # Generation of the model from command inputs
-    encoder = tf.keras.Sequential(
-        [
-            layers.Flatten(input_shape=(config.IMAGE_SIZE, config.IMAGE_SIZE)),
-            layers.Dense(options["latent_dim"], activation="relu"),
-        ]
-    )
-    logger.info("Encoder generated: %s", encoder.summary())
+    # Generation of the encoder input for images
+    logger.info("Generating MNIST autoencoder size %s", config.IMAGE_SIZE)
+    input_img = keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1))
+
+    # Generation of encoder
+    logger.info("Generating MNIST encoder from configuration")
+    x = layers.Flatten()(input_img)
+    encoder = layers.Dense(options["latent_dim"], activation="relu")(x)
+
+    # Generation of decoder
+    logger.info("Generating MNIST decoder from configuration")
+    x = layers.Dense(config.IMAGE_SIZE**2, activation="sigmoid")(encoder)
+    decoder = layers.Reshape(config.IMAGES_SHAPE)(x)
+
+    # Generation of autoencoder
+    logger.info("Merging MNIST encoder and decoder into autoencoder")
+    model = keras.Model(input_img, decoder)
+    logger.debug("Autoencoder generated: %s", model.summary())
 
     # Set model optimizer, loss and metrics
     logger.info("Compile using Adam optimizer and MeanAbsoluteError loss.")
-    encoder.compile(
-        optimizer=tf.keras.optimizers.Adam(),
-        loss=tf.keras.losses.MeanAbsoluteError(),
-    )
+    optimizer = tf.keras.optimizers.Adam()
+    loss = tf.keras.losses.MeanAbsoluteError()
+    model.compile(optimizer, loss)
 
-    # Create mlflow signature
-    input_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
-    input_schema = Schema([TensorSpec(np.dtype(np.float64), input_shape)])
-    output_shape = (-1, options["latent_dim"])
-    output_schema = Schema([TensorSpec(np.dtype(np.float32), output_shape)])
-    signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+    # Create mlflow autoencoder signature
+    logger.info("Generating autoencoder signature for mlflow")
+    io_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
+    input_schema = Schema([TensorSpec(np.dtype(np.float64), io_shape)])
+    output_schema = Schema([TensorSpec(np.dtype(np.float32), io_shape)])
+    signature = ModelSignature(input_schema, output_schema)
+    logger.debug("Signature generated: %s", signature)
 
     # Saving model experiment to mlflow experiments
-    logger.info("Saving model in mlflow experiments.")
+    logger.info("Saving autoencoder in mlflow experiments.")
     with mlflow.start_run():
-        i = mlflow.tensorflow.log_model(encoder, "model", signature=signature)
-    mlflow.register_model(i.model_uri, name)
-
-    logger.info("Creating encoder %s in mlflow model registry", name)
-    mlflow_client.create_registered_model(name)
+        info = mlflow.tensorflow.log_model(model, "model", signature=signature)
+    mlflow.register_model(info.model_uri, name)
+    logger.debug("Autoencoder saved with details: %s", info)
 
     # End of program
-    logger.info("End of MNIST encoder creation script")
+    logger.info("End of MNIST autoencoder creation script")
 
 
 # Main call ---------------------------------------------------------
