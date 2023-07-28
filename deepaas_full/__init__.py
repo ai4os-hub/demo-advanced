@@ -35,7 +35,7 @@ def create_model(dropout_factor=0.5):
     """
     model = tf.keras.Sequential(
         [
-            tf.keras.Input(shape=config.INPUT_SHAPE),
+            tf.keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
             layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
             layers.MaxPooling2D(pool_size=(2, 2)),
             layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
