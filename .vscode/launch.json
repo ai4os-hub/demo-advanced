@@ -39,8 +39,25 @@
             "module": "deepaas_full.models.mnist_convolution",
             "args": [
                 "--name=model_convolution",
+                "--verbosity=DEBUG",
                 "--dropout_factor=0.4",
                 "--learning_rate=1e-2",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Visualisation of MNIST raw data debug
+            "name": "Python: visualization.raw_samples",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.visualization.raw_samples",
+            "args": [
+                "--images=10",
+                "--verbosity=DEBUG",
+                "data/raw/t10k-images-idx3-ubyte.gz",
+                "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
             "justMyCode": true,
             "env": {
