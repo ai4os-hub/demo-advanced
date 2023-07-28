@@ -17,10 +17,10 @@
             },
         },
         { // Data pre processing debug
-            "name": "Python: Preprocess data",
+            "name": "Python: data.make_dataset",
             "type": "python",
             "request": "launch",
-            "module": "transform_data",
+            "module": "deepaas_full.data.make_dataset",
             "args": [
                 "--output=debugging_data.npz",
                 "--verbosity=DEBUG",
@@ -29,7 +29,22 @@
             ],
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/data"
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Model creation convolution debug
+            "name": "Python: models.mnist_convolution",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.models.mnist_convolution",
+            "args": [
+                "--name=model_convolution",
+                "--dropout_factor=0.4",
+                "--learning_rate=1e-2",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
             },
         },
         { // Training workflow debug
