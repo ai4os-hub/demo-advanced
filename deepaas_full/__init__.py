@@ -15,69 +15,57 @@ test set.
 Based on "Deep learning on MNIST" at https://github.com/numpy/numpy-tutorials
 and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 """
+import logging
+
+import mlflow
 import numpy as np
-import tensorflow as tf
-from keras import layers
 
-from deepaas_full import config
+logger = logging.getLogger(__name__)
 
 
-def create_model(dropout_factor=0.5):
-    """Creates a new MNIST model ready for training. The model is composed
-    by multiple convolution layers with flatten and dropout before the last
-    layer. It uses a `relu` activation function on the hidden layers.
-
-    Keyword Arguments:
-        dropout_factor -- Dropout after hidden layer (default: {0.5})
-
-    Returns:
-        Tensorflow MNIST model ready for training.
-    """
-    model = tf.keras.Sequential(
-        [
-            tf.keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
-            layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Flatten(),
-            layers.Dropout(dropout_factor),
-            layers.Dense(config.LABEL_DIMENSIONS, activation="softmax"),
-        ]
-    )
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
-        loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False),
-        metrics=[tf.keras.metrics.CategoricalAccuracy()],
-    )
-    return model
-
-
-def predict(model, input_data, **options):
+def predict(input_file, model_name, version="production", **options):
     """Performs predictions on data using a MNIST model.
 
     Arguments:
-        model -- Tensorflow/Keras model to use for predictions.
-        input_data -- NPZ file with images equivalent to MNIST data.
+        input_file -- NPY file with images equivalent to MNIST data.
+        model_name -- MLFlow model name to use for predictions.
+        version -- MLFLow model version to use for predictions.
         options -- See tensorflow/keras predict documentation.
 
     Returns:
         Return value from tf/keras model predict.
     """
-    predict_data = np.load(input_data)
-    return model.predict(predict_data, verbose="auto", **options)
+    logger.debug("Using model %s for predictions", model_name)
+    model_uri = f"models:/{model_name}/{version}"
+    logger.debug("Loading model from uri: %s", model_uri)
+    model = mlflow.tensorflow.load_model(model_uri)
+    logger.debug("Loading data from input_file: %s", input_file)
+    input_data = np.load(input_file)
+    logger.debug("Predict with options: %s", options)
+    return model.predict(input_data, verbose="auto", **options)
 
 
-def training(model, input_data, **options):
+def training(input_file, model_name, version="production", **options):
     """Performs training on a model from raw MNIST input and target data.
 
     Arguments:
-        model -- Tensorflow/Keras model to train with data.
-        input_data -- NPZ file with training images and labels.
+        input_file -- NPZ file with training images and labels.
+        model_name -- MLFlow model name to use for predictions.
+        version -- MLFLow model version to use for predictions.
         options -- See tensorflow/keras fit documentation.
 
     Returns:
         Return value from tf/keras model fit.
     """
-    train_data = np.load(input_data).values()
-    return model.fit(*train_data, verbose="auto", **options)
+    logger.debug("Using model %s for training", model_name)
+    model_uri = f"models:/{model_name}/{version}"
+    logger.debug("Loading model from uri: %s", model_uri)
+    model = mlflow.tensorflow.load_model(model_uri)
+    logger.debug("Loading data from input_file: %s", input_file)
+    with np.load(input_file) as input_data:
+        train_data = input_data["x_train"], input_data["y_train"]
+    logger.debug("Training with options: %s", options)
+    with mlflow.start_run(run_name=model_name, nested=False) as run:
+        mlflow.tensorflow.autolog()
+        model.fit(*train_data, verbose="uto", **options)
+    return {"run_id": run.info.run_id}

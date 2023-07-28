@@ -1,28 +1,9 @@
 """Module for defining custom web fields to use on the API interface.
 """
 import marshmallow
-import mlflow
-from webargs import ValidationError, fields, validate, missing
+from webargs import ValidationError, fields, validate
 
 from . import config, parsers, utils
-
-
-class ModelURI(fields.String):
-    """Field that takes a string and validates against the available models
-    at the MLFlow instance connected. ModelNameVersion requires the format
-    'models:/{model_name}/{version}' to find it at  the MLFlow registry.
-    """
-
-    def _deserialize(self, value, attr, data, **kwargs):
-        try:  # add cache: https://github.com/mlflow/mlflow/issues/3123
-            mlflow_uri = data.get("mlflow_uri", config.MLFLOW_TRACKING_URI)
-            mlflow.set_tracking_uri(mlflow_uri)
-            mlflow.tensorflow.load_model(value)
-            return value
-        except mlflow.MlflowException as err:
-            raise ValidationError(err.message) from err
-        except OSError as err:
-            raise ValidationError(f"Wrong mlflow model uri {value}") from err
 
 
 class Dataset(fields.String):
@@ -44,30 +25,28 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    # pylint: disable=simplifiable-if-expression
-    mlflow_uri = fields.Url(
-        metadata={
-            "description": "URI '[protocol]://[address]:[port]' to MLFlow instance.",
-        },
-        required=False if config.MLFLOW_TRACKING_URI else True,
-        load_default=config.MLFLOW_TRACKING_URI or missing,
-        validate=validate.URL(schemes=["http", "https"], require_tld=False),
-    )
-
-    model_uri = ModelURI(
-        metadata={
-            "description": "String 'models:/name/version' from MLFlow models.",
-        },
-        required=True,
-    )
-
     input_file = fields.Field(
         metadata={
-            "description": "NPY file with images data for predictions.",
+            "description": "NPY file with np.arrays for predictions.",
             "type": "file",
             "location": "form",
         },
         required=True,
+    )
+
+    model_name = fields.String(
+        metadata={
+            "description": "String identification for MLFlow models.",
+        },
+        required=True,
+    )
+
+    version = fields.String(
+        metadata={
+            "description": "Model version for model in model_name.",
+        },
+        required=False,
+        validate=validate.Range(min=1),
     )
 
     batch_size = fields.Integer(
@@ -105,36 +84,26 @@ class TrainArgsSchema(marshmallow.Schema):
         ordered = True
 
     # pylint: disable=simplifiable-if-expression
-    mlflow_uri = fields.Url(
-        metadata={
-            "description": "URI '[protocol]://[address]:[port]' to MLFlow instance.",
-        },
-        required=False if config.MLFLOW_TRACKING_URI else True,
-        load_default=config.MLFLOW_TRACKING_URI or missing,
-        validate=validate.URL(schemes=["http", "https"], require_tld=False),
-    )
 
-    model_uri = ModelURI(
-        metadata={
-            "description": "Str 'models:/name/version' from MLFlow models.",
-        },
-        required=True,
-    )
-
-    dataset = Dataset(
+    input_file = Dataset(
         metadata={
             "description": "Dataset name from metadata for training input.",
         },
         required=True,
     )
 
-    experiment_id = fields.Integer(
+    model_name = fields.String(
         metadata={
-            "description": "Experiment id where to store training metrics.",
+            "description": "String identification for MLFlow models.",
+        },
+        required=True,
+    )
+
+    version = fields.String(
+        metadata={
+            "description": "Model version for model in model_name.",
         },
         required=False,
-        load_default=config.MLFLOW_EXPERIMENT_ID,
-        validate=validate.Range(min=1),
     )
 
     epochs = fields.Integer(
@@ -203,4 +172,13 @@ class TrainArgsSchema(marshmallow.Schema):
         required=False,
         load_default=1,
         validate=validate.Range(min=1),
+    )
+
+    accept = fields.String(
+        metadata={
+            "description": "Return format for method response.",
+            "location": "headers",
+        },
+        required=True,
+        validate=validate.OneOf(parsers.content_types),
     )
