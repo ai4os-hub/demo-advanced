@@ -51,7 +51,7 @@ parser.add_argument(
 def _run_command(images_file, labels_file, **options):
     # Common operations
     logging.basicConfig(level=options["verbosity"])
-    logger.info("Processing MNIST images at %s", options["output"])
+    logger.debug("Processing MNIST images at %s", options["output"])
 
     # Load images file from gz images_file
     logger.info("Loading MNIST images from file %s", images_file)
@@ -68,7 +68,7 @@ def _run_command(images_file, labels_file, **options):
 
     # Merge and save data in output file
     logger.info("Saving MNIST pre-process output at %s", options["output"])
-    np.savez(options["output"], images=images, labels=labels)
+    np.savez(options["output"], x_train=images, y_train=labels)
 
     # End of program
     logger.info("End of MNIST image processing script")
