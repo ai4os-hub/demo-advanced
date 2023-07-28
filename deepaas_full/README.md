@@ -19,10 +19,15 @@ and "Tensorflow tutorials" https://www.tensorflow.org/tutorials/keras.
 
 ## Generate dataset
 ```bash
-$ python -m deepaas_full.data.make_dataset -o file_name images.gz labels.gz
+$ python -m deepaas_full.data.make_convolution -o file_name images.gz labels.gz
 ```
 
 ## Create models
 ```bash
 $ python -m deepaas_full.models.mnist_convolution -n model_1 --learning_rate 1e-4
+```
+
+## Visualize data
+```bash
+$ python -m deepaas_full.visualization.plot_samples -i=5
 ```
