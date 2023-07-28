@@ -4,8 +4,10 @@
     },
     "python.formatting.provider": "none",
     "cSpell.words": [
+        "aimodel",
         "aiohttp",
         "arange",
+        "autoencoder",
         "autolog",
         "backpropagation",
         "ckpt",
