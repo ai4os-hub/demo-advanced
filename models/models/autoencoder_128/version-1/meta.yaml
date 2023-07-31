@@ -1,0 +1,13 @@
+aliases: []
+creation_timestamp: 1690782685450
+current_stage: None
+description: null
+last_updated_timestamp: 1690782685450
+name: autoencoder_128
+run_id: 3ffd5d765267426c8370e82610fe51fb
+run_link: null
+source: /home/borja/projects/deepaas_full/models/0/3ffd5d765267426c8370e82610fe51fb/artifacts/model
+status: READY
+status_message: null
+user_id: null
+version: 1

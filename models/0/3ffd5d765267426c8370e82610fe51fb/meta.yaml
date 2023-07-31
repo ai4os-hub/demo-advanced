@@ -1,0 +1,15 @@
+artifact_uri: /home/borja/projects/deepaas_full/models/0/3ffd5d765267426c8370e82610fe51fb/artifacts
+end_time: 1690782685438
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3ffd5d765267426c8370e82610fe51fb
+run_name: treasured-crow-80
+run_uuid: 3ffd5d765267426c8370e82610fe51fb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1690782681986
+status: 3
+tags: []
+user_id: borja

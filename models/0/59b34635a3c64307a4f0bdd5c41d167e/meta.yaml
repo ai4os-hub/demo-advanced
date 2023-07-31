@@ -1,0 +1,15 @@
+artifact_uri: /home/borja/projects/deepaas_full/models/0/59b34635a3c64307a4f0bdd5c41d167e/artifacts
+end_time: 1690782661534
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 59b34635a3c64307a4f0bdd5c41d167e
+run_name: skittish-conch-167
+run_uuid: 59b34635a3c64307a4f0bdd5c41d167e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1690782658048
+status: 3
+tags: []
+user_id: borja
