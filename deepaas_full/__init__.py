@@ -20,6 +20,9 @@ import logging
 import mlflow
 import numpy as np
 
+# Configuration is mandatory to execute when running package scripts
+from deepaas_full import config
+
 logger = logging.getLogger(__name__)
 
 
