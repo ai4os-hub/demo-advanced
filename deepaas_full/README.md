@@ -29,7 +29,7 @@ $ python -m deepaas_full.models.mnist_convolution -n model_1 --learning_rate 1e-
 
 ## Set model to production
 ```bash
-$ python -m deepaas_full.models.set_stage --stage=Production model_1 --version=1
+$ python -m deepaas_full.models.set_stage --production model_1 --version=1
 ```
 
 ## Visualize data

@@ -34,6 +34,22 @@ parser.add_argument(
     choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
     default="INFO",
 )
+stage = parser.add_mutually_exclusive_group()
+stage.add_argument(
+    *["--production"],
+    help="Sets model version to production (default option).",
+    dest="stage",
+    action="store_const",
+    const="Production",
+    default="Production",
+)
+stage.add_argument(
+    *["--staging"],
+    help="Sets model version to staging.",
+    dest="stage",
+    action="store_const",
+    const="Staging",
+)
 parser.add_argument(
     *["model_name"],
     help="Model name to use for identification on mlflow registry.",
@@ -43,13 +59,6 @@ parser.add_argument(
     *["--version"],
     help="Model version to stage, latest version is collected if not defined",
     type=version,
-)
-parser.add_argument(
-    *["--stage"],
-    help="Stage version to set for model version (default: %(default)s).",
-    type=str,
-    choices=["Staging", "Production"],
-    default="Production",
 )
 
 
@@ -64,7 +73,7 @@ def _run_command(model_name, version=None, **options):
         logger.info("Collecting latest model version")
         versions = mlflow_client.get_latest_versions(model_name)
         logger.debug("Versions: %s", versions)
-        version = versions[0].version
+        version = max(x.version for x in versions)
 
     # Setting model version in staging or production
     logger.info("Setting version %s to stage %s", version, options["stage"])
