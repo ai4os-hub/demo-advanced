@@ -38,7 +38,7 @@
             "request": "launch",
             "module": "deepaas_full.models.make_autoencoder",
             "args": [
-                "--name=autoencoder_64",
+                "--name=debug_autoencoder",
                 "--verbosity=DEBUG",
                 "--latent_dim=64",
             ],
@@ -63,7 +63,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
-        { // Convolution model training debug
+        { //  Model training debug
             "name": "Python: models.train_model",
             "type": "python",
             "request": "launch",
@@ -71,6 +71,8 @@
             "args": [
                 "--verbosity=DEBUG",
                 "debug_model",
+                "--version=1",
+                "--version=Stage",
                 "data/processed/t10k-convolution.npz",
             ],
             "justMyCode": true,
@@ -78,11 +80,28 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
-        { // Visualisation of MNIST raw data debug
-            "name": "Python: visualization.raw_samples",
+        { // Visualisation of MNIST encoded data debug
+            "name": "Python: visualization.plot_encoding",
             "type": "python",
             "request": "launch",
-            "module": "deepaas_full.visualization.raw_samples",
+            "module": "deepaas_full.visualization.plot_encoding",
+            "args": [
+                "--images=10",
+                "--verbosity=DEBUG",
+                "debug_autoencoder",
+                "--version=Stage",
+                "data/raw/t10k-images-idx3-ubyte.gz",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Visualisation of MNIST raw data debug
+            "name": "Python: visualization.plot_samples",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.visualization.plot_samples",
             "args": [
                 "--images=10",
                 "--verbosity=DEBUG",
