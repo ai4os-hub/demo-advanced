@@ -16,6 +16,19 @@ from deepaas_full import config
 logger = logging.getLogger(__name__)
 
 
+# Type validators ---------------------------------------------------
+def version(string_value):
+    """Validator converter for version values and/or digits."""
+    if string_value in ["Staging", "Production"]:
+        return string_value
+    if not string_value.isdigit():
+        raise ValueError("Version must be int, 'Staging' or 'Production'")
+    value = int(string_value)
+    if value <= 0:
+        raise ValueError("Version number must be greater than 0")
+    return value
+
+
 # Script arguments definition ---------------------------------------
 parser = argparse.ArgumentParser(
     prog="PROG",
@@ -40,6 +53,12 @@ parser.add_argument(
     *["model_name"],
     help="Autoencoder name to use for identification on mlflow registry.",
     type=str,
+)
+parser.add_argument(
+    *["--version"],
+    help="Model version for model in model_name (default: %(default)s).",
+    type=version,
+    default="Production",
 )
 parser.add_argument(
     *["images_file"],
