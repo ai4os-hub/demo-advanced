@@ -98,7 +98,7 @@ def _run_command(model_name, images_file, labels_file, **options):
     model = mlflow.tensorflow.load_model(model_uri)
 
     # Load encoder from mlflow registry if defined
-    if "encoder" in options:
+    if options["encoder"] is not None:
         logger.info("Loading encoder %s from registry", options["encoder"])
         encoder_uri = f"models:/{options['encoder']}/Production"
         logger.debug("Using model uri %s for encoding", encoder_uri)
@@ -148,7 +148,7 @@ def _run_command(model_name, images_file, labels_file, **options):
 
     # Display plot using tight layout
     plt.setp(axes, xticks=[], yticks=[])
-    # plt.tight_layout()
+    plt.tight_layout()
     plt.show()
 
     # End of program
