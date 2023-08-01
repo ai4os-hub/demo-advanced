@@ -139,12 +139,13 @@ def _run_command(model_name, images_file, labels_file, **options):
 
     # Generate plot using random images
     logger.info("Generating plot with random MNIST image indexes")
-    fig, axes = plt.subplots(nrows=options["images"], ncols=3)
+    ncols = 3 if encoder else 2
+    fig, axes = plt.subplots(options["images"], ncols)
     for row, raw, inp, out, lab in zip(axes, images, inputs, outputs, labels):
         row[0].imshow(raw, cmap="gray")
         if encoder:
             row[1].imshow((inp,), cmap="gray")
-        row[2].imshow((out, lab), cmap="gray")
+        row[-1].imshow((out, lab), cmap="gray")
 
     # Display plot using tight layout
     plt.setp(axes, xticks=[], yticks=[])
