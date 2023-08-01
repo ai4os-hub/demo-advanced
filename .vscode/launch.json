@@ -16,7 +16,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
-        { // Data pre processing debug
+        { // Convolution data pre-precessing debug
             "name": "Python: data.make_convolution",
             "type": "python",
             "request": "launch",
@@ -24,6 +24,23 @@
             "args": [
                 "--output=debugging_data.npz",
                 "--verbosity=DEBUG",
+                "data/raw/t10k-images-idx3-ubyte.gz",
+                "data/raw/t10k-labels-idx1-ubyte.gz",
+            ],
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
+        { // Encoded data pre-precessing debug
+            "name": "Python: data.make_encoded",
+            "type": "python",
+            "request": "launch",
+            "module": "deepaas_full.data.make_encoded",
+            "args": [
+                "--output=debugging_data.npz",
+                "--verbosity=DEBUG",
+                "debug_autoencoder",
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
