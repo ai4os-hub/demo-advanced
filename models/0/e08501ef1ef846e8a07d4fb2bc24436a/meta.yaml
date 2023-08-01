@@ -1,0 +1,15 @@
+artifact_uri: /home/borja/projects/deepaas_full/models/0/e08501ef1ef846e8a07d4fb2bc24436a/artifacts
+end_time: 1690884281074
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e08501ef1ef846e8a07d4fb2bc24436a
+run_name: rumbling-hawk-730
+run_uuid: e08501ef1ef846e8a07d4fb2bc24436a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1690882798369
+status: 3
+tags: []
+user_id: borja
