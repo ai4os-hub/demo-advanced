@@ -68,7 +68,7 @@ def training(input_file, model_name, version="production", **options):
     with np.load(input_file) as input_data:
         train_data = input_data["x_train"], input_data["y_train"]
     logger.debug("Training with options: %s", options)
-    with mlflow.start_run(run_name=model_name, nested=False) as run:
+    with mlflow.start_run(nested=False) as run:
         mlflow.tensorflow.autolog()
-        model.fit(*train_data, verbose="uto", **options)
-    return {"run_id": run.info.run_id}
+        model.fit(*train_data, verbose="auto", **options)
+    return run.info.run_id
