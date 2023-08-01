@@ -94,15 +94,11 @@ def _run_command(model_name, input_file, **options):
 
     # Call training function from aimodel
     logger.info("Train model using options: %s", options)
-    result = aimodel.training(input_file, model_name, **options)
-
-    # Register new model version on MLFlow
-    logger.info("Registering new model version on MLFlow")
-    run_id = result["run_id"]
-    mlflow_client.create_model_version(model_name, "models", run_id)
+    run_id = aimodel.training(input_file, model_name, **options)
 
     # End of program
     logger.info("End of MNIST model training script")
+    print(run_id)
 
 
 # Main call ---------------------------------------------------------
