@@ -1,0 +1,21 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ flatten (Flatten)           (None, 784)               0         
+                                                                 
+ dense (Dense)               (None, 128)               100480    
+                                                                 
+ dense_1 (Dense)             (None, 64)                8256      
+                                                                 
+ dense_2 (Dense)             (None, 32)                2080      
+                                                                 
+ dense_3 (Dense)             (None, 784)               25872     
+                                                                 
+ reshape (Reshape)           (None, 28, 28)            0         
+                                                                 
+=================================================================
+Total params: 136688 (533.94 KB)
+Trainable params: 136688 (533.94 KB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________

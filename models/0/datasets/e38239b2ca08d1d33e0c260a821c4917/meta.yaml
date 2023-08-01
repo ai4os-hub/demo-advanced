@@ -1,0 +1,11 @@
+digest: 3c019cc1
+name: dataset
+profile: '{"features_shape": [60000, 28, 28], "features_size": 47040000, "features_nbytes":
+  376320000, "targets_shape": [60000, 28, 28], "targets_size": 47040000, "targets_nbytes":
+  376320000}'
+schema: '{"mlflow_tensorspec": {"features": "[{\"type\": \"tensor\", \"tensor-spec\":
+  {\"dtype\": \"float64\", \"shape\": [-1, 28, 28]}}]", "targets": "[{\"type\": \"tensor\",
+  \"tensor-spec\": {\"dtype\": \"float64\", \"shape\": [-1, 28, 28]}}]"}}'
+source: '{"tags": {"mlflow.user": "borja", "mlflow.source.name": "/home/borja/projects/deepaas_full/deepaas_full/models/train_model.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "f08d1e42b17aee5a8354d85fa796d7f1eb47cd53"}}'
+source_type: code
