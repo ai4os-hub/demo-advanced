@@ -46,7 +46,7 @@ parser.add_argument(
     *["--latent_dim"],
     help="Dimension of encoded output vector (default: %(default)s)",
     type=latent_dim,
-    default=64,
+    default=32,
 )
 parser.add_argument(
     *["-n", "--name"],
@@ -67,7 +67,9 @@ def _run_command(name, **options):
     encoder = [
         layers.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
         layers.Flatten(),
-        layers.Dense(options["latent_dim"], activation="relu"),
+        layers.Dense(options["latent_dim"] * 4, activation="relu"),
+        layers.Dense(options["latent_dim"] * 2, activation="relu"),
+        layers.Dense(options["latent_dim"] * 1, activation="relu"),
     ]
     logger.debug("Encoder layers generated: %s", encoder)
 
