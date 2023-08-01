@@ -41,6 +41,7 @@
                 "--output=debugging_data.npz",
                 "--verbosity=DEBUG",
                 "debug_autoencoder",
+                "--version=Staging",
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
