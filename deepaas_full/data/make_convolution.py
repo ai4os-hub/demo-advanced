@@ -36,12 +36,12 @@ parser.add_argument(
     default="training_data.npz",
 )
 parser.add_argument(
-    "images_file",
+    *["images_file"],
     help="Path to 'gz' raw images file with MNIST data.",
     type=pathlib.Path,
 )
 parser.add_argument(
-    "labels_file",
+    *["labels_file"],
     help="Path to 'gz' labels file classifying images file.",
     type=pathlib.Path,
 )
