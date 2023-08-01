@@ -14,7 +14,7 @@ class Dataset(fields.String):
     def _deserialize(self, value, attr, data, **kwargs):
         if value not in utils.ls_datasets():
             raise ValidationError(f"Dataset `{value}` not found.")
-        return str(config.DATA_PATH / value)
+        return str(config.DATA_PATH / "processed" / value)
 
 
 class PredArgsSchema(marshmallow.Schema):

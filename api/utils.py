@@ -8,6 +8,7 @@ import mlflow
 from . import config
 
 logger = logging.getLogger(__name__)
+mlflow_client = mlflow.MlflowClient()
 
 
 def ls_models():
@@ -17,7 +18,7 @@ def ls_models():
     Returns:
         A list of RegisteredModel from mlflow.
     """
-    models = mlflow.MlflowClient().search_registered_models()
+    models = mlflow_client.search_registered_models()
     return {x.name: x.description for x in models}
 
 
@@ -27,8 +28,9 @@ def ls_datasets():
     Returns:
         A list of strings in the format {id}-{type}.npz.
     """
-    logger.debug("Scanning at: %s", config.DATA_PATH)
-    dirscan = (x.name for x in config.DATA_PATH.glob("*.npz"))
+    processed_path = config.DATA_PATH / "processed"
+    logger.debug("Scanning at: %s", processed_path)
+    dirscan = (x.name for x in processed_path.glob("*.npz"))
     return sorted(dirscan)
 
 

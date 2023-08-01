@@ -11,8 +11,9 @@ import logging
 from aiohttp.web import HTTPException
 
 import deepaas_full as aimodel
+from deepaas_full import config
 
-from . import config, parsers, schemas, utils
+from . import parsers, schemas, utils
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +33,8 @@ def get_metadata():
             "description": config.MODEL_METADATA.get("summary"),
             "license": config.MODEL_METADATA.get("license"),
             "version": config.MODEL_METADATA.get("version"),
-            "public_datasets": utils.ls_datasets(),
-            "public_models": utils.ls_models(),
+            "datasets": utils.ls_datasets(),
+            "models": utils.ls_models(),
         }
         logger.debug("Package model metadata: %s", metadata)
         return metadata
