@@ -12,7 +12,6 @@ import tensorflow as tf
 from keras import layers
 from mlflow.models import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
-from tensorflow import keras
 
 from deepaas_full import config
 
@@ -63,30 +62,37 @@ def _run_command(name, **options):
     logging.basicConfig(level=options["verbosity"])
     logger.debug("Generating MNIST encoder Model as %s", name)
 
-    # Generation of the encoder input for images
-    logger.info("Generating MNIST autoencoder size %s", config.IMAGE_SIZE)
-    input_img = keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1))
+    # Generation of encoder model from command inputs
+    logger.info("Encoder layers with %s latent_dim", options["latent_dim"])
+    encoder = [
+        layers.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
+        layers.Flatten(),
+        layers.Dense(options["latent_dim"], activation="relu"),
+    ]
+    logger.debug("Encoder layers generated: %s", encoder)
 
-    # Generation of encoder
-    logger.info("Generating MNIST encoder from configuration")
-    x = layers.Flatten()(input_img)
-    encoder = layers.Dense(options["latent_dim"], activation="relu")(x)
+    # Generation of decoder model from command inputs
+    logger.info("Decoder layers with %s latent_dim", options["latent_dim"])
+    decoder = [
+        layers.Input(shape=(options["latent_dim"],)),
+        layers.Dense(784, activation="sigmoid"),
+        layers.Reshape((28, 28)),
+    ]
+    logger.debug("Decoder layers generated: %s", decoder)
 
-    # Generation of decoder
-    logger.info("Generating MNIST decoder from configuration")
-    x = layers.Dense(config.IMAGE_SIZE**2, activation="sigmoid")(encoder)
-    decoder = layers.Reshape(config.IMAGES_SHAPE)(x)
-
-    # Generation of autoencoder
-    logger.info("Merging MNIST encoder and decoder into autoencoder")
-    model = keras.Model(input_img, decoder)
-    logger.debug("Autoencoder generated: %s", model.summary())
+    # Merge encoder and decoder into autoencoder
+    logger.info("Merging encoder and autoencoder layers to autoencoder model")
+    model = tf.keras.Sequential(encoder + decoder[1:])
+    model.encoder = tf.keras.Sequential(encoder)
+    model.decoder = tf.keras.Sequential(decoder)
+    logger.debug("Autoencoder model generated: %s", model.summary())
 
     # Set model optimizer, loss and metrics
     logger.info("Compile using Adam optimizer and MeanAbsoluteError loss.")
-    optimizer = tf.keras.optimizers.Adam()
-    loss = tf.keras.losses.MeanAbsoluteError()
-    model.compile(optimizer, loss)
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(),
+        loss=tf.keras.losses.MeanAbsoluteError(),
+    )
 
     # Create mlflow autoencoder signature
     logger.info("Generating autoencoder signature for mlflow")
