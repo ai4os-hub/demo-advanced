@@ -52,7 +52,7 @@ parser.add_argument(
     *["--input_len"],
     help="Dimension of encoded input vectors (default: %(default)s)",
     type=input_len,
-    default=64,
+    default=32,
 )
 parser.add_argument(
     *["--learning_rate"],
