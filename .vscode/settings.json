@@ -8,6 +8,7 @@
         "aiohttp",
         "arange",
         "autoencoder",
+        "autoencoders",
         "autolog",
         "backpropagation",
         "ckpt",
