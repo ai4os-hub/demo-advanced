@@ -124,14 +124,6 @@ class TrainArgsSchema(marshmallow.Schema):
         validate=validate.Range(min=0),
     )
 
-    steps_per_epoch = fields.Integer(
-        metadata={
-            "description": "Steps before declaring an epoch finished.",
-        },
-        required=False,
-        validate=validate.Range(min=0),
-    )
-
     shuffle = fields.Boolean(
         metadata={
             "description": "Shuffle the training data before each epoch.",
@@ -147,31 +139,6 @@ class TrainArgsSchema(marshmallow.Schema):
         required=False,
         load_default=0.0,
         validate=validate.Range(min=0.0, max=1.0),
-    )
-
-    validation_steps = fields.Integer(
-        metadata={
-            "description": "Steps to draw before stopping on validation.",
-        },
-        required=False,
-        validate=validate.Range(min=0),
-    )
-
-    validation_batch_size = fields.Integer(
-        metadata={
-            "description": "Number of samples per validation batch.",
-        },
-        required=False,
-        validate=validate.Range(min=0),
-    )
-
-    validation_freq = fields.Integer(
-        metadata={
-            "description": "Training epochs to run before validation.",
-        },
-        required=False,
-        load_default=1,
-        validate=validate.Range(min=1),
     )
 
     accept = fields.String(

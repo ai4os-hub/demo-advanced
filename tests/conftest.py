@@ -51,11 +51,17 @@ def generate_signature(names, kind=inspect.Parameter.POSITIONAL_OR_KEYWORD):
 
 
 def generate_fields_fixture(signature):
-    """Function to generate dynamically fixtures."""
+    """Function to generate dynamically fixtures with dynamic arguments."""
     def fixture_function(**options):  # fmt: skip
         return {k: v for k, v in options.items() if v is not None}
     fixture_function.__signature__ = signature
     return pytest.fixture(scope="module")(fixture_function)
+
+
+@pytest.fixture(scope="module")
+def metadata():
+    """Fixture to return defined api metadata."""
+    return api.get_metadata()
 
 
 # Generate and inject fixtures for predict arguments
@@ -65,12 +71,18 @@ globals()["predict_kwds"] = generate_fields_fixture(signature)
 
 
 @pytest.fixture(scope="module")
-def metadata():
-    """Fixture to return defined api metadata."""
-    return api.get_metadata()
-
-
-@pytest.fixture(scope="module")
 def predictions(predict_kwds):
     """Fixture to return predictions to assert properties."""
     return api.predict(**predict_kwds)
+
+
+# Generate and inject fixtures for training arguments
+fields_training = api.schemas.TrainArgsSchema().fields
+signature = generate_signature(fields_training.keys())
+globals()["training_kwds"] = generate_fields_fixture(signature)
+
+
+@pytest.fixture(scope="module")
+def training(training_kwds):
+    """Fixture to return training to assert properties."""
+    return api.train(**training_kwds)
