@@ -2,3 +2,4 @@
 jupyterlab
 dvc
 dvc-webdav
+prefect

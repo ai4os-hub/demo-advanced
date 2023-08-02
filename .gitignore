@@ -144,7 +144,10 @@ GTAGS
 
 # Things specific to this project #
 ###################################
-!tests/datasets/t100-dataset.npz
-!tests/datasets/t100-images.npy
+!tests/data/processed/t100-dataset.npz
+!tests/data/interim/t100-images.npy
+!models/0/*/*
+!models/models/*/*
+!models/models/*/*/*
 deepaas.conf
 whiteboard.py

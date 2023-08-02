@@ -8,12 +8,12 @@ docs [1] and at a canonical exemplar module [2].
 """
 import logging
 
-import mlflow
 from aiohttp.web import HTTPException
 
-import deepaas_full
+import deepaas_full as aimodel
+from deepaas_full import config
 
-from . import config, parsers, schemas, utils
+from . import parsers, schemas, utils
 
 logger = logging.getLogger(__name__)
 
@@ -33,11 +33,9 @@ def get_metadata():
             "description": config.MODEL_METADATA.get("summary"),
             "license": config.MODEL_METADATA.get("license"),
             "version": config.MODEL_METADATA.get("version"),
-            "public_datasets": utils.ls_datasets(),
+            "datasets": utils.ls_datasets(),
+            "models": utils.ls_models(),
         }
-        if config.MLFLOW_TRACKING_URI:
-            metadata["public_mlflow"] = config.MLFLOW_TRACKING_URI
-            metadata["public_models"] = utils.ls_models()
         logger.debug("Package model metadata: %s", metadata)
         return metadata
     except Exception as err:
@@ -45,17 +43,17 @@ def get_metadata():
 
 
 @utils.predict_arguments(schema=schemas.PredArgsSchema)
-def predict(mlflow_uri, model_uri, input_file, accept, **options):
+def predict(model_name, input_file, accept, **options):
     """Performs {model} prediction from given input data and parameters.
 
     Arguments:
-        mlflow_uri -- MLFlow URI to connect to.
-        model_uri -- Model URI from MLFlow to use for prediction values.
-        input_file -- NPY file with images to perform predictions from model.
+        model_name -- Model name from registry to use for prediction values.
+        input_file -- NPY file with data to perform predictions from model.
         accept -- Response parser type.
         **options -- Arbitrary keyword arguments from PredArgsSchema.
 
     Options:
+        version -- MLFLow model version to use for predictions.
         batch_size -- Number of samples per batch.
         steps -- Steps before prediction round is finished.
 
@@ -66,13 +64,7 @@ def predict(mlflow_uri, model_uri, input_file, accept, **options):
         The predicted model values or files.
     """
     try:
-        logger.debug("Current tracking uri: %s", mlflow_uri)
-        mlflow.set_tracking_uri(mlflow_uri)
-        logger.debug("Using model %s for predictions", model_uri)
-        model = mlflow.tensorflow.load_model(model_uri)
-        logger.debug("Predictions from input_file: %s", input_file)
-        logger.debug("Using options: %s", options)
-        result = deepaas_full.predict(model, input_file.filename, **options)
+        result = aimodel.predict(input_file.filename, model_name, **options)
         logger.debug("Using parser for: %s", accept)
         return parsers.response_parsers[accept](result)
     except Exception as err:
@@ -80,17 +72,17 @@ def predict(mlflow_uri, model_uri, input_file, accept, **options):
 
 
 @utils.train_arguments(schema=schemas.TrainArgsSchema)
-def train(mlflow_uri, model_uri, dataset, experiment_id=None, **options):
+def train(model_name, input_file, accept, **options):
     """Performs {model} training from given input data and parameters.
 
     Arguments:
-        mlflow_uri -- Alternative MLFlow URI to connect to.
-        model_uri -- Model URI from MLFlow to use for training.
-        dataset -- Dataset name with images and labels to use for training.
-        experiment_id -- Mlflow experiment id where to log training metrics.
+        model_name -- Model name from registry to use for training values.
+        input_file -- NPZ file with data and labels to use for training.
+        accept -- Response parser type.
         **options -- Arbitrary keyword arguments from TrainArgsSchema.
 
     Options:
+        version -- MLFLow model version to use for predictions.
         epochs -- Number of epochs to train the model.
         initial_epoch -- Epoch at which to start training.
         steps_per_epoch -- Steps before declaring an epoch finished.
@@ -107,16 +99,8 @@ def train(mlflow_uri, model_uri, dataset, experiment_id=None, **options):
         Dictionary containing mlflow run information.
     """
     try:
-        logger.debug("Current tracking uri: %s", mlflow_uri)
-        mlflow.set_tracking_uri(mlflow_uri)
-        logger.debug("Using model %s for training", model_uri)
-        model = mlflow.tensorflow.load_model(model_uri)
-        logger.debug("Training from dataset: %s", dataset)
-        logger.debug("Using experiment_id: %s", experiment_id)
-        logger.debug("Using options: %s", options)
-        with mlflow.start_run(None, experiment_id, nested=False) as run:
-            mlflow.tensorflow.autolog()
-            deepaas_full.training(model, dataset, **options)
-        return dict(mlflow.get_run(run.info.run_id).info)
+        result = aimodel.training(input_file, model_name, **options)
+        # return parsers.response_parsers[accept](result)
+        return result
     except Exception as err:
         raise HTTPException(reason=err) from err

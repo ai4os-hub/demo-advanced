@@ -1,0 +1,13 @@
+aliases: []
+creation_timestamp: 1690876449348
+current_stage: Production
+description: null
+last_updated_timestamp: 1690876464709
+name: autoencoder_32
+run_id: da16768c4d5b46cb8ea3e9007cf3ff4e
+run_link: null
+source: /home/borja/projects/deepaas_full/models/0/da16768c4d5b46cb8ea3e9007cf3ff4e/artifacts/model
+status: READY
+status_message: null
+user_id: null
+version: 1

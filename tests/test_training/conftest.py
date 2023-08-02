@@ -5,16 +5,22 @@ import pytest
 import api
 
 
-@pytest.fixture(scope="module", params=["models:/deepaas_full-testing/1"])
-def model_uri(request):
-    """Fixture to provide the model_uri argument to api.train."""
+@pytest.fixture(scope="module", params=["t100-dataset.npz"])
+def input_file(request):
+    """Fixture to provide the dataset argument to api.train."""
+    return api.config.DATA_PATH / "processed" / request.param
+
+
+@pytest.fixture(scope="module", params=["test_simplemodel"])
+def model_name(request):
+    """Fixture to provide the model_name argument to api.train."""
     return request.param
 
 
-@pytest.fixture(scope="module", params=["t100-dataset.npz"])
-def dataset(request):
-    """Fixture to provide the dataset argument to api.train."""
-    return api.config.DATA_PATH / request.param
+@pytest.fixture(scope="module", params=[1])
+def version(request):
+    """Fixture to provide the model version argument to api.train."""
+    return request.param
 
 
 @pytest.fixture(scope="module", params=[2])
@@ -41,19 +47,7 @@ def validation_split(request):
     return request.param
 
 
-@pytest.fixture(scope="module")
-def options(epochs, initial_epoch, shuffle, validation_split):
-    """Fixture to return arbitrary keyword arguments for training."""
-    options = {}  # Customize/Complete with training options
-    options["epochs"] = epochs
-    options["initial_epoch"] = initial_epoch
-    options["shuffle"] = shuffle
-    options["validation_split"] = validation_split
-    return {k: v for k, v in options.items() if v is not None}
-
-
-@pytest.fixture(scope="module")
-def training(model_uri, dataset, options):
-    """Fixture to perform and return training to assert properties."""
-    mlflow_uri = api.config.MLFLOW_TRACKING_URI
-    return api.train(mlflow_uri, model_uri, dataset, **options)
+@pytest.fixture(scope="module", params=["application/json"])
+def accept(request):
+    """Fixture to provide the accept argument to api.predict."""
+    return request.param
