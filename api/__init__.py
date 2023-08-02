@@ -100,7 +100,6 @@ def train(model_name, input_file, accept, **options):
     """
     try:
         result = aimodel.training(input_file, model_name, **options)
-        # return parsers.response_parsers[accept](result)
-        return result
+        return parsers.response_parsers[accept](result)
     except Exception as err:
         raise HTTPException(reason=err) from err

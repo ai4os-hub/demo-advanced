@@ -99,7 +99,7 @@ def _run_command(model_name, input_file, **options):
 
     # End of program
     logger.info("End of MNIST model training script")
-    pprint.pprint(result)
+    pprint.pprint(dict(result))
 
 
 # Main call ---------------------------------------------------------

@@ -71,4 +71,4 @@ def training(input_file, model_name, version="production", **options):
     with mlflow.start_run(nested=False) as run:
         mlflow.tensorflow.autolog()
         model.fit(*train_data, verbose="auto", **options)
-    return dict(mlflow.get_run(run.info.run_id).info)
+    return mlflow.get_run(run.info.run_id).info
