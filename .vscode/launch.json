@@ -138,9 +138,8 @@
             "args": [
                 "--images=10",
                 "--verbosity=DEBUG",
-                // "debug_model",
-                "dense2layers",
-                // "--version=Staging",
+                "debug_model",
+                "--version=Staging",
                 "--encoder=autoencoder_32",
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
