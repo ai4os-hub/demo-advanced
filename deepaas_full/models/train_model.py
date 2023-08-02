@@ -3,6 +3,7 @@
 import argparse
 import logging
 import pathlib
+import pprint
 import sys
 
 import mlflow
@@ -94,11 +95,11 @@ def _run_command(model_name, input_file, **options):
 
     # Call training function from aimodel
     logger.info("Train model using options: %s", options)
-    run_id = aimodel.training(input_file, model_name, **options)
+    result = aimodel.training(input_file, model_name, **options)
 
     # End of program
     logger.info("End of MNIST model training script")
-    print(run_id)
+    pprint.pprint(result)
 
 
 # Main call ---------------------------------------------------------
