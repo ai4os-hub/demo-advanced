@@ -165,6 +165,21 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
         },
+        { // Tests collection debug
+            "name": "Python: Test collection",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "--collect-only",
+                "tests",
+            ],
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+        },
         { // Current file debug
             "name": "Python: Current File",
             "type": "python",
