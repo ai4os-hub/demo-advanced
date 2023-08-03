@@ -3,7 +3,9 @@
 import marshmallow
 from webargs import ValidationError, fields, validate
 
-from . import config, parsers, utils
+from deepaas_full import config
+
+from . import parsers, utils
 
 
 class Dataset(fields.String):

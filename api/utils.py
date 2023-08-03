@@ -2,13 +2,14 @@
 """
 import logging
 import sys
+from pathlib import Path
 
 import mlflow
 
-from . import config
+from deepaas_full import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient()
+mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
 
 
 def ls_models():
@@ -28,7 +29,7 @@ def ls_datasets():
     Returns:
         A list of strings in the format {id}-{type}.npz.
     """
-    processed_path = config.DATA_PATH / "processed"
+    processed_path = Path(config.DATA_PATH) / "processed"
     logger.debug("Scanning at: %s", processed_path)
     dirscan = (x.name for x in processed_path.glob("*.npz"))
     return sorted(dirscan)
