@@ -3,7 +3,7 @@
 as subprocess. DEEPaaS does not provide a `test` call that generates a mock
 client with loaded configuration.
 
-Additionally, oslo_config performs parsing at command line call, it does not 
+Additionally, oslo_config performs parsing at command line call, it does not
 support configuration loading. Therefore testing with direct calls to deepaas
 would require monkeypatching configuration loading which might lead to multiple
 issues, see:
