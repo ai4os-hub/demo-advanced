@@ -20,9 +20,12 @@ import logging
 import mlflow
 import numpy as np
 
-# Configuration is mandatory to execute when running package scripts
 from deepaas_full import config
 
+# Set MLFlow registry URI to models path
+mlflow.set_registry_uri(config.MODELS_PATH)
+
+# Create logger for this module
 logger = logging.getLogger(__name__)
 
 
