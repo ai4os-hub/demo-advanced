@@ -9,8 +9,8 @@ import api
 @pytest.fixture(scope="module", params=["t100-images.npy"])
 def input_file(request):
     """Fixture to provide the input_file argument to api.predict."""
-    filepath = api.config.DATA_PATH / "interim"
-    return UploadedFile("", filename=filepath / request.param)
+    filepath = f"{api.config.DATA_PATH}/interim"
+    return UploadedFile("", filename=f"{filepath}/{request.param}")
 
 
 @pytest.fixture(scope="module", params=["test_simplemodel"])

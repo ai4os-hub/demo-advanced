@@ -6,6 +6,7 @@ import inspect
 import os
 import shutil
 import tempfile
+import pathlib
 
 import pytest
 
@@ -15,13 +16,13 @@ import api
 @pytest.fixture(scope="session", autouse=True)
 def original_datapath():
     """Fixture to generate a original directory path for datasets."""
-    return api.config.DATA_PATH.absolute()
+    return pathlib.Path(api.config.DATA_PATH).absolute()
 
 
 @pytest.fixture(scope="session", autouse=True)
 def original_modelspath():
     """Fixture to generate a original directory path for datasets."""
-    return api.config.MODELS_PATH.absolute()
+    return pathlib.Path(api.config.MODELS_PATH).absolute()
 
 
 @pytest.fixture(scope="module", name="testdir")
