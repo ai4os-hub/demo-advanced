@@ -1,7 +1,6 @@
 """Module for defining custom API response parsers and content types.
 """
 import logging
-import builtins
 import numpy as np
 import tensorflow as tf
 
@@ -20,13 +19,11 @@ def json_response(values, **extra_values):
     """
     logger.debug("Response result: %d", values)
     logger.debug("Response options: %d", extra_values)
-    match type(values):
-        case builtins.dict | builtins.list:
-            return values
-        case np.ndarray | tf.Tensor:
-            return values.tolist()
-        case _:
-            return dict(values)
+    if isinstance(values, (dict, list)):
+        return values
+    if isinstance(values, (np.ndarray, tf.Tensor)):
+        return values.tolist()
+    return dict(values)
 
 
 def pdf_response(values, **extra_values):
