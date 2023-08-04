@@ -10,7 +10,8 @@ import mlflow
 
 from . import config
 
-mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
+tracking_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
+mlflow_client = mlflow.MlflowClient(tracking_uri)
 logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
 
