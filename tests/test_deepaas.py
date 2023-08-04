@@ -34,6 +34,7 @@ def deepaas_process(request, config_file):
         args=["deepaas-run", "--config-file", config_file],
         stdout=subprocess.PIPE,  # Capture stdout
         stderr=subprocess.PIPE,  # Capture stderr
+        text=True,  # Capture as text
     ) as process:
         try:
             outs, errs = process.communicate(timeout=request.param)
@@ -43,7 +44,7 @@ def deepaas_process(request, config_file):
         except Exception as exc:
             process.kill()
             raise exc
-    return {"stdout": str(outs), "stderr": str(errs)}
+    return {"stdout": outs, "stderr": errs}
 
 
 @pytest.mark.parametrize("deepaas_process", [10], indirect=True)
