@@ -1,10 +1,9 @@
 """Utilities module for API endpoints and methods.
 """
 import logging
-import subprocess
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
-from subprocess import TimeoutExpired
 
 import mlflow
 
@@ -44,6 +43,10 @@ def copy_remote(frompath, topath, timeout=600):
     vice versa for example:
         - `copy_remote('rshare:/data/images', '/srv/myapp/data/images')`
 
+    Subprocess might introduce vulnerabilities in the code. In order to reduce
+    security vulnerabilities, it is recommended to be used with shell=False.
+    https://security.openstack.org/guidelines/dg_use-subprocess-securely.html#correct
+
     Arguments:
         frompath -- Source folder to be copied.
         topath -- Destination folder.
@@ -52,15 +55,16 @@ def copy_remote(frompath, topath, timeout=600):
     Returns:
         A tuple with stdout and stderr from the command.
     """
-    with subprocess.Popen(
+    with subprocess.Popen(  # nosec B603
         args=["rclone", "copy", f"{frompath}", f"{topath}"],
         stdout=subprocess.PIPE,  # Capture stdout
         stderr=subprocess.PIPE,  # Capture stderr
+        shell=False,  # No shell for security reasons
         text=True,  # Return strings rather than bytes
     ) as process:
         try:
             outs, errs = process.communicate(None, timeout)
-        except TimeoutExpired:
+        except subprocess.TimeoutExpired:
             logger.error("Timeout when copying from/to remote directory.")
             process.kill()
             outs, errs = process.communicate()
