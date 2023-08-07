@@ -16,35 +16,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
 
 
-def ls_dirs(path):
-    """Utility to return a list of directories available in `path` folder.
-
-    Arguments:
-        path -- Directory path to scan for folders.
-
-    Returns:
-        A list of strings for found subdirectories.
-    """
-    logger.debug("Scanning directories at: %s", path)
-    dirscan = (x.name for x in path.iterdir() if x.is_dir())
-    return sorted(dirscan)
-
-
-def ls_files(path, pattern):
-    """Utility to return a list of files available in `path` folder.
-
-    Arguments:
-        path -- Directory path to scan.
-        pattern -- File pattern to filter found files. See glob.glob() python.
-
-    Returns:
-        A list of strings for files found according to the pattern.
-    """
-    logger.debug("Scanning for %s files at: %s", pattern, path)
-    dirscan = (x.name for x in path.glob(pattern))
-    return sorted(dirscan)
-
-
 def ls_models():
     """Utility to return a list of models available in the MLFlow connected
     models registry.
