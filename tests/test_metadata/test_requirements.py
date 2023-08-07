@@ -28,7 +28,9 @@ def test_author(metadata):
 def test_email(metadata):
     """Tests that metadata provides authors information."""
     assert "author-email" in metadata
-    assert metadata["author-email"] == {"Borja Esteban": "boressan@outlook.com"}
+    assert metadata["author-email"] == {
+        "Borja Esteban": "boressan@outlook.com"
+    }
 
 
 def test_description(metadata):
