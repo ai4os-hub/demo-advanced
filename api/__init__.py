@@ -124,7 +124,7 @@ def train(model_name, input_file, accept="application/json", **options):
         logger.info("Using model %s for training", model_name)
         logger.debug("Loading data from input_file: %s", input_file)
         logger.debug("Training with options: %s", options)
-        result = aimodel.training(model_name, input_file, **options)
+        result = aimodel.train(model_name, input_file, **options)
         logger.debug("Training result: %s", result)
         logger.info("Returning content_type for: %s", accept)
         return responses.content_types[accept](result, **options)

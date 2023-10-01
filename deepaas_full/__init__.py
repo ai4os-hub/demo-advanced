@@ -62,7 +62,7 @@ def predict(model_name, input_file, version="production", **options):
     return model.predict(input_data, verbose="auto", **options)
 
 
-def training(model_name, input_file, version="production", **options):
+def train(model_name, input_file, version="production", **options):
     """Performs training on a model from raw MNIST input and target data.
 
     Arguments:
