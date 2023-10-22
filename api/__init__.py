@@ -130,4 +130,4 @@ def train(model_name, input_file, accept="application/json", **options):
         return responses.content_types[accept](result, **options)
     except Exception as err:
         logger.info("Error while training: %s", err)
-        raise
+        raise  # Reraise the exception after log
