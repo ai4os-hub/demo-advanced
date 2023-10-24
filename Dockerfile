@@ -1,6 +1,6 @@
 # Dockerfile may have following Arguments:
 # tag - tag for the Base image, (e.g. 2.9.1 for tensorflow)
-# branch - user repository branch to clone (default: master, another option: test)
+# branch - user repository branch to clone, i.e. test (default: master)
 #
 # To build the image:
 # $ docker build -t <dockerhub_user>/<dockerhub_repo> --build-arg arg=value .
@@ -10,9 +10,9 @@
 # [!] Note: For the Jenkins CI/CD pipeline, input args are defined inside the
 # Jenkinsfile, not here!
 
-ARG tag=2.9.1
+ARG tag=2.13.0-gpu
 
-# Base image, e.g. tensorflow/tensorflow:2.9.1
+# Base image, e.g. tensorflow/tensorflow:2.x.x-gpu
 FROM tensorflow/tensorflow:${tag}
 
 LABEL maintainer='Borja Esteban'
@@ -23,7 +23,8 @@ LABEL version='0.0.0'
 ARG branch=main
 
 # Install Ubuntu packages
-# - gcc is needed in Pytorch images because deepaas installation might break otherwise (see docs) (it is already installed in tensorflow images)
+# - gcc is needed in Pytorch images because deepaas installation might break otherwise (see docs)
+#   (it is already installed in tensorflow images)
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends \
         gcc \
@@ -58,7 +59,7 @@ RUN pip3 install --no-cache-dir jupyterlab
 RUN pip3 install --no-cache-dir dvc dvc-webdav
 
 # Install user app
-RUN git clone -b $branch https://git.scc.kit.edu/m-team/ai/deepaas_full && \
+RUN git clone --depth 1 -b $branch https://git.scc.kit.edu/m-team/ai/deepaas_full && \
     pip3 install --no-cache-dir -e ./deepaas_full
 
 # Open ports: DEEPaaS (5000), Monitoring (6006), Jupyter (8888)

@@ -6,4 +6,5 @@ frouros~=0.5.1
 fPDF2~=2.7.4
 
 # Model requirements
-tensorflow~=2.13.0
+# Check tensorflow version matches dockerfile base image tag
+tensorflow==2.13.0
