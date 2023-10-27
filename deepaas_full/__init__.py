@@ -23,7 +23,8 @@ import numpy as np
 from deepaas_full import config
 
 # Set MLFlow registry URI to models path
-mlflow.set_registry_uri(config.MODELS_PATH)
+registry_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
+mlflow.set_registry_uri(registry_uri)
 
 # Create logger for this module
 logger = logging.getLogger(__name__)

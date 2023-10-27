@@ -39,9 +39,9 @@ dvc pull  # Download data from your dvc remote storage
 > and your storage provider.
 
 Make sure your MNIST data repository provides a list of `npz` datasets at the
-folder configured as _DATA_PATH_ in your environment (default: `./data`). The
-API metadata will provide all the file name of the datasets available in that
-folder.
+folder configured as _DEEPAAS_FULL_DATA_ in your environment
+(default: `./data`). The API metadata will provide all the file name of the
+datasets available in that folder.
 
 > Note model function `deepaas_full.train` expects `npz` files with keys
 > `images` and `labels`.
@@ -102,8 +102,7 @@ Additionally you can configure the following environment variables for customiza
 
 API configuration environment variables:
 
-- _DATA_PATH_ path pointing to the training datasets, default `./data/raw`.
-- _API_NAME_ package name used to provide API metadata, default `deepaas_full`.
+- _DEEPAAS_FULL_DATA_ path pointing to the training datasets, default `./data/raw`.
 
 Model data configuration environment variables:
 
