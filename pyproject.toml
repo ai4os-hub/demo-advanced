@@ -19,8 +19,8 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-"Homepage" = "https://github.com/"
-"Bug Tracker" = "https://github.com/"
+"Homepage" = "https://git.scc.kit.edu/m-team/ai/deepaas_full"
+"Bug Tracker" = "https://git.scc.kit.edu/m-team/ai/deepaas_full/-/issues"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

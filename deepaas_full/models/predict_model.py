@@ -9,9 +9,10 @@ import mlflow
 import numpy as np
 
 import deepaas_full as aimodel
+from deepaas_full import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient()
+mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
 
 
 # Type validators ---------------------------------------------------

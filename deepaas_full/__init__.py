@@ -20,18 +20,32 @@ import logging
 import mlflow
 import numpy as np
 
-# Configuration is mandatory to execute when running package scripts
 from deepaas_full import config
 
+# Set MLFlow registry URI to models path
+mlflow.set_registry_uri(config.MODELS_PATH)
+
+# Create logger for this module
 logger = logging.getLogger(__name__)
 
 
-def predict(input_file, model_name, version="production", **options):
+def warm():
+    """Function to run preparation phase before anything else can start.
+
+    Returns:
+        True if model is ready to use.
+    """
+    logger.info("Warming up the model...")
+    logger.info("Model is ready to use.")
+    return True
+
+
+def predict(model_name, input_file, version="production", **options):
     """Performs predictions on data using a MNIST model.
 
     Arguments:
-        input_file -- NPY file with images equivalent to MNIST data.
         model_name -- MLFlow model name to use for predictions.
+        input_file -- NPY file with images equivalent to MNIST data.
         version -- MLFLow model version to use for predictions.
         options -- See tensorflow/keras predict documentation.
 
@@ -48,12 +62,12 @@ def predict(input_file, model_name, version="production", **options):
     return model.predict(input_data, verbose="auto", **options)
 
 
-def training(input_file, model_name, version="production", **options):
+def train(model_name, input_file, version="production", **options):
     """Performs training on a model from raw MNIST input and target data.
 
     Arguments:
-        input_file -- NPZ file with training images and labels.
         model_name -- MLFlow model name to use for predictions.
+        input_file -- NPZ file with training images and labels.
         version -- MLFLow model version to use for predictions.
         options -- See tensorflow/keras fit documentation.
 
@@ -71,4 +85,4 @@ def training(input_file, model_name, version="production", **options):
     with mlflow.start_run(nested=False) as run:
         mlflow.tensorflow.autolog()
         model.fit(*train_data, verbose="auto", **options)
-    return dict(mlflow.get_run(run.info.run_id).info)
+    return mlflow.get_run(run.info.run_id).info

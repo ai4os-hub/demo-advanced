@@ -9,9 +9,10 @@ import sys
 import mlflow
 
 import deepaas_full as aimodel
+from deepaas_full import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient()
+mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
 
 
 # Type validators ---------------------------------------------------
@@ -99,7 +100,7 @@ def _run_command(model_name, input_file, **options):
 
     # End of program
     logger.info("End of MNIST model training script")
-    pprint.pprint(result)
+    pprint.pprint(dict(result))
 
 
 # Main call ---------------------------------------------------------

@@ -1,8 +1,7 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.black-formatter",
     },
-    "python.formatting.provider": "none",
     "cSpell.words": [
         "aimodel",
         "aiohttp",
@@ -13,6 +12,7 @@
         "backpropagation",
         "ckpt",
         "cmap",
+        "configpath",
         "Crossentropy",
         "datapath",
         "datas",
@@ -34,6 +34,7 @@
         "MNIST",
         "modelspath",
         "moduleauthor",
+        "monkeypatching",
         "ncols",
         "nrows",
         "opensearch",
@@ -47,6 +48,7 @@
         "relu",
         "savez",
         "sectionauthor",
+        "setsid",
         "simplemodel",
         "softmax",
         "sourcelink",
@@ -58,5 +60,6 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "black-formatter.args": [ "--line-length=79" ]
 }

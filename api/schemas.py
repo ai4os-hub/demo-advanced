@@ -3,7 +3,18 @@
 import marshmallow
 from webargs import ValidationError, fields, validate
 
-from . import config, parsers, utils
+from . import config, responses, utils
+
+
+class ModelName(fields.String):
+    """Field that takes a string and validates against current available
+    models at config.MODELS_PATH.
+    """
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        if value not in list(utils.ls_models()):
+            raise ValidationError(f"Checkpoint `{value}` not found.")
+        return str(config.MODELS_PATH / value)
 
 
 class Dataset(fields.String):
@@ -12,7 +23,7 @@ class Dataset(fields.String):
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
-        if value not in utils.ls_datasets():
+        if value not in list(utils.ls_datasets()):
             raise ValidationError(f"Dataset `{value}` not found.")
         return str(config.DATA_PATH / "processed" / value)
 
@@ -25,18 +36,18 @@ class PredArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
+    model_name = ModelName(
+        metadata={
+            "description": "String identification for MLFlow models.",
+        },
+        required=True,
+    )
+
     input_file = fields.Field(
         metadata={
             "description": "NPY file with np.arrays for predictions.",
             "type": "file",
             "location": "form",
-        },
-        required=True,
-    )
-
-    model_name = fields.String(
-        metadata={
-            "description": "String identification for MLFlow models.",
         },
         required=True,
     )
@@ -71,7 +82,7 @@ class PredArgsSchema(marshmallow.Schema):
             "location": "headers",
         },
         required=True,
-        validate=validate.OneOf(parsers.content_types),
+        validate=validate.OneOf(list(responses.content_types)),
     )
 
 
@@ -83,18 +94,16 @@ class TrainArgsSchema(marshmallow.Schema):
         # pylint: disable=too-few-public-methods
         ordered = True
 
-    # pylint: disable=simplifiable-if-expression
-
-    input_file = Dataset(
+    model_name = ModelName(
         metadata={
-            "description": "Dataset name from metadata for training input.",
+            "description": "String identification for MLFlow models.",
         },
         required=True,
     )
 
-    model_name = fields.String(
+    input_file = Dataset(
         metadata={
-            "description": "String identification for MLFlow models.",
+            "description": "Dataset name from metadata for training input.",
         },
         required=True,
     )
@@ -147,5 +156,5 @@ class TrainArgsSchema(marshmallow.Schema):
             "location": "headers",
         },
         required=True,
-        validate=validate.OneOf(parsers.content_types),
+        validate=validate.OneOf(list(responses.content_types)),
     )

@@ -1,9 +1,13 @@
 """Generic tests environment configuration. This file implement all generic
-fixtures to simplify model and api specific testing. 
+fixtures to simplify model and api specific testing.
+
+Modify this file only if you need to add new fixtures or modify the existing
+related to the environment and generic tests.
 """
 # pylint: disable=redefined-outer-name
 import inspect
 import os
+import pathlib
 import shutil
 import tempfile
 
@@ -15,13 +19,20 @@ import api
 @pytest.fixture(scope="session", autouse=True)
 def original_datapath():
     """Fixture to generate a original directory path for datasets."""
-    return api.config.DATA_PATH.absolute()
+    return pathlib.Path(api.config.DATA_PATH).absolute()
 
 
 @pytest.fixture(scope="session", autouse=True)
 def original_modelspath():
     """Fixture to generate a original directory path for datasets."""
-    return api.config.MODELS_PATH.absolute()
+    return pathlib.Path(api.config.MODELS_PATH).absolute()
+
+
+@pytest.fixture(scope="session", params=os.listdir("tests/configurations"))
+def config_file(request):
+    """Fixture to provide each deepaas configuration path."""
+    config_str = f"tests/configurations/{request.param}"
+    return pathlib.Path(config_str).absolute()
 
 
 @pytest.fixture(scope="module", name="testdir")
@@ -60,7 +71,7 @@ def generate_fields_fixture(signature):
 
 @pytest.fixture(scope="module")
 def metadata():
-    """Fixture to return defined api metadata."""
+    """Fixture to return get_metadata to assert properties."""
     return api.get_metadata()
 
 
