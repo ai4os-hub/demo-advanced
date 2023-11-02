@@ -16,7 +16,7 @@ from importlib import metadata
 from demo_advanced.config import DATA_PATH, MODELS_PATH
 
 # Get AI model metadata
-API_NAME = "demo_advanced"
+API_NAME = "demo_advanced_api"
 API_METADATA = metadata.metadata(API_NAME)  # .json
 
 # Fix metadata for emails from pyproject parsing
