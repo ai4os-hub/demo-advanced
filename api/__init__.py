@@ -10,7 +10,7 @@ import logging
 
 from aiohttp.web import HTTPException
 
-import deepaas_full as aimodel
+import demo_advanced as aimodel
 
 from . import config, responses, schemas, utils
 

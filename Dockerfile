@@ -59,8 +59,8 @@ RUN pip3 install --no-cache-dir jupyterlab
 RUN pip3 install --no-cache-dir dvc dvc-webdav
 
 # Install user app
-RUN git clone --depth 1 -b $branch https://git.scc.kit.edu/m-team/ai/deepaas_full && \
-    pip3 install --no-cache-dir -e ./deepaas_full
+RUN git clone --depth 1 -b $branch https://git.scc.kit.edu/m-team/ai/demo-advanced-api && \
+    pip3 install --no-cache-dir -e ./demo-advanced-api
 
 # Open ports: DEEPaaS (5000), Monitoring (6006), Jupyter (8888)
 EXPOSE 5000 6006 8888

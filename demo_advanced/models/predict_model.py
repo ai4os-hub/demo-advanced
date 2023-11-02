@@ -1,15 +1,15 @@
-"""Script to train a MNIST model with a dataset.
+"""Script to predict using MNIST model with an input file.
 """
 import argparse
 import logging
 import pathlib
-import pprint
 import sys
 
 import mlflow
+import numpy as np
 
-import deepaas_full as aimodel
-from deepaas_full import config
+import demo_advanced as aimodel
+from demo_advanced import config
 
 logger = logging.getLogger(__name__)
 mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
@@ -28,19 +28,11 @@ def version(string_value):
     return value
 
 
-def epochs(string_value):
+def batch_size(string_value):
     """Validator converter for integer values for values higher than 0."""
     value = int(string_value)
     if value <= 0:
-        raise ValueError("Epochs must be greater than 0")
-    return value
-
-
-def validation_split(string_value):
-    """Validator converter for float values for values between 1 and 0."""
-    value = float(string_value)
-    if not 0.0 <= value <= 1.0:
-        raise ValueError("Validation split factor must be between 0.0 and 1.0")
+        raise ValueError("Batch size must be greater than 0")
     return value
 
 
@@ -71,36 +63,37 @@ parser.add_argument(
 )
 parser.add_argument(
     *["input_file"],
-    help="Dataset NPZ file to train the model.",
+    help="NPY file to generate model predictions.",
     type=pathlib.Path,
 )
 parser.add_argument(
-    *["--epochs"],
-    help="Number of epochs to train the model (default: %(default)s).",
-    type=epochs,
-    default=6,
+    *["--batch_size"],
+    help="Number of samples per batch (default: %(default)s).",
+    type=batch_size,
 )
 parser.add_argument(
-    *["--validation_split"],
-    help="Data fraction to use as validation (default: %(default)s).",
-    type=validation_split,
-    default=0.1,
+    *["output_file"],
+    help="NPY file where to write model predictions.",
+    type=pathlib.Path,
 )
 
 
 # Script command actions --------------------------------------------
-def _run_command(model_name, input_file, **options):
+def _run_command(model_name, input_file, output_file, **options):
     # Common operations
     logging.basicConfig(level=options.pop("verbosity"))
-    logger.debug("Training new %s model", model_name)
+    logger.debug("Predict using %s model", model_name)
 
     # Call training function from aimodel
-    logger.info("Train model using options: %s", options)
-    result = aimodel.training(input_file, model_name, **options)
+    logger.info("Generate predictions with options: %s", options)
+    result = aimodel.predict(input_file, model_name, **options)
+
+    # Write predictions into output file
+    logger.info("Writing predictions to output file %s", output_file)
+    np.save(output_file, result)
 
     # End of program
     logger.info("End of MNIST model training script")
-    pprint.pprint(dict(result))
 
 
 # Main call ---------------------------------------------------------

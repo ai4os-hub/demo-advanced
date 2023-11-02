@@ -1,6 +1,6 @@
-![qc.sec](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-sec.yml/badge.svg)
-![qc.sty](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-sty.yml/badge.svg)
-![qc.uni](https://github.com/BorjaEst/deepaas_full/actions/workflows/qc-uni.yml/badge.svg)
+![qc.sec](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-sec.yml/badge.svg)
+![qc.sty](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-sty.yml/badge.svg)
+![qc.uni](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-uni.yml/badge.svg)
 
 # DEEPaaS Full Template
 
@@ -9,7 +9,7 @@
 To launch it, first download the repository and install the package using pip.
 
 ```bash
-git clone git@git.scc.kit.edu:m-team/ai/deepaas_full.git  # Download repository
+git clone git@git.scc.kit.edu:m-team/ai/demo-advanced-api.git  # Download repository
 cd {repository}  # Navigate inside repository project
 pip install -e .  # Install repository project
 ```
@@ -39,11 +39,11 @@ dvc pull  # Download data from your dvc remote storage
 > and your storage provider.
 
 Make sure your MNIST data repository provides a list of `npz` datasets at the
-folder configured as _DEEPAAS_FULL_DATA_ in your environment
+folder configured as _DEMO_ADVANCED_DATA_PATH_ in your environment
 (default: `./data`). The API metadata will provide all the file name of the
 datasets available in that folder.
 
-> Note model function `deepaas_full.train` expects `npz` files with keys
+> Note model function `demo_advanced.train` expects `npz` files with keys
 > `images` and `labels`.
 
 ## FLFlow Experiments and Models Registry
@@ -102,12 +102,12 @@ Additionally you can configure the following environment variables for customiza
 
 API configuration environment variables:
 
-- _DEEPAAS_FULL_DATA_ path pointing to the training datasets, default `./data/raw`.
+- _DEMO_ADVANCED_DATA_PATH_ pointing to the training datasets, default `./data/raw`.
 
 Model data configuration environment variables:
 
-- _LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
-- _IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
+- _DEMO_ADVANCED_LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
+- _DEMO_ADVANCED_IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
 
 ## Flows and deployments
 
@@ -149,15 +149,15 @@ Tests are implemented following [pytest](https://docs.pytest.org) framework.
 Fixtures and parametrization are placed inside `conftest.py` files meanwhile
 assertion tests are located on `test_*.py` files.
 
-Tests are performed by a remote model named `deepaas_full-testing` using its
+Tests are performed by a remote model named `demo-advanced-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
 your MLFlow model registry and configure the environment variables to access
 it. Experiments can be tracked if you set a _MLFLOW_EXPERIMENT_NAME_ or
 _MLFLOW_EXPERIMENT_ID_, leaving empty those variables prevents the generation
 of experiment tracking on the MLFlow server.
 
-> If tests fail with `Registered Model with name=deepaas_full-testing not found`
-> but you are sure that the model `deepaas_full-testing` exists in your MLFlow
+> If tests fail with `Registered Model with name=demo-advanced-testing not found`
+> but you are sure that the model `demo-advanced-testing` exists in your MLFlow
 > registry, ensure your MLFlow environment is accessible at testing runtime.
 
 ## Project structure
@@ -183,8 +183,7 @@ folder should look approximately as follows:
 ├── data                    <- Folder with model datasets and raw data
 ├── deepaas.conf            <- DEEPaaS configuration file
 ├── deepaas.conf.sample     <- DEEPaaS configuration sample
-├── deepaas_full            <- Package folder containing the model code
-├── deepaas_full.egg-info   <- Pip build for package installation
+├── demo_advanced           <- Package folder containing the model code
 ├── deployments             <- Folder with prefect deployment configurations 
 ├── dvc.lock                <- Data record and output state tracking (dvc)
 ├── dvc.yaml                <- Configuration and stages for dvc

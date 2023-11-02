@@ -13,10 +13,10 @@ from importlib import metadata
 
 # Ensure that your model package has a config.py file with the following
 # pylint: disable=unused-import
-from deepaas_full.config import DATA_PATH, MODELS_PATH
+from demo_advanced.config import DATA_PATH, MODELS_PATH
 
 # Get AI model metadata
-API_NAME = "deepaas_full"
+API_NAME = "demo_advanced"
 API_METADATA = metadata.metadata(API_NAME)  # .json
 
 # Fix metadata for emails from pyproject parsing

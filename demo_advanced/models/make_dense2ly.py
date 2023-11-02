@@ -1,5 +1,4 @@
-"""Script to generate a MNIST sequential model with convolution layers of
-neurons.
+"""Script to generate a MNIST sequential model with 2 dense layers of neurons.
 """
 import argparse
 import logging
@@ -12,18 +11,18 @@ from keras import layers
 from mlflow.models import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
 
-from deepaas_full import config
+from demo_advanced import config
 
 logger = logging.getLogger(__name__)
 mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
 
 
 # Type validators ---------------------------------------------------
-def dropout_factor(string_value):
-    """Validator converter for float values for values between 1 and 0."""
-    value = float(string_value)
-    if not 0.0 <= value <= 1.0:
-        raise ValueError("Dropout factor must be between 0.0 and 1.0")
+def input_len(string_value):
+    """Validator converter for integer values for values higher than 0."""
+    value = int(string_value)
+    if value <= 0:
+        raise ValueError("Input length must be greater than 0")
     return value
 
 
@@ -50,10 +49,10 @@ parser.add_argument(
     default="INFO",
 )
 parser.add_argument(
-    *["--dropout_factor"],
-    help="Percentage of hidden neurons ignored (default: %(default)s)",
-    type=dropout_factor,
-    default=0.5,
+    *["--input_len"],
+    help="Dimension of encoded input vectors (default: %(default)s)",
+    type=input_len,
+    default=32,
 )
 parser.add_argument(
     *["--learning_rate"],
@@ -76,16 +75,11 @@ def _run_command(name, **options):
     logger.debug("Generating MNIST convolution Model as %s", name)
 
     # Generation of the model from command inputs
-    logger.info("Generating MNIST convolution model from configuration")
+    logger.info("Generating MNIST model with dense layers from configuration")
     model = tf.keras.Sequential(
         [
-            tf.keras.Input(shape=(config.IMAGE_SIZE, config.IMAGE_SIZE, 1)),
-            layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
-            layers.MaxPooling2D(pool_size=(2, 2)),
-            layers.Flatten(),
-            layers.Dropout(options["dropout_factor"]),
+            tf.keras.Input(shape=(options["input_len"],)),
+            layers.Dense(128, activation="relu"),
             layers.Dense(config.LABEL_DIMENSIONS, activation="softmax"),
         ]
     )
@@ -101,7 +95,7 @@ def _run_command(name, **options):
 
     # Create mlflow signature
     logger.info("Generating model signature for mlflow")
-    input_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
+    input_shape = (-1, options["input_len"])
     input_schema = Schema([TensorSpec(np.dtype(np.float64), input_shape)])
     output_shape = (-1, config.LABEL_DIMENSIONS)
     output_schema = Schema([TensorSpec(np.dtype(np.float32), output_shape)])

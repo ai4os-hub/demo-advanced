@@ -1,4 +1,4 @@
-"""Script to perform MNIST data pre-processing to prepare it for model
+"""Script to perform MNIST data pre-processing to prepare it for encoder
 training.
 """
 import argparse
@@ -8,9 +8,8 @@ import pathlib
 import sys
 
 import numpy as np
-import tensorflow as tf
 
-from deepaas_full import config
+from demo_advanced import config
 
 logger = logging.getLogger(__name__)
 
@@ -36,19 +35,14 @@ parser.add_argument(
     default="training_data.npz",
 )
 parser.add_argument(
-    *["images_file"],
+    "images_file",
     help="Path to 'gz' raw images file with MNIST data.",
-    type=pathlib.Path,
-)
-parser.add_argument(
-    *["labels_file"],
-    help="Path to 'gz' labels file classifying images file.",
     type=pathlib.Path,
 )
 
 
 # Script command actions --------------------------------------------
-def _run_command(images_file, labels_file, **options):
+def _run_command(images_file, **options):
     # Common operations
     logging.basicConfig(level=options["verbosity"])
     logger.debug("Processing MNIST images at %s", options["output"])
@@ -60,15 +54,9 @@ def _run_command(images_file, labels_file, **options):
         images = images.reshape(-1, *config.IMAGES_SHAPE)
     images = images / 255.0
 
-    # Load labels file from gz labels_file
-    logger.info("Loading MNIST labels from file %s", labels_file)
-    with gzip.open(labels_file, "rb") as file:
-        labels = np.frombuffer(file.read(), np.uint8, offset=8)
-    labels = tf.keras.utils.to_categorical(labels, config.LABEL_DIMENSIONS)
-
     # Merge and save data in output file
     logger.info("Saving MNIST pre-process output at %s", options["output"])
-    np.savez(options["output"], x_train=images, y_train=labels)
+    np.savez(options["output"], x_train=images, y_train=images)
 
     # End of program
     logger.info("End of MNIST image processing script")

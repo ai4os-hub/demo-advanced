@@ -166,7 +166,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "deepaas_full-doc"
+htmlhelp_basename = "demo-advanced-api-doc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -185,7 +185,7 @@ latex_elements = {
 latex_documents = [
     (
         "index",
-        "deepaas_full.tex",
+        "demo-advanced-api.tex",
         "DEEPaaS Full Documentation",
         "Borja Esteban",
         "manual",
@@ -220,7 +220,7 @@ latex_documents = [
 man_pages = [
     (
         "index",
-        "deepaas_full",
+        "demo-advanced-api",
         "DEEPaaS Full Documentation",
         ["Borja Esteban"],
         1,
@@ -239,7 +239,7 @@ man_pages = [
 texinfo_documents = [
     (
         "index",
-        "deepaas_full",
+        "demo-advanced-api",
         "DEEPaaS Full Documentation",
         "Borja Esteban",
         "DEEPaaS Full",

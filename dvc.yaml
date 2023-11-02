@@ -1,14 +1,14 @@
 stages:
 
   convolution_t10k:
-    cmd: python -m deepaas_full.data.make_convolution -o data/processed/t10k-convolution data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
+    cmd: python -m demo_advanced.data.make_convolution -o data/processed/t10k-convolution data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
     deps:
     - data/raw/t10k-images-idx3-ubyte.gz
     - data/raw/t10k-labels-idx1-ubyte.gz
     outs:
     - data/processed/t10k-convolution.npz
   convolution_t60k:
-    cmd: python -m deepaas_full.data.make_convolution -o data/processed/t60k-convolution data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
+    cmd: python -m demo_advanced.data.make_convolution -o data/processed/t60k-convolution data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
     deps:
     - data/raw/train-images-idx3-ubyte.gz
     - data/raw/train-labels-idx1-ubyte.gz
@@ -16,14 +16,14 @@ stages:
     - data/processed/t60k-convolution.npz
 
   autoencoder_t60k:
-    cmd: python -m deepaas_full.data.make_autoencoder -o data/processed/t60k-autoencoder data/raw/train-images-idx3-ubyte.gz
+    cmd: python -m demo_advanced.data.make_autoencoder -o data/processed/t60k-autoencoder data/raw/train-images-idx3-ubyte.gz
     deps:
     - data/raw/train-images-idx3-ubyte.gz
     outs:
     - data/processed/t60k-autoencoder.npz
 
   encoded32_t10k:
-    cmd: python -m deepaas_full.data.make_encoded autoencoder_32 -o data/processed/t10k-encoded data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
+    cmd: python -m demo_advanced.data.make_encoded autoencoder_32 -o data/processed/t10k-encoded data/raw/t10k-images-idx3-ubyte.gz data/raw/t10k-labels-idx1-ubyte.gz
     deps:
     - data/raw/t10k-images-idx3-ubyte.gz
     - data/raw/t10k-images-idx3-ubyte.gz
@@ -31,7 +31,7 @@ stages:
     outs:
     - data/processed/t10k-encoded.npz
   encoded32_t60k:
-    cmd: python -m deepaas_full.data.make_encoded autoencoder_32 -o data/processed/t60k-encoded data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
+    cmd: python -m demo_advanced.data.make_encoded autoencoder_32 -o data/processed/t60k-encoded data/raw/train-images-idx3-ubyte.gz data/raw/train-labels-idx1-ubyte.gz
     deps:
     - data/raw/train-images-idx3-ubyte.gz
     - data/raw/train-images-idx3-ubyte.gz

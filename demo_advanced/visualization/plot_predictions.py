@@ -1,4 +1,4 @@
-"""Script to visualize autoencoder model output from MNIST dataset.
+"""Script to visualize model predictions from MNIST inputs.
 """
 import argparse
 import gzip
@@ -8,9 +8,10 @@ import sys
 
 import mlflow
 import numpy as np
+import tensorflow as tf
 from matplotlib import pyplot as plt
 
-from deepaas_full import config
+from demo_advanced import config
 
 logger = logging.getLogger(__name__)
 
@@ -68,48 +69,83 @@ parser.add_argument(
     default="Production",
 )
 parser.add_argument(
+    *["--encoder"],
+    help="Autoencoder name to identify the encoder on mlflow registry.",
+    type=str,
+)
+parser.add_argument(
     *["images_file"],
     help="Path to 'gz' raw images file with MNIST data.",
+    type=pathlib.Path,
+)
+parser.add_argument(
+    *["labels_file"],
+    help="Path to 'gz' labels file classifying images file.",
     type=pathlib.Path,
 )
 
 
 # Script command actions --------------------------------------------
-def _run_command(model_name, images_file, **options):
+def _run_command(model_name, images_file, labels_file, **options):
     # Common operations
     logging.basicConfig(level=options["verbosity"])
-    logger.debug("Visualizing autoencoder %s output", model_name)
+    logger.debug("Visualizing model %s predictions", model_name)
 
     # Load model from mlflow registry
-    logger.info("Loading autoencoder %s from mlflow registry", model_name)
+    logger.info("Loading model %s from mlflow registry", model_name)
     model_uri = f"models:/{model_name}/{options['version']}"
     logger.debug("Using model uri %s visualization", model_uri)
     model = mlflow.tensorflow.load_model(model_uri)
+
+    # Load encoder from mlflow registry if defined
+    if options["encoder"] is not None:
+        logger.info("Loading encoder %s from registry", options["encoder"])
+        encoder_uri = f"models:/{options['encoder']}/Production"
+        logger.debug("Using model uri %s for encoding", encoder_uri)
+        encoder = mlflow.tensorflow.load_model(encoder_uri).encoder
+    else:
+        encoder = None
 
     # Load images file from gz images_file
     logger.info("Loading MNIST images from file %s", images_file)
     with gzip.open(images_file, "rb") as file:
         images = np.frombuffer(file.read(), np.uint8, offset=16)
         images = images.reshape(-1, *config.IMAGES_SHAPE)
+    images = images / 255.0
 
-    # Collect images for visualization
-    logger.info("Collecting MNIST images from file %s", images_file)
+    # Load labels file from gz labels_file
+    logger.info("Loading MNIST labels from file %s", labels_file)
+    with gzip.open(labels_file, "rb") as file:
+        labels = np.frombuffer(file.read(), np.uint8, offset=8)
+    labels = tf.keras.utils.to_categorical(labels, config.LABEL_DIMENSIONS)
+
+    # Collect images and labels for visualization
+    logger.info("Collecting MNIST images and labels from data files")
     rng = np.random.default_rng()
     indexes = rng.choice(len(images), size=options["images"], replace=False)
     logger.debug("Selected image indexes: %s", indexes)
     images = images[indexes]
+    labels = labels[indexes]
 
-    # Generate autoencoder output from images
-    encoded = model.encoder(images)
-    decoded = model.decoder(encoded)
+    # Generate model input from images
+    logging.info("Generating model input from images")
+    inputs = encoder(images) if encoder else images
+    logging.debug("Model input shape: %s", inputs.shape)
+
+    # Generate model output from input
+    logging.info("Generating model output from input")
+    outputs = model.predict(inputs)
+    logging.debug("Model output shape: %s", outputs.shape)
 
     # Generate plot using random images
     logger.info("Generating plot with random MNIST image indexes")
-    fig, axes = plt.subplots(nrows=options["images"], ncols=3)
-    for row, raw, enc, dec in zip(axes, images, encoded, decoded):
+    ncols = 3 if encoder else 2
+    fig, axes = plt.subplots(options["images"], ncols)
+    for row, raw, inp, out, lab in zip(axes, images, inputs, outputs, labels):
         row[0].imshow(raw, cmap="gray")
-        row[1].imshow((enc,), cmap="gray")
-        row[2].imshow(dec, cmap="gray")
+        if encoder:
+            row[1].imshow((inp,), cmap="gray")
+        row[-1].imshow((out, lab), cmap="gray")
 
     # Display plot using tight layout
     plt.setp(axes, xticks=[], yticks=[])

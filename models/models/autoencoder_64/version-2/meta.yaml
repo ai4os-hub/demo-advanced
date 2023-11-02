@@ -6,7 +6,7 @@ last_updated_timestamp: 1690878021133
 name: autoencoder_64
 run_id: 2b9409c8ff6e40efa4509add25d70065
 run_link: null
-source: /home/borja/projects/deepaas_full/models/0/2b9409c8ff6e40efa4509add25d70065/artifacts/model
+source: /home/borja/projects/demo-advanced-api/models/0/2b9409c8ff6e40efa4509add25d70065/artifacts/model
 status: READY
 status_message: null
 user_id: null

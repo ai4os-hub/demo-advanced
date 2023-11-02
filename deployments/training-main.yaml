@@ -46,7 +46,7 @@ infrastructure:
   block_type_slug: process
   _block_type_slug: process
 storage: null
-path: /home/borja/projects/deepaas_full
+path: /home/borja/projects/demo_advanced
 entrypoint: flows/training.py:main
 parameter_openapi_schema:
   title: Parameters
