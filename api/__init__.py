@@ -42,7 +42,7 @@ def get_metadata():
         return metadata
     except Exception as err:
         logger.error("Error collecting metadata: %s", err, exc_info=True)
-        raise HTTPException(reason=err) from err
+        raise  # Reraise the exception after log
 
 
 def warm():
@@ -56,7 +56,7 @@ def warm():
         aimodel.warm()
     except Exception as err:
         logger.error("Error when warming up: %s", err, exc_info=True)
-        raise
+        raise  # Reraise the exception after log
 
 
 @utils.predict_arguments(schema=schemas.PredArgsSchema)
@@ -90,7 +90,7 @@ def predict(model_name, input_file, accept="application/json", **options):
         return responses.content_types[accept](result, **options)
     except Exception as err:
         logger.error("Error calculating predictions: %s", err, exc_info=True)
-        raise HTTPException(reason=err) from err
+        raise  # Reraise the exception after log
 
 
 @utils.train_arguments(schema=schemas.TrainArgsSchema)
