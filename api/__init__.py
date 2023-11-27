@@ -8,8 +8,6 @@ docs [1] and at a canonical exemplar module [2].
 """
 import logging
 
-from aiohttp.web import HTTPException
-
 import demo_advanced as aimodel
 
 from . import config, responses, schemas, utils
