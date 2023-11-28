@@ -14,7 +14,7 @@ class ModelName(fields.String):
     def _deserialize(self, value, attr, data, **kwargs):
         if value not in list(utils.ls_models()):
             raise ValidationError(f"Checkpoint `{value}` not found.")
-        return str(config.MODELS_PATH / value)
+        return value
 
 
 class Dataset(fields.String):

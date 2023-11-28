@@ -23,8 +23,8 @@ import numpy as np
 from demo_advanced import config
 
 # Set MLFlow registry URI to models path
-registry_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
-mlflow.set_registry_uri(registry_uri)
+tracking_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
+mlflow.set_tracking_uri(tracking_uri)
 
 # Create logger for this module
 logger = logging.getLogger(__name__)
