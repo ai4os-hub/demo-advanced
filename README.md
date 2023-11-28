@@ -102,7 +102,7 @@ Additionally you can configure the following environment variables for customiza
 
 API configuration environment variables:
 
-- _DEMO_ADVANCED_DATA_PATH_ pointing to the training datasets, default `./data/raw`.
+- _DEMO_ADVANCED_DATA_PATH_ pointing to the training datasets, default `./data`.
 
 Model data configuration environment variables:
 
@@ -132,7 +132,7 @@ docs [external-requirements](https://docs.prefect.io/2.10.18/getting-started/ins
 In case you are using `conda` you can install SQLite with the following
 command:
 
-```bash 
+```bash
 $ conda install -c conda-forge sqlite
 ```
 
@@ -184,7 +184,7 @@ folder should look approximately as follows:
 ├── deepaas.conf            <- DEEPaaS configuration file
 ├── deepaas.conf.sample     <- DEEPaaS configuration sample
 ├── demo_advanced           <- Package folder containing the model code
-├── deployments             <- Folder with prefect deployment configurations 
+├── deployments             <- Folder with prefect deployment configurations
 ├── dvc.lock                <- Data record and output state tracking (dvc)
 ├── dvc.yaml                <- Configuration and stages for dvc
 ├── flows                   <- Folder with Prefect flows
