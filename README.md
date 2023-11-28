@@ -78,6 +78,14 @@ export MLFLOW_EXPERIMENT_ID={your-mlflow-experiment-id}
 > Username and password are only required on MLFlow deployments protected by
 > user and password.
 
+To work in local mode, you can set the environment variable _MLFLOW_TRACKING_URI_ to
+`models` and MLFlow will store all models and experiments in the `models` folder.
+To explore them you can use the web interface by launching MLFlow server with:
+
+```bash
+mlflow server --backend-store-uri models
+```
+
 ## Configure and run DEEPaaS
 
 To configure DEEPaaS functionalities, create a copy from `deepaas.conf.sample`,
