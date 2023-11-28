@@ -145,9 +145,17 @@ you are using `conda` for managing your virtual environments, consider using
 `tox-conda` to automatically manage all python installation on your testing
 virtual environment.
 
+```bash
+tox -e {environment}  # Run tests on a specific environment
+```
+
 Tests are implemented following [pytest](https://docs.pytest.org) framework.
 Fixtures and parametrization are placed inside `conftest.py` files meanwhile
 assertion tests are located on `test_*.py` files.
+
+```bash
+python -m pytest tests
+```
 
 Tests are performed by a remote model named `demo-advanced-testing` using its
 version `1`. In order to pass all tests, you need to provide this model on
