@@ -204,6 +204,7 @@ folder should look approximately as follows:
 ├── dvc.lock                <- Data record and output state tracking (dvc)
 ├── dvc.yaml                <- Configuration and stages for dvc
 ├── flows                   <- Folder with Prefect flows
+├── models                  <- Folder with local MLFlow models
 ├── pyproject.toml          <- Makes project installable (pip install -e .)
 ├── htmlcov                 <- Report from tox qc.cov environment
 ├── requirements-test.txt   <- Requirements file for testing the service
