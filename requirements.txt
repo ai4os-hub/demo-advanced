@@ -1,7 +1,7 @@
 # DEEPaaS framework requirements
 deepaas~=2.1.0
 webargs~=5.5.2
-mlflow~=2.5.0
+mlflow~=2.8.1
 frouros~=0.5.1
 fPDF2~=2.7.4
 
