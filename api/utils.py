@@ -12,7 +12,6 @@ from . import config
 tracking_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
 mlflow_client = mlflow.MlflowClient(tracking_uri)
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOG_LEVEL)
 
 
 def ls_models():

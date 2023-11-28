@@ -14,7 +14,6 @@ from fpdf import FPDF
 from . import config
 
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOG_LEVEL)
 
 
 def json_response(result, **options):

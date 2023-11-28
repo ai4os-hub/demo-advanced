@@ -13,7 +13,6 @@ import demo_advanced as aimodel
 from . import config, responses, schemas, utils
 
 logger = logging.getLogger(__name__)
-logger.setLevel(config.LOG_LEVEL)
 
 
 def get_metadata():

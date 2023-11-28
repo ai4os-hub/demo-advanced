@@ -7,8 +7,6 @@ file on your model package to define CONSTANTS related to your model.
 
 By convention, the CONSTANTS defined in this module are in UPPER_CASE.
 """
-import logging
-import os
 from importlib import metadata
 
 # Ensure that your model package has a config.py file with the following
@@ -29,8 +27,3 @@ _AUTHORS = API_METADATA.get("Author", "").split(", ")
 _AUTHORS = [] if _AUTHORS == [""] else _AUTHORS
 _AUTHORS += API_METADATA["Author-emails"].keys()
 API_METADATA["Authors"] = sorted(_AUTHORS)
-
-# logging level across API modules can be setup via API_LOG_LEVEL,
-# options: DEBUG, INFO(default), WARNING, ERROR, CRITICAL
-ENV_LOG_LEVEL = os.getenv("API_LOG_LEVEL", default="INFO")
-LOG_LEVEL = getattr(logging, ENV_LOG_LEVEL.upper())
