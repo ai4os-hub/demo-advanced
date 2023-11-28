@@ -64,7 +64,8 @@ export DEMO_ADVANCED_MODELS_URI=https://{your-mlflow-address}:{mlflow-port}
 
 > TODO: Add env variable to configure MLFlow experiment name.  
 > Username and password are only required on MLFlow deployments protected by
-> user and password. See [how to use credentials file](https://mlflow.org/docs/latest/auth/index.html#using-credentials-file) to store and use your credentials.
+> user and password. See [how to use credentials file](https://mlflow.org/docs/latest/auth/index.html#using-credentials-file)
+> to store and use your credentials.
 
 To work in local mode, set the environment variable _DEMO_ADVANCED_MODELS_URI_
 to a local path (i.e. `models`) and MLFlow will store all models and experiments
