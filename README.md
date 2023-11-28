@@ -39,7 +39,7 @@ dvc pull  # Download data from your dvc remote storage
 > and your storage provider.
 
 Make sure your MNIST data repository provides a list of `npz` datasets at the
-folder configured as _DEMO_ADVANCED_DATA_PATH_ in your environment
+folder configured as _DEMO_ADVANCED_DATA_URI_ in your environment
 (default: `./data`). The API metadata will provide all the file name of the
 datasets available in that folder.
 
@@ -49,38 +49,27 @@ datasets available in that folder.
 ## FLFlow Experiments and Models Registry
 
 This example uses [MLFlow](https://mlflow.org/) to track and store models.
-Users can use the API argument `mlflow_uri` to indicate the mlflow instance
-where they want to store their training metrics, models and artifacts.
-
-> TODO: Implement basic authorization on API methods to login into the MLFlow
-> server forwarding the username and password provided by the user.
-
-By default, the argument `mlflow_uri` is required, however, you can set up
-the following environment variables to define default values in case you want
-to provide your users with a public MLFlow server or experiments:
-
-- _MLFLOW_TRACKING_URI_ pointing to the MLflow server to use for storing models.
-- _MLFLOW_TRACKING_USERNAME_ username to use with HTTP Basic authentication on MLflow.
-- _MLFLOW_TRACKING_PASSWORD_ password to use with HTTP Basic authentication on MLflow.
-- _MLFLOW_EXPERIMENT_NAME_ experiment identification to store trainings on MLflow.
-- _MLFLOW_EXPERIMENT_ID_ alternative to _MLFLOW_EXPERIMENT_NAME_ by on MLflow.
+By default, this example uses a local MLFlow server to store models and
+experiments. You can configure the MLFlow server to use by setting the
+environment variable _DEMO_ADVANCED_MODELS_URI_ to the relative path to
+your models or the address of your MLFlow server.
 
 We recommend to create an `.env` file from `.env.sample.` to load by your
 script. Additionally you can directly use the command line:
 
 ```bash
-export MLFLOW_TRACKING_USERNAME={your-mlflow-username}
-export MLFLOW_TRACKING_PASSWORD={your-mlflow-password}
-export MLFLOW_TRACKING_URI=https://{your-mlflow-address}:{mlflow-port}
-export MLFLOW_EXPERIMENT_ID={your-mlflow-experiment-id}
+export DEMO_ADVANCED_MODELS_URI=https://{your-mlflow-address}:{mlflow-port}
+# export DEMO_ADVANCED_EXPERIMENT_NAME={your-mlflow-experiment-name}
 ```
 
+> TODO: Add env variable to configure MLFlow experiment name.  
 > Username and password are only required on MLFlow deployments protected by
-> user and password.
+> user and password. See [how to use credentials file](https://mlflow.org/docs/latest/auth/index.html#using-credentials-file) to store and use your credentials.
 
-To work in local mode, you can set the environment variable _MLFLOW_TRACKING_URI_ to
-`models` and MLFlow will store all models and experiments in the `models` folder.
-To explore them you can use the web interface by launching MLFlow server with:
+To work in local mode, set the environment variable _DEMO_ADVANCED_MODELS_URI_
+to a local path (i.e. `models`) and MLFlow will store all models and experiments
+there. To explore them you can use the web interface by launching MLFlow server.
+To launch MLFlow server for `models` folder, you can use the following command:
 
 ```bash
 mlflow server --backend-store-uri models
@@ -110,7 +99,7 @@ Additionally you can configure the following environment variables for customiza
 
 API configuration environment variables:
 
-- _DEMO_ADVANCED_DATA_PATH_ pointing to the training datasets, default `./data`.
+- _DEMO_ADVANCED_DATA_URI_ pointing to the training datasets, default `./data`.
 
 Model data configuration environment variables:
 

@@ -19,13 +19,13 @@ import api
 @pytest.fixture(scope="session", autouse=True)
 def original_datapath():
     """Fixture to generate a original directory path for datasets."""
-    return pathlib.Path(api.config.DATA_PATH).absolute()
+    return pathlib.Path(api.config.DATA_URI).absolute()
 
 
 @pytest.fixture(scope="session", autouse=True)
 def original_modelspath():
     """Fixture to generate a original directory path for datasets."""
-    return pathlib.Path(api.config.MODELS_PATH).absolute()
+    return pathlib.Path(api.config.MODELS_URI).absolute()
 
 
 @pytest.fixture(scope="session", params=os.listdir("tests/configurations"))
@@ -46,13 +46,13 @@ def create_testdir():
 @pytest.fixture(scope="module", autouse=True)
 def copytree_data(testdir, original_datapath):
     """Fixture to copy the original data directory to the test directory."""
-    shutil.copytree(original_datapath, f"{testdir}/{api.config.DATA_PATH}")
+    shutil.copytree(original_datapath, f"{testdir}/{api.config.DATA_URI}")
 
 
 @pytest.fixture(scope="module", autouse=True)
 def copytree_models(testdir, original_modelspath):
     """Fixture to copy the original models directory to the test directory."""
-    shutil.copytree(original_modelspath, f"{testdir}/{api.config.MODELS_PATH}")
+    shutil.copytree(original_modelspath, f"{testdir}/{api.config.MODELS_URI}")
 
 
 def generate_signature(names, kind=inspect.Parameter.POSITIONAL_OR_KEYWORD):

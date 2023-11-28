@@ -25,8 +25,8 @@ dynamic = ["version", "dependencies"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
 env = [
-    "DEMO_ADVANCED_DATA_PATH=tests/data",
-    "DEMO_ADVANCED_MODELS_PATH=tests/models",
+    "DEMO_ADVANCED_DATA_URI=tests/data",
+    "DEMO_ADVANCED_MODELS_URI=tests/models",
 ]
 # Allow test files to share names
 # https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html

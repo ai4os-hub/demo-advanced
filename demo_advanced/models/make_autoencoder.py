@@ -16,7 +16,7 @@ from mlflow.types.schema import Schema, TensorSpec
 from demo_advanced import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient(config.MODELS_PATH)
+mlflow_client = mlflow.MlflowClient(config.MODELS_URI)
 
 
 # Type validators ---------------------------------------------------

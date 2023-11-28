@@ -8,7 +8,7 @@ from . import config, responses, utils
 
 class ModelName(fields.String):
     """Field that takes a string and validates against current available
-    models at config.MODELS_PATH.
+    models at config.MODELS_URI.
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
@@ -19,13 +19,13 @@ class ModelName(fields.String):
 
 class Dataset(fields.String):
     """Field that takes a string and validates against current available
-    data files at config.DATA_PATH.
+    data files at config.DATA_URI.
     """
 
     def _deserialize(self, value, attr, data, **kwargs):
         if value not in list(utils.ls_datasets()):
             raise ValidationError(f"Dataset `{value}` not found.")
-        return str(config.DATA_PATH / "processed" / value)
+        return str(config.DATA_URI / "processed" / value)
 
 
 class PredArgsSchema(marshmallow.Schema):

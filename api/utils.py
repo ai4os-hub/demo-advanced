@@ -9,7 +9,7 @@ import mlflow
 
 from . import config
 
-tracking_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
+tracking_uri = str(config.MODELS_URI)  # pylint: disable=invalid-name
 mlflow_client = mlflow.MlflowClient(tracking_uri)
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def ls_datasets():
     Returns:
         A list of strings in the format {id}-{type}.npz.
     """
-    processed_path = Path(config.DATA_PATH) / "processed"
+    processed_path = Path(config.DATA_URI) / "processed"
     logger.debug("Scanning at: %s", processed_path)
     dirscan = (x.name for x in processed_path.glob("*.npz"))
     return sorted(dirscan)

@@ -20,11 +20,6 @@ import logging
 import mlflow
 import numpy as np
 
-from demo_advanced import config
-
-# Set MLFlow registry URI to models path
-tracking_uri = str(config.MODELS_PATH)  # pylint: disable=invalid-name
-mlflow.set_tracking_uri(tracking_uri)
 
 # Create logger for this module
 logger = logging.getLogger(__name__)
@@ -84,6 +79,5 @@ def train(model_name, input_file, version="production", **options):
         train_data = input_data["x_train"], input_data["y_train"]
     logger.debug("Training with options: %s", options)
     with mlflow.start_run(nested=False) as run:
-        mlflow.tensorflow.autolog()
         model.fit(*train_data, verbose="auto", **options)
     return mlflow.get_run(run.info.run_id).info

@@ -11,7 +11,7 @@ from importlib import metadata
 
 # Ensure that your model package has a config.py file with the following
 # pylint: disable=unused-import
-from demo_advanced.config import DATA_PATH, MODELS_PATH
+from demo_advanced.config import DATA_URI, MODELS_URI
 
 # Get AI model metadata
 API_NAME = "demo_advanced_api"

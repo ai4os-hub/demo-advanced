@@ -11,6 +11,7 @@ By convention, the CONSTANTS defined in this module are in UPPER_CASE.
 # That might create circular dependencies.
 import os
 from pathlib import Path
+import mlflow
 
 
 # DEEPaaS can load more than one installed models. Therefore, in order to
@@ -20,11 +21,16 @@ from pathlib import Path
 BASE_PATH = Path(__file__).resolve(strict=True).parents[1]
 
 # Path definition for the pre-trained models
-MODELS_PATH = os.getenv("DEMO_ADVANCED_MODELS_PATH", BASE_PATH / "models")
-MODELS_PATH = Path(MODELS_PATH)
+MODELS_URI = os.getenv("DEMO_ADVANCED_MODELS_URI", "models")
+MODELS_URI = Path(MODELS_URI)
+
+# MLFlow configuration
+mlflow.set_tracking_uri(str(MODELS_URI))
+mlflow.tensorflow.autolog()
+
 # Path definition for data folder
-DATA_PATH = os.getenv("DEMO_ADVANCED_DATA_PATH", BASE_PATH / "data")
-DATA_PATH = Path(DATA_PATH)
+DATA_URI = os.getenv("DEMO_ADVANCED_DATA_URI", "data")
+DATA_URI = Path(DATA_URI)
 
 # Configuration of model framework features
 LABEL_DIMENSIONS = int(os.getenv("DEMO_ADVANCED_LABEL_DIMENSIONS", "10"))
