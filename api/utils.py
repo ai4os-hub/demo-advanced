@@ -9,8 +9,6 @@ import mlflow
 
 from . import config
 
-tracking_uri = str(config.MODELS_URI)  # pylint: disable=invalid-name
-mlflow_client = mlflow.MlflowClient(tracking_uri)
 logger = logging.getLogger(__name__)
 
 
@@ -21,7 +19,7 @@ def ls_models():
     Returns:
         A list of RegisteredModel from mlflow.
     """
-    models = mlflow_client.search_registered_models()
+    models = mlflow.search_registered_models()
     return {x.name: x.description for x in models}
 
 

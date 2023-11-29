@@ -1,18 +1,17 @@
 """Script to predict using MNIST model with an input file.
 """
+# pylint: disable=unused-import
 import argparse
 import logging
 import pathlib
 import sys
 
-import mlflow
 import numpy as np
 
 import demo_advanced as aimodel
 from demo_advanced import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient(config.MODELS_URI)
 
 
 # Type validators ---------------------------------------------------

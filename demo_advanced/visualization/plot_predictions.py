@@ -1,5 +1,6 @@
 """Script to visualize model predictions from MNIST inputs.
 """
+# pylint: disable=unused-import
 import argparse
 import gzip
 import logging

@@ -1,6 +1,7 @@
 """Script to perform MNIST data pre-processing to prepare it for encoder
 training.
 """
+# pylint: disable=unused-import
 import argparse
 import gzip
 import logging

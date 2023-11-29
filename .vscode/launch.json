@@ -11,10 +11,10 @@
             "module": "deepaas.cmd.run",
             "args": [ "--config-file=deepaas.conf" ],
             "envFile": "${workspaceFolder}/.env",
-            "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Convolution data pre-precessing debug
             "name": "Python: data.make_convolution",
@@ -27,10 +27,11 @@
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Encoded data pre-precessing debug
             "name": "Python: data.make_encoded",
@@ -45,10 +46,11 @@
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Model creation autoencoder debug
             "name": "Python: models.make_autoencoder",
@@ -60,10 +62,11 @@
                 "--verbosity=DEBUG",
                 "--latent_dim=64",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Model creation convolution debug
             "name": "Python: models.make_convolution",
@@ -76,10 +79,11 @@
                 "--dropout_factor=0.4",
                 "--learning_rate=1e-2",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { //  Model training autoencoder debug
             "name": "Python: models.train_model (autoencoder)",
@@ -92,10 +96,11 @@
                 "--version=Staging",
                 "data/processed/t60k-autoencoder.npz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { //  Model training model debug
             "name": "Python: models.train_model",
@@ -108,10 +113,11 @@
                 "--version=Staging",
                 "data/processed/t10k-convolution.npz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Visualisation of MNIST encoded data debug
             "name": "Python: visualization.plot_encoding",
@@ -125,10 +131,11 @@
                 "--version=Staging",
                 "data/raw/t10k-images-idx3-ubyte.gz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Visualisation of MNIST encoded data debug
             "name": "Python: visualization.plot_predictions",
@@ -144,10 +151,11 @@
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Visualisation of MNIST raw data debug
             "name": "Python: visualization.plot_samples",
@@ -160,10 +168,11 @@
                 "data/raw/t10k-images-idx3-ubyte.gz",
                 "data/raw/t10k-labels-idx1-ubyte.gz",
             ],
-            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Tests collection debug
             "name": "Python: Test collection",
@@ -175,10 +184,10 @@
                 "tests",
             ],
             "envFile": "${workspaceFolder}/.env",
-            "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         },
         { // Current file debug
             "name": "Python: Current File",
@@ -187,10 +196,10 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
-            "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             },
+            "justMyCode": true,
         }
     ]
 }

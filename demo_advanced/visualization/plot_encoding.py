@@ -1,5 +1,6 @@
 """Script to visualize autoencoder model output from MNIST dataset.
 """
+# pylint: disable=unused-import
 import argparse
 import gzip
 import logging

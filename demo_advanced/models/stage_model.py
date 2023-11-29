@@ -5,12 +5,9 @@ import argparse
 import logging
 import sys
 
-import mlflow
-
 from demo_advanced import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient(config.MODELS_URI)
 
 
 # Type validators ---------------------------------------------------
@@ -73,13 +70,13 @@ def _run_command(model_name, version=None, **options):
     # Collect latest model version if not defined
     if version is None:
         logger.info("Collecting latest model version")
-        versions = mlflow_client.get_latest_versions(model_name)
+        versions = config.mlflow_client.get_latest_versions(model_name)
         logger.debug("Versions: %s", versions)
         version = max(x.version for x in versions)
 
     # Setting model version in staging or production
     logger.info("Setting version %s to stage %s", version, options["stage"])
-    mlflow_client.transition_model_version_stage(
+    config.mlflow_client.transition_model_version_stage(
         model_name, version, options["stage"]
     )
 

@@ -1,5 +1,6 @@
 """Script to train a MNIST model with a dataset.
 """
+# pylint: disable=unused-import
 import argparse
 import logging
 import sys
@@ -9,7 +10,6 @@ import mlflow
 from demo_advanced import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient(config.MODELS_URI)
 
 
 # Script arguments definition ---------------------------------------

@@ -1,18 +1,16 @@
 """Script to train a MNIST model with a dataset.
 """
+# pylint: disable=unused-import
 import argparse
 import logging
 import pathlib
 import pprint
 import sys
 
-import mlflow
-
 import demo_advanced as aimodel
 from demo_advanced import config
 
 logger = logging.getLogger(__name__)
-mlflow_client = mlflow.MlflowClient(config.MODELS_URI)
 
 
 # Type validators ---------------------------------------------------
@@ -96,7 +94,7 @@ def _run_command(model_name, input_file, **options):
 
     # Call training function from aimodel
     logger.info("Train model using options: %s", options)
-    result = aimodel.training(input_file, model_name, **options)
+    result = aimodel.train(model_name, input_file, **options)
 
     # End of program
     logger.info("End of MNIST model training script")
