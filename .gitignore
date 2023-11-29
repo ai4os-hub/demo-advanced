@@ -142,13 +142,23 @@ GTAGS
 *.pkl
 *.npz
 
+# Testing #
+###########
+tests/data/*
+tests/models/*
+!tests/models/0
+!tests/models/models
+
 # Things specific to this project #
 ###################################
+!tests/data/external
+tests/data/external/*
+!tests/data/external/t100-images.npy
+!tests/data/processed
+tests/data/processed/*
 !tests/data/processed/t100-dataset.npz
-!tests/data/interim/t100-images.npy
-!models/0/*/*
-!models/models/*/*
-!models/models/*/*/*
+tests/models/models/*
+!tests/models/models/test_simplemodel
 mlruns/
 deepaas.conf
 whiteboard.py
