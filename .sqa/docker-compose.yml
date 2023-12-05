@@ -2,3 +2,7 @@ services:
   testing:
     image: tensorflow/tensorflow:2.13.0
     container_name: "testing"
+    volumes:
+      - type: bind
+        source: ./
+        target: /srv

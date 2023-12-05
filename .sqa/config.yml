@@ -14,7 +14,7 @@ sqa_criteria:
         container: testing
         tox:
           testenv:
-            - stylecheck
+            - qc.sty
 
 environment:
   GIT_COMMITTER_NAME: "Borja Esteban"
