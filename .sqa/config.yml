@@ -1,0 +1,24 @@
+# .sqa/config.yml - jenkins-pipeline-library configuration file
+
+# generic configuration: workspace, agents
+config:
+  project_repos:
+    demo-advanced:
+      repo: "https://github.com/deephdc/demo_advanced.git"
+      branch: dev1
+
+sqa_criteria:
+  qc_style:
+    repos:
+      demo-advanced:
+        container: testing
+        tox:
+          testenv:
+            - stylecheck
+
+environment:
+  GIT_COMMITTER_NAME: "Borja Esteban"
+  GIT_COMMITTER_EMAIL: boressan@outlook.com
+  LANG: C.UTF-8
+
+timeout: 600
