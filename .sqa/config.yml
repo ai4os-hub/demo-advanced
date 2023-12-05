@@ -12,8 +12,8 @@ sqa_criteria:
     repos:
       demo-advanced:
         container: testing
-        tox_file: tox.ini
         tox:
+          tox_file: tox.ini
           testenv:
             - qc.sty
 
