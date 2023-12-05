@@ -7,3 +7,4 @@ services:
       - type: bind
         source: ./
         target: /srv
+    command: sleep infinity
