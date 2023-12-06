@@ -11,7 +11,7 @@ import logging
 import numpy as np
 from fpdf import FPDF
 
-from . import config
+from . import config  # noqa: F401
 
 logger = logging.getLogger(__name__)
 

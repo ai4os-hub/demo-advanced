@@ -7,7 +7,7 @@ import sys
 
 import mlflow
 
-from demo_advanced import config
+from demo_advanced import config  # noqa: F401
 
 logger = logging.getLogger(__name__)
 

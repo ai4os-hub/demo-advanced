@@ -9,7 +9,7 @@ import sys
 import numpy as np
 
 import demo_advanced as aimodel
-from demo_advanced import config
+from demo_advanced import config  # noqa: F401
 
 logger = logging.getLogger(__name__)
 
