@@ -11,7 +11,7 @@ sqa_criteria:
   qc_style:
     repos:
       demo-advanced:
-        container: testing
+        container: precessing
         tox:
           tox_file: tox.ini
           testenv:

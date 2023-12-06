@@ -1,6 +1,7 @@
 services:
-  testing:
+  processing:
     image: tensorflow/tensorflow:2.13.0
+    container_name: processing
     working_dir: /srv
     volumes:
       - type: bind
