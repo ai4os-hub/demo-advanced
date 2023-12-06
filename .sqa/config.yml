@@ -31,7 +31,7 @@ sqa_criteria:
         tox:
           tox_file: tox.ini
           testenv:
-            - security
+            - qc.sec
 
 environment:
   GIT_COMMITTER_NAME: "Borja Esteban"
