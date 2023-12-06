@@ -1,5 +1,6 @@
-# Build: docker build -t sqa .
-FROM tensorflow/tensorflow:2.13.0-gpu
+# Docker image for CI testing of the DEEPaaS API
+# Note there is probably no gpu in the CI server
+FROM tensorflow/tensorflow:2.13.0
 RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip3 install --no-cache-dir tox
 CMD ["sleep", "infinity"]
