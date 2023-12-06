@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   testing:
-    image: tensorflow/tensorflow:2.13.0
+    image: ifcacomputing/ci-images:python3.12
     container_name: testing
     working_dir: /srv
     volumes:
