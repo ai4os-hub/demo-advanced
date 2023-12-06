@@ -1,7 +1,6 @@
 services:
   testing:
     image: tensorflow/tensorflow:2.13.0
-    container_name: "testing"
     working_dir: /srv
     volumes:
       - type: bind
