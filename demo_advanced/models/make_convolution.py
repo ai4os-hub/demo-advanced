@@ -113,7 +113,6 @@ def _run_command(name, **options):
     logger.info("Saving model in %s.", config.MODELS_URI)
     save_path = f"{config.MODELS_URI}/{name}"
     mlflow.tensorflow.save_model(model, save_path, signature=signature)
-
     mlflow.register_model(save_path, name)
     logger.debug("Model saved with details: %s", save_path)
 

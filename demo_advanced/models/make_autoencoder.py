@@ -98,17 +98,18 @@ def _run_command(name, **options):
     # Create mlflow autoencoder signature
     logger.info("Generating autoencoder signature for mlflow")
     io_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
-    input_schema = Schema([TensorSpec(np.dtype(np.float64), io_shape)])
-    output_schema = Schema([TensorSpec(np.dtype(np.float32), io_shape)])
-    signature = ModelSignature(input_schema, output_schema)
+    signature = ModelSignature(
+        inputs=Schema([TensorSpec(np.dtype(np.float64), io_shape)]),
+        outputs=Schema([TensorSpec(np.dtype(np.float32), io_shape)]),
+    )
     logger.debug("Signature generated: %s", signature)
 
     # Saving model experiment to mlflow experiments
-    logger.info("Saving autoencoder in mlflow experiments.")
-    with mlflow.start_run():
-        info = mlflow.tensorflow.log_model(model, "model", signature=signature)
-    mlflow.register_model(info.model_uri, name)
-    logger.debug("Autoencoder saved with details: %s", info)
+    logger.info("Saving autoencoder in %s.", config.MODELS_URI)
+    save_path = f"{config.MODELS_URI}/{name}"
+    mlflow.tensorflow.save_model(model, save_path, signature=signature)
+    mlflow.register_model(save_path, name)
+    logger.debug("Model saved with details: %s", save_path)
 
     # End of program
     logger.info("End of MNIST autoencoder creation script")
