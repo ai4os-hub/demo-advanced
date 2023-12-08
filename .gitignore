@@ -150,10 +150,6 @@ mlruns/0/*
 !mlruns/0/meta.yaml
 !mlruns/models/
 
-# Testing #
-###########
-
-
 # Things specific to this project #
 ###################################
 deepaas.conf
