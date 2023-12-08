@@ -102,18 +102,20 @@ def _run_command(name, **options):
     # Create mlflow signature
     logger.info("Generating model signature for mlflow")
     input_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
-    input_schema = Schema([TensorSpec(np.dtype(np.float64), input_shape)])
     output_shape = (-1, config.LABEL_DIMENSIONS)
-    output_schema = Schema([TensorSpec(np.dtype(np.float32), output_shape)])
-    signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+    signature = ModelSignature(
+        inputs=Schema([TensorSpec(np.dtype(np.float64), input_shape)]),
+        outputs=Schema([TensorSpec(np.dtype(np.float32), output_shape)]),
+    )
     logger.debug("Signature generated: %s", signature)
 
     # Saving model experiment to mlflow experiments
-    logger.info("Saving model in mlflow experiments.")
-    with mlflow.start_run():
-        info = mlflow.tensorflow.log_model(model, "model", signature=signature)
-    mlflow.register_model(info.model_uri, name)
-    logger.debug("Model saved with details: %s", info)
+    logger.info("Saving model in %s.", config.MODELS_URI)
+    save_path = f"{config.MODELS_URI}/{name}"
+    mlflow.tensorflow.save_model(model, save_path, signature=signature)
+
+    mlflow.register_model(save_path, name)
+    logger.debug("Model saved with details: %s", save_path)
 
     # End of program
     logger.info("End of MNIST model creation script")
