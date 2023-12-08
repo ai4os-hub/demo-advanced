@@ -17,15 +17,22 @@ import api
 
 
 @pytest.fixture(scope="session", autouse=True)
-def original_datapath():
-    """Fixture to generate a original directory path for datasets."""
+def path_testdata():
+    """Fixture to generate absolute path for <repo>/test/datas."""
     return pathlib.Path(api.config.DATA_URI).absolute()
 
 
 @pytest.fixture(scope="session", autouse=True)
-def original_modelspath():
-    """Fixture to generate a original directory path for datasets."""
+def path_testmodels():
+    """Fixture to generate absolute path for <repo>/test/models."""
     return pathlib.Path(api.config.MODELS_URI).absolute()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def path_testregistry():
+    """Fixture to generate absolute path for <repo>/test/registry."""
+    path_registry = os.getenv("MLFLOW_REGISTRY_URI", "tests/registry")
+    return pathlib.Path(path_registry).absolute()
 
 
 @pytest.fixture(scope="session", params=os.listdir("tests/configurations"))
@@ -35,24 +42,31 @@ def config_file(request):
     return pathlib.Path(config_str).absolute()
 
 
-@pytest.fixture(scope="module", name="testdir")
-def create_testdir():
+@pytest.fixture(scope="module", name="tempdir")
+def create_tempdir():
     """Fixture to generate a temporary directory for each test module."""
-    with tempfile.TemporaryDirectory() as testdir:
-        os.chdir(testdir)
-        yield testdir
+    with tempfile.TemporaryDirectory() as tempdir:
+        os.chdir(tempdir)
+        yield tempdir
 
 
 @pytest.fixture(scope="module", autouse=True)
-def copytree_data(testdir, original_datapath):
-    """Fixture to copy the original data directory to the test directory."""
-    shutil.copytree(original_datapath, f"{testdir}/{api.config.DATA_URI}")
+def copytree_data(tempdir, path_testdata):
+    """Fixture to copy the original data directory to the temp directory."""
+    shutil.copytree(path_testdata, f"{tempdir}/{api.config.DATA_URI}")
 
 
 @pytest.fixture(scope="module", autouse=True)
-def copytree_models(testdir, original_modelspath):
-    """Fixture to copy the original models directory to the test directory."""
-    shutil.copytree(original_modelspath, f"{testdir}/{api.config.MODELS_URI}")
+def copytree_models(tempdir, path_testmodels):
+    """Fixture to copy the original models directory to the temp directory."""
+    shutil.copytree(path_testmodels, f"{tempdir}/{api.config.MODELS_URI}")
+
+
+@pytest.fixture(scope="module", autouse=True)
+def copytree_registry(tempdir, path_testregistry):
+    """Fixture to copy the original regist directory to the temp directory."""
+    path_registry = os.getenv("MLFLOW_REGISTRY_URI", "tests/registry")
+    shutil.copytree(path_testregistry, f"{tempdir}/{path_registry}")
 
 
 def generate_signature(names, kind=inspect.Parameter.POSITIONAL_OR_KEYWORD):

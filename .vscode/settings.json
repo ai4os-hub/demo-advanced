@@ -54,6 +54,8 @@
         "sourcelink",
         "submodel",
         "submodels",
+        "testmodels",
+        "testregistry",
         "webargs"
     ],
     "python.testing.pytestArgs": [
