@@ -6,6 +6,14 @@ pipeline {
     agent any
 
     stages {
+
+        stage("User pipeline job") {
+            steps {
+                script {
+                    build(job: "/AI4OS-HUB-TEST/" + env.JOB_NAME.drop(10))
+                }
+            }
+        }        
         stage('SQA baseline dynamic stages') {
             steps {
                 script {
