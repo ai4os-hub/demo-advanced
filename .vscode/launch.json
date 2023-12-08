@@ -24,8 +24,8 @@
             "args": [
                 "--output=debugging_data.npz",
                 "--verbosity=DEBUG",
-                "data/raw/t10k-images-idx3-ubyte.gz",
-                "data/raw/t10k-labels-idx1-ubyte.gz",
+                "t10k-images-idx3-ubyte",
+                "t10k-labels-idx1-ubyte",
             ],
             "envFile": "${workspaceFolder}/.env",
             "env": {
@@ -43,8 +43,8 @@
                 "--verbosity=DEBUG",
                 "debug_autoencoder",
                 "--version=Staging",
-                "data/raw/t10k-images-idx3-ubyte.gz",
-                "data/raw/t10k-labels-idx1-ubyte.gz",
+                "t10k-images-idx3-ubyte",
+                "t10k-labels-idx1-ubyte",
             ],
             "envFile": "${workspaceFolder}/.env",
             "env": {

@@ -55,6 +55,7 @@ def _run_command(images_file, labels_file, **options):
     logger.debug("Processing MNIST images at %s", options["output"])
 
     # Load images file from gz images_file
+    images_file = f"{config.DATA_URI}/raw/{images_file}.gz"
     logger.info("Loading MNIST images from file %s", images_file)
     with gzip.open(images_file, "rb") as file:
         images = np.frombuffer(file.read(), np.uint8, offset=16)
@@ -62,6 +63,7 @@ def _run_command(images_file, labels_file, **options):
     images = images / 255.0
 
     # Load labels file from gz labels_file
+    labels_file = f"{config.DATA_URI}/raw/{labels_file}.gz"
     logger.info("Loading MNIST labels from file %s", labels_file)
     with gzip.open(labels_file, "rb") as file:
         labels = np.frombuffer(file.read(), np.uint8, offset=8)
