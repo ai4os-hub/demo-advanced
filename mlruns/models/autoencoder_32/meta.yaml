@@ -1,5 +1,5 @@
 aliases: {}
 creation_timestamp: 1702039487369
-description: null
-last_updated_timestamp: 1702039487369
+description: MNIST Autoencoder 32 latent dimensions.
+last_updated_timestamp: 1702043763862
 name: autoencoder_32

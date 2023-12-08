@@ -1,5 +1,5 @@
 aliases: {}
 creation_timestamp: 1702039768445
-description: null
-last_updated_timestamp: 1702039768445
+description: MNIST 2 layers full connected ANN.
+last_updated_timestamp: 1702043875148
 name: dense2layers

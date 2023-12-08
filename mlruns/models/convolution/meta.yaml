@@ -1,5 +1,5 @@
 aliases: {}
 creation_timestamp: 1702038223999
-description: null
-last_updated_timestamp: 1702038224000
+description: MNIST simple CNN model.
+last_updated_timestamp: 1702043829036
 name: convolution
