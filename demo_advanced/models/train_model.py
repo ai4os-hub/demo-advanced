@@ -92,6 +92,10 @@ def _run_command(model_name, input_file, **options):
     logging.basicConfig(level=options.pop("verbosity"))
     logger.debug("Training new %s model", model_name)
 
+    # Get training file from data directory
+    input_file = f"{config.DATA_URI}/processed/{input_file}.npz"
+    logger.debug("Loading data from input_file: %s", input_file)
+
     # Call training function from aimodel
     logger.info("Train model using options: %s", options)
     result = aimodel.train(model_name, input_file, **options)

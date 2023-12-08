@@ -94,7 +94,7 @@
                 "--verbosity=DEBUG",
                 "debug_autoencoder",
                 "--version=Staging",
-                "data/processed/t60k-autoencoder.npz",
+                "t60k-autoencoder",
             ],
             "envFile": "${workspaceFolder}/.env",
             "env": {
@@ -111,7 +111,7 @@
                 "--verbosity=DEBUG",
                 "debug_model",
                 "--version=Staging",
-                "data/processed/t10k-convolution.npz",
+                "t10k-convolution",
             ],
             "envFile": "${workspaceFolder}/.env",
             "env": {
