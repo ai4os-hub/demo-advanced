@@ -51,7 +51,7 @@ def input_file(request):
     return UploadedFile("", filename=f"{filepath}/{request.param}")
 
 
-@pytest.fixture(scope="module", params=["test_simplemodel"])
+@pytest.fixture(scope="module", params=["simple_convolution"])
 def model_name(request):
     """Fixture to provide the model_name argument to api.predict."""
     return request.param
