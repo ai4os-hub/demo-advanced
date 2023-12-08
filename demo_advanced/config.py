@@ -20,18 +20,13 @@ import mlflow
 
 # Path definition for the pre-trained models
 MODELS_URI = os.getenv("DEMO_ADVANCED_MODELS_URI", "models")
+DATA_URI = os.getenv("DEMO_ADVANCED_DATA_URI", "data")
 
 # MLFlow configuration
-EXPERIMENT_NAME = os.getenv("DEMO_ADVANCED_EXPERIMENT_NAME", "demo_advanced")
-mlflow.set_tracking_uri(MODELS_URI)
 mlflow.tensorflow.autolog()
-if not mlflow.get_experiment_by_name(EXPERIMENT_NAME):
-    mlflow.create_experiment(EXPERIMENT_NAME)
-mlflow.set_experiment(EXPERIMENT_NAME)
 mlflow_client = mlflow.tracking.MlflowClient()
 
 # Path definition for data folder
-DATA_URI = os.getenv("DEMO_ADVANCED_DATA_URI", "data")
 
 # Configuration of model framework features
 LABEL_DIMENSIONS = int(os.getenv("DEMO_ADVANCED_LABEL_DIMENSIONS", "10"))
