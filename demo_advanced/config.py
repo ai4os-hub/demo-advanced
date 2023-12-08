@@ -26,8 +26,6 @@ DATA_URI = os.getenv("DEMO_ADVANCED_DATA_URI", "data")
 mlflow.tensorflow.autolog()
 mlflow_client = mlflow.tracking.MlflowClient()
 
-# Path definition for data folder
-
 # Configuration of model framework features
 LABEL_DIMENSIONS = int(os.getenv("DEMO_ADVANCED_LABEL_DIMENSIONS", "10"))
 IMAGE_SIZE = int(os.getenv("DEMO_ADVANCED_IMAGE_SIZE", default="28"))
