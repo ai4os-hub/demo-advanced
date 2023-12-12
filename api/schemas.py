@@ -38,7 +38,7 @@ class PredArgsSchema(marshmallow.Schema):
 
     model_name = ModelName(
         metadata={
-            "description": "String identification for MLFlow models.",
+            "description": "String identification for models.",
         },
         required=True,
     )
@@ -50,14 +50,6 @@ class PredArgsSchema(marshmallow.Schema):
             "location": "form",
         },
         required=True,
-    )
-
-    version = fields.String(
-        metadata={
-            "description": "Model version for model in model_name.",
-        },
-        required=False,
-        validate=validate.Range(min=1),
     )
 
     batch_size = fields.Integer(
@@ -96,7 +88,7 @@ class TrainArgsSchema(marshmallow.Schema):
 
     model_name = ModelName(
         metadata={
-            "description": "String identification for MLFlow models.",
+            "description": "String identification for models.",
         },
         required=True,
     )
@@ -106,13 +98,6 @@ class TrainArgsSchema(marshmallow.Schema):
             "description": "Dataset name from metadata for training input.",
         },
         required=True,
-    )
-
-    version = fields.String(
-        metadata={
-            "description": "Model version for model in model_name.",
-        },
-        required=False,
     )
 
     epochs = fields.Integer(

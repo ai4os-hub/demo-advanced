@@ -10,7 +10,6 @@ By convention, the CONSTANTS defined in this module are in UPPER_CASE.
 # Do NOT import anything from `api` or `demo_advanced` packages here.
 # That might create circular dependencies.
 import os
-import mlflow
 
 
 # DEEPaaS can load more than one installed models. Therefore, in order to
@@ -21,10 +20,6 @@ import mlflow
 # Path definition for the pre-trained models
 MODELS_URI = os.getenv("DEMO_ADVANCED_MODELS_URI", "models")
 DATA_URI = os.getenv("DEMO_ADVANCED_DATA_URI", "data")
-
-# MLFlow configuration
-mlflow.tensorflow.autolog()
-mlflow_client = mlflow.tracking.MlflowClient()
 
 # Configuration of model framework features
 LABEL_DIMENSIONS = int(os.getenv("DEMO_ADVANCED_LABEL_DIMENSIONS", "10"))

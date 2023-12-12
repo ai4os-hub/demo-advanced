@@ -10,7 +10,6 @@ import sys
 
 import numpy as np
 import tensorflow as tf
-import mlflow
 
 from demo_advanced import config
 
@@ -52,7 +51,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["model_name"],
-    help="Autoencoder name to use for identification on mlflow registry.",
+    help="Autoencoder name to use for identification on save folder.",
     type=str,
 )
 parser.add_argument(
@@ -94,11 +93,11 @@ def _run_command(model_name, images_file, labels_file, **options):
         labels = np.frombuffer(file.read(), np.uint8, offset=8)
     labels = tf.keras.utils.to_categorical(labels, config.LABEL_DIMENSIONS)
 
-    # Load model from mlflow registry
-    logger.info("Loading autoencoder %s from mlflow registry", model_name)
-    model_uri = f"models:/{model_name}/{options['version']}"
+    # Load model from models folder
+    logger.info("Loading autoencoder %s from models folder", model_name)
+    model_uri = pathlib.Path(config.MODELS_URI) / model_name
     logger.debug("Using model uri %s visualization", model_uri)
-    model = mlflow.tensorflow.load_model(model_uri)
+    model = tf.keras.models.load_model(model_uri)
 
     # Process images using autoencoder encoder
     logger.info("Encoding MNIST images using %s autoencoder", model_name)

@@ -6,12 +6,9 @@ import argparse
 import logging
 import sys
 
-import mlflow
 import numpy as np
 import tensorflow as tf
 from keras import layers
-from mlflow.models import ModelSignature
-from mlflow.types.schema import Schema, TensorSpec
 
 from demo_advanced import config
 
@@ -49,7 +46,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["-n", "--name"],
-    help="Model name to use for identification on mlflow registry.",
+    help="Model name to use for identification on saves folder.",
     type=str,
     required=True,
 )
@@ -95,20 +92,10 @@ def _run_command(name, **options):
         loss=tf.keras.losses.MeanAbsoluteError(),
     )
 
-    # Create mlflow autoencoder signature
-    logger.info("Generating autoencoder signature for mlflow")
-    io_shape = (-1, config.IMAGE_SIZE, config.IMAGE_SIZE, 1)
-    signature = ModelSignature(
-        inputs=Schema([TensorSpec(np.dtype(np.float64), io_shape)]),
-        outputs=Schema([TensorSpec(np.dtype(np.float32), io_shape)]),
-    )
-    logger.debug("Signature generated: %s", signature)
-
-    # Saving model experiment to mlflow experiments
+    # Saving model to models folder
     logger.info("Saving autoencoder in %s.", config.MODELS_URI)
     save_path = f"{config.MODELS_URI}/{name}"
-    mlflow.tensorflow.save_model(model, save_path, signature=signature)
-    mlflow.register_model(save_path, name)
+    model.save(save_path)
     logger.debug("Model saved with details: %s", save_path)
 
     # End of program

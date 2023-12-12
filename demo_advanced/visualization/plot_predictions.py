@@ -7,7 +7,7 @@ import logging
 import pathlib
 import sys
 
-import mlflow
+import keras
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -60,7 +60,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["model_name"],
-    help="Model name to use for identification on mlflow registry.",
+    help="Model name to use for identification on models folder.",
     type=str,
 )
 parser.add_argument(
@@ -71,7 +71,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["--encoder"],
-    help="Autoencoder name to identify the encoder on mlflow registry.",
+    help="Autoencoder name to identify the encoder on models folder.",
     type=str,
 )
 parser.add_argument(
@@ -92,18 +92,18 @@ def _run_command(model_name, images_file, labels_file, **options):
     logging.basicConfig(level=options["verbosity"])
     logger.debug("Visualizing model %s predictions", model_name)
 
-    # Load model from mlflow registry
-    logger.info("Loading model %s from mlflow registry", model_name)
-    model_uri = f"models:/{model_name}/{options['version']}"
+    # Load model from models folder
+    logger.info("Loading model %s from models folder", model_name)
+    model_uri = pathlib.Path(config.MODELS_URI) / model_name
     logger.debug("Using model uri %s visualization", model_uri)
-    model = mlflow.tensorflow.load_model(model_uri)
+    model = keras.models.load_model(model_uri)
 
-    # Load encoder from mlflow registry if defined
+    # Load encoder from models folder if defined
     if options["encoder"] is not None:
-        logger.info("Loading encoder %s from registry", options["encoder"])
-        encoder_uri = f"models:/{options['encoder']}/Production"
+        logger.info("Loading encoder %s from models", options["encoder"])
+        encoder_uri = pathlib.Path(config.MODELS_URI) / options["encoder"]
         logger.debug("Using model uri %s for encoding", encoder_uri)
-        encoder = mlflow.tensorflow.load_model(encoder_uri).encoder
+        encoder = keras.models.load_model(encoder_uri)
     else:
         encoder = None
 

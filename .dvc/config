@@ -1,4 +1,0 @@
-[core]
-    remote = deep-cloud
-['remote "deep-cloud"']
-    url = webdavs://data-deep.a.incd.pt/public.php/webdav

@@ -56,7 +56,7 @@ def test_version(metadata):
 def test_models(metadata):
     """Tests that metadata provides models information."""
     assert "models" in metadata
-    assert metadata["models"] == {"simple_convolution": "Testing model."}
+    assert metadata["models"] == ["simple_convolution"]
 
 
 def test_datasets(metadata):

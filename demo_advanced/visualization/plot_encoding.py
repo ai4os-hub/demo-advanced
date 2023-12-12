@@ -7,7 +7,7 @@ import logging
 import pathlib
 import sys
 
-import mlflow
+import keras
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -59,7 +59,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["model_name"],
-    help="Model name to use for identification on mlflow registry.",
+    help="Model name to use for identification from models folder.",
     type=str,
 )
 parser.add_argument(
@@ -81,11 +81,11 @@ def _run_command(model_name, images_file, **options):
     logging.basicConfig(level=options["verbosity"])
     logger.debug("Visualizing autoencoder %s output", model_name)
 
-    # Load model from mlflow registry
-    logger.info("Loading autoencoder %s from mlflow registry", model_name)
-    model_uri = f"models:/{model_name}/{options['version']}"
+    # Load model from models folder
+    logger.info("Loading autoencoder %s from models", model_name)
+    model_uri = pathlib.Path(config.MODELS_URI) / model_name
     logger.debug("Using model uri %s visualization", model_uri)
-    model = mlflow.tensorflow.load_model(model_uri)
+    model = keras.models.load_model(model_uri)
 
     # Load images file from gz images_file
     images_file = f"{config.DATA_URI}/raw/{images_file}.gz"

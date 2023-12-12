@@ -58,7 +58,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["model_name"],
-    help="Model name to use for identification on mlflow registry.",
+    help="Model name to use for identification from models folder.",
     type=str,
 )
 parser.add_argument(
@@ -98,7 +98,8 @@ def _run_command(model_name, input_file, **options):
 
     # Call training function from aimodel
     logger.info("Train model using options: %s", options)
-    result = aimodel.train(model_name, input_file, **options)
+    model_uri = pathlib.Path(config.MODELS_URI) / model_name
+    result = aimodel.train(model_uri, input_file, **options)
 
     # End of program
     logger.info("End of MNIST model training script")
