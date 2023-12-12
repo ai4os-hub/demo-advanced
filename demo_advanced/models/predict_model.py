@@ -51,7 +51,7 @@ parser.add_argument(
 )
 parser.add_argument(
     *["model_name"],
-    help="Model name to use for identification on mlflow registry.",
+    help="Model name to use for identification from models folder.",
     type=str,
 )
 parser.add_argument(
@@ -85,7 +85,8 @@ def _run_command(model_name, input_file, output_file, **options):
 
     # Call training function from aimodel
     logger.info("Generate predictions with options: %s", options)
-    result = aimodel.predict(input_file, model_name, **options)
+    model_uri = pathlib.Path(config.MODELS_URI) / model_name
+    result = aimodel.predict(model_uri, input_file, **options)
 
     # Write predictions into output file
     logger.info("Writing predictions to output file %s", output_file)

@@ -1,6 +1,4 @@
-![qc.sec](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-sec.yml/badge.svg)
-![qc.sty](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-sty.yml/badge.svg)
-![qc.uni](https://github.com/BorjaEst/demo-advanced-api/actions/workflows/qc-uni.yml/badge.svg)
+> TODO: Add badges for CI/CD, coverage, license, etc. from AI4OS Jenkins.
 
 # DEEPaaS Full Template
 
@@ -18,63 +16,52 @@ pip install -e .  # Install repository project
 > your code at the repository and not a copy at `.../site-packages`. Useful to
 > test your package changes without reinstalling.
 
-## Data Version Control
+## Data implementation
 
-As second step, you need to download your raw data and datasets. This project
-uses the Data Version Control [DVC](https://dvc.org/) library to organize and
-version all datasets and data.
-
-For a tutorial about how to use `dvc` you can use the guide at DVC:
-[Get Started: Data Management](https://dvc.org/doc/start/data-management).
+As second step, you need to download MNIST dataset and place it inside the
+`data/raw` with the following structure:
 
 ```bash
-pip instal -r requirements-dev.txt
-dvc remote modify --local deep-cloud user {your-dvc-remote-user}
-dvc remote modify --local deep-cloud password {your-dvc-remote-password}
-dvc pull  # Download data from your dvc remote storage
+data/raw
+├── t10k-images-idx3-ubyte.gz
+├── t10k-labels-idx1-ubyte.gz
+├── train-images-idx3-ubyte.gz
+└── train-labels-idx1-ubyte.gz
 ```
 
-> If your provider does not provide webdav, check the alternatives offered at
-> [DVC Remotes](https://dvc.org/doc/user-guide/data-management/remote-storage)
-> and your storage provider.
+You can change the data folder by setting the environment variable
+_DEMO_ADVANCED_DATA_URI_ to the path of your data folder.
+Once you have downloaded the data, you can generate processed dataset by
+running the following scripts:
 
-Make sure your MNIST data repository provides a list of `npz` datasets at the
-folder configured as _DEMO_ADVANCED_DATA_URI_ in your environment
-(default: `./data`). The API metadata will provide all the file name of the
-datasets available in that folder.
+- `python -m demo_advanced.data.make_convolution` for convolution training data.
+- `python -m demo_advanced.data.make_autoencoder` for autoencoders training data.
+- `python -m demo_advanced.data.make_encoded` for encoded training data.
+
+One example of the expected data structure is the following:
+
+```bash
+data/processed
+├── t10k-convolution.npz
+├── t10k-encoded.npz
+├── t60k-autoencoder.npz
+├── t60k-convolution.npz
+└── t60k-encoded.npz
+```
 
 > Note model function `demo_advanced.train` expects `npz` files with keys
 > `images` and `labels`.
 
-## FLFlow Experiments and Models Registry
+## Model implementation and storage
 
-This example uses [MLFlow](https://mlflow.org/) to track and store models.
-By default, this example uses a local MLFlow server to store models and
-experiments. You can configure the MLFlow server to use by setting the
-environment variable _DEMO_ADVANCED_MODELS_URI_ to the relative path to
-your models or the address of your MLFlow server.
+This example uses different models to train and predict MNIST dataset.
+By default, models are stored in the local `models` folder. You can change
+the model folder by setting the environment variable _DEMO_ADVANCED_MODELS_URI_.
+To generate the models, you can run the following scripts:
 
-We recommend to create an `.env` file from `.env.sample.` to load by your
-script. Additionally you can directly use the command line:
-
-```bash
-export DEMO_ADVANCED_MODELS_URI=https://{your-mlflow-address}:{mlflow-port}
-# export DEMO_ADVANCED_EXPERIMENT_NAME={your-mlflow-experiment-name}
-```
-
-> TODO: Add env variable to configure MLFlow experiment name.  
-> Username and password are only required on MLFlow deployments protected by
-> user and password. See [how to use credentials file](https://mlflow.org/docs/latest/auth/index.html#using-credentials-file)
-> to store and use your credentials.
-
-To work in local mode, set the environment variable _DEMO_ADVANCED_MODELS_URI_
-to a local path (i.e. `models`) and MLFlow will store all models and experiments
-there. To explore them you can use the web interface by launching MLFlow server.
-To launch MLFlow server for `models` folder, you can use the following command:
-
-```bash
-mlflow server --backend-store-uri models
-```
+- `python -m demo_advanced.models.make_autoencoder` for autoencoder model.
+- `python -m demo_advanced.models.make_convolution` for convolution model.
+- `python -m demo_advanced.models.make_dense2ly` for 2 layers full connected model.
 
 ## Configure and run DEEPaaS
 
@@ -100,39 +87,13 @@ Additionally you can configure the following environment variables for customiza
 
 API configuration environment variables:
 
+- _DEMO_ADVANCED_MODELS_URI_ pointing to the models folder, default `./models`.
 - _DEMO_ADVANCED_DATA_URI_ pointing to the training datasets, default `./data`.
 
 Model data configuration environment variables:
 
 - _DEMO_ADVANCED_LABEL_DIMENSIONS_ dimensions the labels are hot encoded, default `10`.
 - _DEMO_ADVANCED_IMAGE_SIZE_ vertical and horizontal pixels per image, default `28`.
-
-## Flows and deployments
-
-This example uses [Prefect](https://docs.prefect.io/) to define and run flow
-processes to automate training, dataset updates and possible deployments of
-the model.
-
-> TODO: Add flow and deployment to update datasets from public repository.  
-> TODO: Add flow and deployment to deploy model on a public server.
-
-Flows are defined inside the `flows` folder. You can run them using the
-prefect CLI or from a prefect server deployment. For example, to run the
-training flow you can use the following commands:
-
-```bash
-$ prefect deploy --params={training-arguments} flows/training.py:main
-```
-
-Note that in case you are running prefect CLI or server, you need to install
-and configure a database backend. For more information, check the Prefect
-docs [external-requirements](https://docs.prefect.io/2.10.18/getting-started/installation/#external-requirements).
-In case you are using `conda` you can install SQLite with the following
-command:
-
-```bash
-$ conda install -c conda-forge sqlite
-```
 
 ## Testing
 
@@ -155,16 +116,11 @@ assertion tests are located on `test_*.py` files.
 python -m pytest tests
 ```
 
-Tests are performed by a remote model named `demo-advanced-testing` using its
-version `1`. In order to pass all tests, you need to provide this model on
-your MLFlow model registry and configure the environment variables to access
-it. Experiments can be tracked if you set a _MLFLOW_EXPERIMENT_NAME_ or
-_MLFLOW_EXPERIMENT_ID_, leaving empty those variables prevents the generation
-of experiment tracking on the MLFlow server.
-
-> If tests fail with `Registered Model with name=demo-advanced-testing not found`
-> but you are sure that the model `demo-advanced-testing` exists in your MLFlow
-> registry, ensure your MLFlow environment is accessible at testing runtime.
+This example provides an example of minimalistic dataset and model to run
+all testing functionalities. As the dataset and model are minimalistic, it is
+supposed to be fast to run all tests. If you want to test your own dataset
+see how to configure the environment variables for testing at pyproject.toml
+using [pytest-env](https://pypi.org/project/pytest-env/).
 
 ## Project structure
 
@@ -172,15 +128,15 @@ After downloading and configuring the your project instance, your project
 folder should look approximately as follows:
 
 ```
-├── .dvc                    <- Folder with Data Version Control configuration
-├── .dvcignore              <- Untracked files that dvc should ignore
 ├── .env                    <- Environment configuration file
 ├── .env.sample             <- Environment configuration sample
 ├── .git                    <- Folder with Code Version Control data (git)
 ├── .gitignore              <- Untracked files that git should ignore
 ├── .pytest_cache           <- Cache generated by pytest framework
+├── .sqa                    <- AI4OS Software Quality Assurance (SQA) folder
 ├── .tox                    <- Environments generated by tox automated testing
 ├── .vscode                 <- VSCode configuration (debug, formatting, etc.)
+├── Dockerfile              <- Instructions to build service containers
 ├── Jenkinsfile             <- Describes basic Jenkins CI/CD pipeline
 ├── LICENSE                 <- Project and model license file
 ├── README.md               <- The top-level README for using this project
@@ -190,13 +146,14 @@ folder should look approximately as follows:
 ├── deepaas.conf            <- DEEPaaS configuration file
 ├── deepaas.conf.sample     <- DEEPaaS configuration sample
 ├── demo_advanced           <- Package folder containing the model code
-├── deployments             <- Folder with prefect deployment configurations
-├── dvc.lock                <- Data record and output state tracking (dvc)
-├── dvc.yaml                <- Configuration and stages for dvc
-├── flows                   <- Folder with Prefect flows
+├── docs                    <- Folder with documentation files
+├── htmlcov                 <- Report from tox qc.cov environment
+├── metadata.json           <- Defines information to the [DEEP Open Catalog](https://marketplace.deep-hybrid-datacloud.eu)
 ├── models                  <- Folder with local MLFlow models
 ├── pyproject.toml          <- Makes project installable (pip install -e .)
-├── htmlcov                 <- Report from tox qc.cov environment
+├── notebooks               <- Jupyter notebooks folder
+├── references              <- Data dictionaries, manuals, and explanatory materials
+├── requirements-dev.txt    <- Requirements file with development utilities
 ├── requirements-test.txt   <- Requirements file for testing the service
 ├── requirements.txt        <- Requirements file for running the service
 ├── tests                   <- Folder containing tests for the API methods

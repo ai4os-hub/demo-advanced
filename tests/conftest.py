@@ -28,13 +28,6 @@ def path_testmodels():
     return pathlib.Path(api.config.MODELS_URI).absolute()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def path_testregistry():
-    """Fixture to generate absolute path for <repo>/test/registry."""
-    path_registry = os.getenv("MLFLOW_REGISTRY_URI", "tests/registry")
-    return pathlib.Path(path_registry).absolute()
-
-
 @pytest.fixture(scope="session", params=os.listdir("tests/configurations"))
 def config_file(request):
     """Fixture to provide each deepaas configuration path."""
@@ -60,13 +53,6 @@ def copytree_data(tempdir, path_testdata):
 def copytree_models(tempdir, path_testmodels):
     """Fixture to copy the original models directory to the temp directory."""
     shutil.copytree(path_testmodels, f"{tempdir}/{api.config.MODELS_URI}")
-
-
-@pytest.fixture(scope="module", autouse=True)
-def copytree_registry(tempdir, path_testregistry):
-    """Fixture to copy the original regist directory to the temp directory."""
-    path_registry = os.getenv("MLFLOW_REGISTRY_URI", "tests/registry")
-    shutil.copytree(path_testregistry, f"{tempdir}/{path_registry}")
 
 
 def generate_signature(names, kind=inspect.Parameter.POSITIONAL_OR_KEYWORD):
