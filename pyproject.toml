@@ -19,8 +19,8 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-"Homepage" = "https://git.scc.kit.edu/m-team/ai/demo-advanced-api"
-"Bug Tracker" = "https://git.scc.kit.edu/m-team/ai/demo-advanced-api/-/issues"
+"Homepage" = "https://codebase.helmholtz.cloud/m-team/ai/demo-advanced-api"
+"Bug Tracker" = "https://codebase.helmholtz.cloud/m-team/ai/demo-advanced-api/-/issues"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

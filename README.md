@@ -7,7 +7,7 @@
 To launch it, first download the repository and install the package using pip.
 
 ```bash
-git clone git@git.scc.kit.edu:m-team/ai/demo-advanced-api.git  # Download repository
+git clone git@codebase.helmholtz.cloud:m-team/ai/demo-advanced-api.git  # Download repository
 cd {repository}  # Navigate inside repository project
 pip install -e .  # Install repository project
 ```
