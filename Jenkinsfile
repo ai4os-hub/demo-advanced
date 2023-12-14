@@ -8,18 +8,11 @@ pipeline {
     }
 
     stages {
-        stage('User pipeline job') {
-            steps {
-                script {
-                    build(job: '/AI4OS-HUB-TEST/' + env.JOB_NAME.drop(10))
-                }
-            }
-        }
-        stage('SQA baseline dynamic stages') {
+        stage('AI4EOSC SQA baseline dynamic stages') {
             steps {
                 script {
                     projectConfig = pipelineConfig(
-                        configFile: '.sqa/ai4eosc.yml',
+                        configFile: '.sqa/ai4eosc.yml'
                     )
                     buildStages(projectConfig)
                 }
