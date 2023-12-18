@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage('') {
+        stage('Demo advance testing') {
             steps {
                 script {
                     projectConfig = pipelineConfig()
