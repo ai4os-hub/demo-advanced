@@ -8,12 +8,10 @@ pipeline {
     }
 
     stages {
-        stage('AI4EOSC SQA baseline dynamic stages') {
+        stage('') {
             steps {
                 script {
-                    projectConfig = pipelineConfig(
-                        configFile: '.sqa/ai4eosc.yml'
-                    )
+                    projectConfig = pipelineConfig()
                     buildStages(projectConfig)
                 }
             }
