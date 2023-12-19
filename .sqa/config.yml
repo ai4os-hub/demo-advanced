@@ -5,7 +5,7 @@ config:
   project_repos:
     demo-advanced:
       repo: "https://github.com/deephdc/demo_advanced.git"
-      branch: dev1
+      branch: main 
 
 sqa_criteria:
   qc_style:
