@@ -3,9 +3,7 @@
 def projectConfig
 
 pipeline {
-    agent {
-        label 'docker'
-    }
+    agent any
 
     stages {
         stage('Demo advance testing') {
