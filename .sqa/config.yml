@@ -1,12 +1,4 @@
 # .sqa/config.yml - jenkins-pipeline-library configuration file
-
-# generic configuration: workspace, agents
-config:
-  project_repos:
-    demo-advanced:
-      repo: "https://github.com/deephdc/demo_advanced.git"
-      branch: dev1
-
 sqa_criteria:
   qc_style:
     repos:
