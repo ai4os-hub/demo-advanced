@@ -7,14 +7,17 @@
 To launch it, first download the repository and install the package using pip.
 
 ```bash
-git clone git@codebase.helmholtz.cloud:m-team/ai/demo-advanced-api.git  # Download repository
+git clone git@github.com:ai4os-hub/demo-advanced.git  # Download repository
 cd {repository}  # Navigate inside repository project
+pip install -U pip  # Upgrade pip to avoid errors
 pip install -e .  # Install repository project
 ```
 
 > Use editable mode `pip install -e .` when you are want python to access your
 > your code at the repository and not a copy at `.../site-packages`. Useful to
 > test your package changes without reinstalling.
+> Old versions of pip require `setup.py` for installation, upgrade `pip` as
+> indicated on the instructions to solve this error.
 
 ## Data implementation
 
