@@ -4,13 +4,17 @@ fixtures to simplify model and api specific testing.
 Modify this file only if you need to add new fixtures or modify the existing
 related to the environment and generic tests.
 """
+
 # pylint: disable=redefined-outer-name
 import inspect
 import os
 import pathlib
 import shutil
 import tempfile
+from random import random
+from unittest.mock import MagicMock, patch
 
+import numpy as np
 import pytest
 
 import api
@@ -84,7 +88,11 @@ globals()["predict_kwds"] = generate_fields_fixture(signature)
 @pytest.fixture(scope="module")
 def predictions(predict_kwds):
     """Fixture to return predictions to assert properties."""
-    return api.predict(**predict_kwds)
+    predictions = np.random.dirichlet(np.ones(10), size=[20])
+    model = MagicMock(predict=MagicMock(return_value=predictions))
+    with patch("keras.models.load_model") as load_model:
+        load_model.return_value = model
+        return api.predict(**predict_kwds)
 
 
 # Generate and inject fixtures for training arguments
@@ -96,4 +104,11 @@ globals()["training_kwds"] = generate_fields_fixture(signature)
 @pytest.fixture(scope="module")
 def training(training_kwds):
     """Fixture to return training to assert properties."""
-    return api.train(**training_kwds)
+    train_results = {
+        "loss": [random() for _ in range(20)],
+        "categorical_accuracy": [random() for _ in range(20)],
+    }
+    model = MagicMock(fit=MagicMock(return_value=train_results))
+    with patch("keras.models.load_model") as load_model:
+        load_model.return_value = model
+        return api.train(**training_kwds)
