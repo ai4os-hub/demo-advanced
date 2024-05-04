@@ -12,11 +12,11 @@ import pathlib
 import shutil
 import tempfile
 from random import random
-from unittest.mock import MagicMock, patch, Mock, create_autospec
-from keras import models
+from unittest.mock import create_autospec, patch
 
 import numpy as np
 import pytest
+from keras import models
 
 import api
 
