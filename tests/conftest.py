@@ -12,7 +12,8 @@ import pathlib
 import shutil
 import tempfile
 from random import random
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, Mock, create_autospec
+from keras import models
 
 import numpy as np
 import pytest
@@ -89,9 +90,12 @@ globals()["predict_kwds"] = generate_fields_fixture(signature)
 def predictions(predict_kwds):
     """Fixture to return predictions to assert properties."""
     predictions = np.random.dirichlet(np.ones(10), size=[20])
-    model = MagicMock(predict=MagicMock(return_value=predictions))
-    with patch("keras.models.load_model") as load_model:
-        load_model.return_value = model
+    model = create_autospec(
+        models.Model, predict=create_autospec(models.Model.predict)
+    )
+    model.predict.return_value = predictions
+    with patch("keras.models.load_model", autospec=True) as load:
+        load.return_value = model
         return api.predict(**predict_kwds)
 
 
@@ -108,7 +112,10 @@ def training(training_kwds):
         "loss": [random() for _ in range(20)],
         "categorical_accuracy": [random() for _ in range(20)],
     }
-    model = MagicMock(fit=MagicMock(return_value=train_results))
-    with patch("keras.models.load_model") as load_model:
-        load_model.return_value = model
+    model = create_autospec(
+        models.Model, fit=create_autospec(models.Model.fit)
+    )
+    model.fit.return_value = train_results
+    with patch("keras.models.load_model", autospec=True) as load:
+        load.return_value = model
         return api.train(**training_kwds)
