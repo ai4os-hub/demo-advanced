@@ -1,7 +1,5 @@
 # AI4OS Demo Advanced
 
-> TODO: Add badges for CI/CD, coverage, license, etc. from AI4OS Jenkins.
-
 [![Build Status](https://jenkins.services.ai4os.eu/buildStatus/icon?job=AI4OS-hub/demo-advanced/main)](https://jenkins.services.ai4os.eu/job/AI4OS-hub/job/demo-advanced/job/main/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
