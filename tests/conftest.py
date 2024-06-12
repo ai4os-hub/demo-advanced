@@ -4,14 +4,19 @@ fixtures to simplify model and api specific testing.
 Modify this file only if you need to add new fixtures or modify the existing
 related to the environment and generic tests.
 """
+
 # pylint: disable=redefined-outer-name
 import inspect
 import os
 import pathlib
 import shutil
 import tempfile
+from random import random
+from unittest.mock import create_autospec, patch
 
+import numpy as np
 import pytest
+from keras import models
 
 import api
 
@@ -84,7 +89,14 @@ globals()["predict_kwds"] = generate_fields_fixture(signature)
 @pytest.fixture(scope="module")
 def predictions(predict_kwds):
     """Fixture to return predictions to assert properties."""
-    return api.predict(**predict_kwds)
+    predictions = np.random.dirichlet(np.ones(10), size=[20])
+    model = create_autospec(
+        models.Model, predict=create_autospec(models.Model.predict)
+    )
+    model.predict.return_value = predictions
+    with patch("keras.models.load_model", autospec=True) as load:
+        load.return_value = model
+        return api.predict(**predict_kwds)
 
 
 # Generate and inject fixtures for training arguments
@@ -96,4 +108,14 @@ globals()["training_kwds"] = generate_fields_fixture(signature)
 @pytest.fixture(scope="module")
 def training(training_kwds):
     """Fixture to return training to assert properties."""
-    return api.train(**training_kwds)
+    train_results = {
+        "loss": [random() for _ in range(20)],
+        "categorical_accuracy": [random() for _ in range(20)],
+    }
+    model = create_autospec(
+        models.Model, fit=create_autospec(models.Model.fit)
+    )
+    model.fit.return_value = train_results
+    with patch("keras.models.load_model", autospec=True) as load:
+        load.return_value = model
+        return api.train(**training_kwds)
