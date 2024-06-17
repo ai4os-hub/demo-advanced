@@ -10,13 +10,13 @@
 # [!] Note: For the Jenkins CI/CD pipeline, input args are defined inside the
 # Jenkinsfile, not here!
 
-ARG tag=2.13.0-gpu
+ARG tag=2.16.1-gpu
 
 # Base image, e.g. tensorflow/tensorflow:2.x.x-gpu
 FROM tensorflow/tensorflow:${tag}
 
 LABEL maintainer='Borja Esteban'
-LABEL version='0.0.0'
+LABEL version='1.0.0'
 # DEEPaaS full demo/template.
 
 # What user branch to clone [!]
