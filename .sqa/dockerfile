@@ -1,6 +1,6 @@
 # Docker image for CI testing of the DEEPaaS API
 # Note there is probably no gpu in the CI server
-FROM python:3.11-slim
+FROM python:3.12
 RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip3 install --no-cache-dir tox
 CMD ["sleep", "infinity"]
