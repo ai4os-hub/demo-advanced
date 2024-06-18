@@ -5,4 +5,4 @@ fPDF2~=2.7.4
 
 # Model requirements
 # Check tensorflow version matches dockerfile base image tag
-tensorflow==2.13.0
+tensorflow==2.16.1

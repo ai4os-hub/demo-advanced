@@ -2,7 +2,8 @@ version: "3.6"
 
 services:
   testing:
-    container_name: testing
+    container_name: "${BUILD_TAG}"
+    hostname: "${BUILD_TAG}"
     working_dir: /srv
     build:
       context: ./.sqa
