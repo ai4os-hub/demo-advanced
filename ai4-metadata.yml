@@ -1,7 +1,8 @@
 metadata_version: 2.0.0
 title: Demo Advanced
 summary: DEEPaaS full demo/template
-description: '"Demo Advanced is an application using the DEEPaaS API.\n" "Write additional information for your users (how to predict, how to retrain," "dataset description, training description, etc)."'
+description: |-
+   This is a module to test the full demo template.
 dates:
   created: '2023-12-11'
   updated: '2024-08-12'
@@ -9,8 +10,11 @@ links:
   source_code: https://github.com/deephdc/demo-advanced
   docker_image: deephdc/demo-advanced
 tags:
-- docker
-- api-v2
-tasks: []
+  - demo
+tasks:
+  - Other
 categories: []
-libraries: []
+libraries:
+  - Other
+data-type:
+  - Other
