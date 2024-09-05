@@ -64,5 +64,6 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "black-formatter.args": [ "--line-length=79" ]
+    "black-formatter.path": [ "black" ],
+    "black-formatter.args": [ "--line-length=80" ]
 }
